@@ -13,44 +13,50 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      appBarAction: <Widget>[
-        Center(
-          child: Text('Manage team expenses'),
-        ),
-      ],
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: Dimens.NORMAL_PADDING),
-              child: AppLogo(
-                height: 150.0,
-                width: 150.0,
-              ),
-            ),
-            TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: "Your activity's name",
-              ),
-            ),
-            MaterialButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (_) => MainPage()));
-              },
-              child: Text(
-                'CREATE YOUR ACTIVITY',
-                style: TextStyle(
-                  color: Colors.white,
+      body: SafeArea(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: Dimens.NORMAL_PADDING),
+                child: AppLogo(
+                  height: 150.0,
+                  width: 150.0,
                 ),
               ),
-              color: Colors.blue,
-            ),
-            Text('Linh đẹp trai'),
-          ],
+              Text(
+                'Manage team expenses',
+                style: Theme.of(context).textTheme.headline,
+              ),
+              SizedBox(height: Dimens.LARGE_PADDING,),
+              TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: "Your activity's name",
+                ),
+              ),
+              SizedBox(height: Dimens.LARGE_PADDING,),
+              MaterialButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                      context, MaterialPageRoute(builder: (_) => MainPage()));
+                },
+                child: Text(
+                  'CREATE YOUR ACTIVITY',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                color: Colors.blue,
+              ),
+              Expanded(
+                child: Container(),
+              ),
+              Text('Linh đẹp trai'),
+            ],
+          ),
         ),
       ),
     );
