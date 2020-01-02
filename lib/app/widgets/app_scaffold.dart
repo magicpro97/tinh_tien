@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tinh_tien/app/widgets/app_logo.dart';
 
 class AppScaffold extends StatelessWidget {
   final Widget body;
@@ -16,6 +17,7 @@ class AppScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: AppLogo(height: 16.0, width: 16.0),
         title: Text('Tinh tien'),
         actions: appBarAction,
       ),

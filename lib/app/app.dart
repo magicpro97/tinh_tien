@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tinh_tien/app/pages/main_page/main_page.dart';
+import 'package:tinh_tien/app/pages/home_page.dart';
 
 class App extends StatelessWidget {
   @override
@@ -9,7 +9,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MainPage(),
+      home: HomePage(),
     );
   }
 }

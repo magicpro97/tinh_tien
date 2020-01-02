@@ -1,5 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:tinh_tien/app/pages/main_page/main_page.dart';
+import 'package:tinh_tien/app/widgets/app_logo.dart';
 import 'package:tinh_tien/app/widgets/app_scaffold.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
@@ -21,26 +22,25 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Column(
           children: <Widget>[
-            SizedBox(
-              height: Dimens.NORMAL_PADDING,
-            ),
-            CachedNetworkImage(
-              imageUrl:
-                  'https://www.filevine.com/wp-content/uploads/2018/02/expense-tracking.png',
-              fit: BoxFit.cover,
-              height: 150,
-              width: 150,
-            ),
-            SizedBox(
-              height: Dimens.NORMAL_PADDING,
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: Dimens.NORMAL_PADDING),
+              child: AppLogo(
+                height: 150.0,
+                width: 150.0,
+              ),
             ),
             TextField(
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
+                hintText: "Your activity's name",
               ),
             ),
             MaterialButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (_) => MainPage()));
+              },
               child: Text(
                 'CREATE YOUR ACTIVITY',
                 style: TextStyle(
