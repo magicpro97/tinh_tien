@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tinh_tien/app/pages/expense/expense.dart';
+import 'package:tinh_tien/app/pages/expense_page/expense_page.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
 class ExpenseTab extends StatelessWidget {
@@ -40,7 +40,7 @@ class ExpenseTab extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => Expense()));
+          Navigator.push(context, MaterialPageRoute(builder: (_) => ExpensePage()));
         },
         child: Icon(Icons.add),
       ),
