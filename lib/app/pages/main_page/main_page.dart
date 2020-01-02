@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tinh_tien/app/pages/main_page/expense_tab.dart';
 import 'package:tinh_tien/app/pages/main_page/people_tab.dart';
 import 'package:tinh_tien/app/widgets/app_scaffold.dart';
 
@@ -10,7 +11,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   final tabs = <Widget>[
     PeopleTab(),
-    PeopleTab(),
+    ExpenseTab(),
     PeopleTab(),
     PeopleTab(),
   ];
