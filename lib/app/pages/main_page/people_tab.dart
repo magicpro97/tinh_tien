@@ -3,6 +3,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
 class PeopleTab extends StatelessWidget {
+  final SlidableController slidableController = SlidableController();
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -23,15 +25,45 @@ class PeopleTab extends StatelessWidget {
           ),
           ...List.generate(
             10,
-            (index) => _peopleItem(),
+            (index) => _peopleItem(context, index),
           ),
         ],
       ),
     );
   }
 
-  Widget _peopleItem() {
+  Widget _peopleItem(BuildContext context, int index) {
     return Slidable(
+      key: Key('$index'),
+      controller: slidableController,
+      dismissal: SlidableDismissal(
+        child: SlidableDrawerDismissal(),
+        onWillDismiss: (actionType) {
+          return showDialog<bool>(
+              context: context,
+              builder: (_) {
+                return AlertDialog(
+                  title: Text('Delete'),
+                  content: Text('People will be delete'),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text('Cancel'),
+                      onPressed: () => Navigator.of(context).pop(false),
+                    ),
+                    FlatButton(
+                      child: Text('Ok'),
+                      onPressed: () => Navigator.of(context).pop(true),
+                    ),
+                  ],
+                );
+              });
+        },
+        onDismissed: (actionType) {
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text('People is deleted.'),
+          ));
+        },
+      ),
       child: Container(
         color: Colors.white,
         child: ListTile(
