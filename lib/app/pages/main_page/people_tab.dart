@@ -8,7 +8,6 @@ class PeopleTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: Dimens.NORMAL_PADDING),
       child: Column(
         children: <Widget>[
           Padding(
