@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tinh_tien/app/widgets/app_logo.dart';
 
+import '../../common/dimens.dart';
+
 class AppScaffold extends StatelessWidget {
   final Widget body;
   final Widget bottomNavigationBar;
@@ -21,7 +23,16 @@ class AppScaffold extends StatelessWidget {
         title: Text('Tinh tien'),
         actions: appBarAction,
       ),
-      body: body,
+      body: SafeArea(
+          child: Container(
+        padding: const EdgeInsets.fromLTRB(
+          Dimens.NORMAL_PADDING,
+          Dimens.NORMAL_PADDING,
+          Dimens.NORMAL_PADDING,
+          Dimens.ZERO,
+        ),
+        child: body,
+      )),
       bottomNavigationBar: bottomNavigationBar,
     );
   }
