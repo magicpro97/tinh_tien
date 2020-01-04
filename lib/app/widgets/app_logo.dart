@@ -1,5 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class AppLogo extends StatelessWidget {
   final double height;
@@ -15,9 +15,10 @@ class AppLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CachedNetworkImage(
-      imageUrl:
+    return FadeInImage.memoryNetwork(
+      image:
           'https://www.filevine.com/wp-content/uploads/2018/02/expense-tracking.png',
+      placeholder: kTransparentImage,
       fit: fit,
       height: height,
       width: width,
