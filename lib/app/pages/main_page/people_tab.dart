@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:tinh_tien/app/widgets/action_item.dart';
 import 'package:tinh_tien/app/widgets/app_tabview.dart';
-import 'package:tinh_tien/common/colors.dart';
 
 class PeopleTab extends StatelessWidget {
   final SlidableController slidableController = SlidableController();
