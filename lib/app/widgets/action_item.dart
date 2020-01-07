@@ -25,7 +25,6 @@ class ActionItem extends StatelessWidget {
         ],
       ),
     );
-    ;
   }
 }
 

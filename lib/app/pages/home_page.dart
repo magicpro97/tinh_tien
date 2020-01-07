@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tinh_tien/app/pages/main_page/main_page.dart';
 import 'package:tinh_tien/app/widgets/app_logo.dart';
-import 'package:tinh_tien/app/widgets/app_scaffold.dart';
 import 'package:tinh_tien/common/colors.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
@@ -16,15 +15,16 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.all(Dimens.NORMAL_PADDING),
+          padding:
+              const EdgeInsets.symmetric(horizontal: Dimens.NORMAL_PADDING),
           child: Column(
             children: <Widget>[
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: Dimens.NORMAL_PADDING),
                 child: AppLogo(
-                  height: 150.0,
-                  width: 150.0,
+                  height: 150,
+                  width: 150,
                 ),
               ),
               Text(
