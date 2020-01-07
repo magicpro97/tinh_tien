@@ -30,9 +30,7 @@ class _ExpensePageState extends State<ExpensePage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      appBarAction: <Widget>[
-        Center(child: Text('Add a new expense')),
-      ],
+      appBarAction: <Widget>[],
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,6 +87,7 @@ class _ExpensePageState extends State<ExpensePage> {
                   Text(
                     '$selectedTime',
                   )
+              
                 ]),
               ),
             ),

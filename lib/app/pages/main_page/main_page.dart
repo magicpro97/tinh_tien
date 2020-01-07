@@ -30,7 +30,6 @@ class _MainPageState extends State<MainPage> {
       appBarAction: <Widget>[
         Row(
           children: <Widget>[
-            Text("Activity's name"),
             IconButton(icon: Icon(Icons.info), onPressed: () {}),
           ],
         )
@@ -51,6 +50,17 @@ class _MainPageState extends State<MainPage> {
           BottomNavigationBarItem(
               icon: Icon(Icons.assignment), title: Text('Outstanding')),
         ],
+      ),
+      bottom: Container(
+        width: double.infinity,
+        color: Colors.white,
+        alignment: Alignment.center,
+        child: Text(
+          "Activity's name",
+          style: Theme.of(context)
+              .textTheme
+              .title,
+        ),
       ),
     );
   }
