@@ -21,13 +21,17 @@ class WelcomeBloc extends Bloc<WelcomeEvent, WelcomeState> {
   ) async* {
     if (event is CreateActivityEvent) {
       try {
-        yield CreateActivityLoading();
-        final data = await activityRepository.createActivity(event.name);
-        yield data.fold((fail) {
-          return CreateActivityFail(fail.message);
-        }, (activity) {
-          return CreateActivitySuccess();
-        });
+        if (event.name.isEmpty) {
+          yield CreateActivityFail('Required');
+        } else {
+          yield CreateActivityLoading();
+          final data = await activityRepository.createActivity(event.name);
+          yield data.fold((fail) {
+            return CreateActivityFail(fail.message);
+          }, (activity) {
+            return CreateActivitySuccess();
+          });
+        }
       } catch (e) {
         if (e is NoNetworkConnection) {
           yield CreateActivityFail('Please connect to internet and try again.');

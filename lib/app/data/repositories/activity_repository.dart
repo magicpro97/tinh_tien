@@ -1,4 +1,6 @@
 import 'package:dartz/dartz.dart';
+import 'package:data_connection_checker/data_connection_checker.dart';
+import 'package:meta/meta.dart';
 import 'package:tinh_tien/app/data/datasources/activity_datasource.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/data/models/activity/activity_request.dart';
@@ -9,7 +11,10 @@ import 'package:tinh_tien/core/errors/failures/activity_failure.dart';
 class ActivityRepository extends BaseRepository {
   final ActivityDatasource activityDatasource;
 
-  ActivityRepository(this.activityDatasource);
+  ActivityRepository({
+    @required this.activityDatasource,
+    @required DataConnectionChecker dataConnectionChecker,
+  }) : super(dataConnectionChecker);
 
   Future<Either<ActivityFailure, Activity>> createActivity(String name) async {
     if (await hasNetworkConnection()) {
