@@ -11,7 +11,16 @@ class ActivityDatasource {
       ActivityRequest activityRequest) async {
     try {
       final response =
-          await dio.post('/activities', data: activityRequest.toJson());
+      await dio.post(ACTIVITIES, data: activityRequest.toJson());
+      return Right(Activity.fromJson(response.data));
+    } on DioError catch (e) {
+      return Left(ErrorResponse.fromJson(e.response.data));
+    }
+  }
+
+  Future<Either<ErrorResponse, Activity>> get(String id) async {
+    try {
+      final response = await dio.get('$ACTIVITIES/$id');
       return Right(Activity.fromJson(response.data));
     } on DioError catch (e) {
       return Left(ErrorResponse.fromJson(e.response.data));

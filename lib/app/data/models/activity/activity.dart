@@ -1,4 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:tinh_tien/app/data/models/expense/expense.dart';
+import 'package:tinh_tien/app/data/models/people/person.dart';
 
 part 'activity.g.dart';
 
@@ -10,9 +12,19 @@ class Activity {
   @JsonKey(required: true)
   final String name;
 
-  Activity(this.id, this.name);
+  final List<Person> people;
 
-  factory Activity.fromJson(Map<String, dynamic> json) => _$ActivityFromJson(json);
+  final List<Expense> expense;
+
+  Activity({
+    this.id,
+    this.name,
+    this.people,
+    this.expense,
+  });
+
+  factory Activity.fromJson(Map<String, dynamic> json) =>
+      _$ActivityFromJson(json);
 
   Map<String, dynamic> toJson() => _$ActivityToJson(this);
 }
