@@ -14,7 +14,7 @@ class _WelcomePageState extends State<WelcomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Container(
+        child: SingleChildScrollView(
           padding:
               const EdgeInsets.symmetric(horizontal: Dimens.NORMAL_PADDING),
           child: Column(
@@ -69,9 +69,6 @@ class _WelcomePageState extends State<WelcomePage> {
                   'I HAVE ACTIVITY ALREADY',
                   style: TextStyle(color: AppColors.MAIN_COLOR),
                 ),
-              ),
-              Expanded(
-                child: Container(),
               ),
               Text('Linh đẹp trai'),
             ],
