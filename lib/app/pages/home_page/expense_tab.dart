@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:tinh_tien/app/pages/expense_page/expense_page.dart';
+import 'package:tinh_tien/app/route.dart';
 import 'package:tinh_tien/app/widgets/action_item.dart';
 import 'package:tinh_tien/app/widgets/app_tabview.dart';
 import 'package:tinh_tien/common/dimens.dart';
@@ -24,8 +24,7 @@ class ExpenseTab extends StatelessWidget {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (_) => ExpensePage()));
+              Navigator.pushNamed(context, EXPENSE_PAGE);
             },
             child: Icon(Icons.add),
           ),

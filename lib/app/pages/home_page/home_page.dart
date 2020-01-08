@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:tinh_tien/app/pages/main_page/expense_tab.dart';
-import 'package:tinh_tien/app/pages/main_page/people_tab.dart';
 import 'package:tinh_tien/app/widgets/app_scaffold.dart';
 
-class MainPage extends StatefulWidget {
+import 'expense_tab.dart';
+import 'people_tab.dart';
+
+class HomePage extends StatefulWidget {
   @override
-  _MainPageState createState() => _MainPageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _HomePageState extends State<HomePage> {
   final tabs = <Widget>[
     PeopleTab(),
     ExpenseTab(),

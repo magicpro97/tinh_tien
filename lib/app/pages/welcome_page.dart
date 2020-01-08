@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:tinh_tien/app/pages/main_page/main_page.dart';
+import 'package:tinh_tien/app/route.dart';
 import 'package:tinh_tien/app/widgets/app_logo.dart';
 import 'package:tinh_tien/common/colors.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
-class HomePage extends StatefulWidget {
+class WelcomePage extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _WelcomePageState createState() => _WelcomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,8 +51,8 @@ class _HomePageState extends State<HomePage> {
               ),
               MaterialButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
-                      context, MaterialPageRoute(builder: (_) => MainPage()));
+                  Navigator.pushNamed(
+                      context, HOME_PAGE);
                 },
                 child: Text(
                   'CREATE YOUR ACTIVITY',
