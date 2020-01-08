@@ -51,8 +51,7 @@ class _WelcomePageState extends State<WelcomePage> {
               ),
               MaterialButton(
                 onPressed: () {
-                  Navigator.pushNamed(
-                      context, HOME_PAGE);
+                  Navigator.pushNamed(context, HOME_PAGE);
                 },
                 child: Text(
                   'CREATE YOUR ACTIVITY',
@@ -61,6 +60,15 @@ class _WelcomePageState extends State<WelcomePage> {
                   ),
                 ),
                 color: Colors.blue,
+              ),
+              FlatButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, ALREADY_HAVE_ACTIVITY_PAGE);
+                },
+                child: Text(
+                  'I HAVE ACTIVITY ALREADY',
+                  style: TextStyle(color: AppColors.MAIN_COLOR),
+                ),
               ),
               Expanded(
                 child: Container(),
