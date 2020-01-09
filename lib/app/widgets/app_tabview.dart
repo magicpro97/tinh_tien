@@ -8,7 +8,7 @@ class AppTabView extends StatelessWidget {
 
   const AppTabView({
     Key key,
-    @required this.title,
+    this.title,
     @required this.body,
   }) : super(key: key);
 
@@ -18,7 +18,7 @@ class AppTabView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Padding(
+         title != null ? Padding(
             padding: const EdgeInsets.all(Dimens.NORMAL_PADDING),
             child: Text(
               title,
@@ -31,7 +31,7 @@ class AppTabView extends StatelessWidget {
                 decoration: TextDecoration.underline,
               ),
             ),
-          ),
+          ) : Container(),
           body,
         ],
       ),
