@@ -49,16 +49,16 @@ class _WelcomePageState extends State<WelcomePage>
         _sloganFontSize = 24;
       });
     });
-    _opacityDuration = Duration(milliseconds: 200);
-    Future.delayed(Duration(milliseconds: 2200), () {
+    _opacityDuration = Duration(milliseconds: 400);
+    Future.delayed(Duration(milliseconds: 3000), () {
       _scaleController.forward();
     });
-    Future.delayed(Duration(milliseconds: 2400), () {
+    Future.delayed(Duration(milliseconds: 3400), () {
       setState(() {
         _createButtonOpacity = 1;
       });
     });
-    Future.delayed(Duration(milliseconds: 2600), () {
+    Future.delayed(Duration(milliseconds: 3600), () {
       setState(() {
         _alreadyHaveButtonOpacity = 1;
       });
