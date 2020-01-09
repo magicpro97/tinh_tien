@@ -35,77 +35,80 @@ class ExpenseTab extends StatelessWidget {
       body: Expanded(
         child: Scaffold(
           body: Container(
+            margin: const EdgeInsets.only(top: Dimens.SMALL_PADDING),
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
                   Container(
-                    padding: const EdgeInsets.fromLTRB(
-                      0,
-                      Dimens.NORMAL_PADDING,
-                      Dimens.NORMAL_PADDING,
-                      0,
-                    ),
                     width: double.infinity,
-                    color: Colors.white,
-                    child: LineChart(LineChartData(
-                        showingTooltipIndicators: showIndexes.map((index) {
-                          return MapEntry(
-                            index,
-                            [
-                              LineBarSpot(
-                                  tooltipsOnBar,
-                                  lineBarsData.indexOf(tooltipsOnBar),
-                                  tooltipsOnBar.spots[index]),
-                            ],
-                          );
-                        }).toList(),
-                        lineTouchData: LineTouchData(
-                            enabled: false,
-                            touchTooltipData: LineTouchTooltipData(
-                                tooltipBgColor: Colors.pink,
-                                tooltipRoundedRadius: 8,
-                                getTooltipItems: (
-                                    List<LineBarSpot> lineBarsSpot) {
-                                  return lineBarsSpot.map((lineBarSpot) {
-                                    return LineTooltipItem(
-                                      lineBarSpot.y.toString(),
-                                      TextStyle(color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    );
-                                  }).toList();
-                                })),
-                        lineBarsData: lineBarsData,
-                        minX: 0,
-                        minY: 0,
-                        maxY: 35,
-                        gridData: const FlGridData(show: false),
-                        titlesData: FlTitlesData(
-                          leftTitles: const SideTitles(
-                            showTitles: false,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Dimens.NORMAL_PADDING,
+                    ),
+                    child: Card(
+                      elevation: 10.0,
+                      child: LineChart(LineChartData(
+                          showingTooltipIndicators: showIndexes.map((index) {
+                            return MapEntry(
+                              index,
+                              [
+                                LineBarSpot(
+                                    tooltipsOnBar,
+                                    lineBarsData.indexOf(tooltipsOnBar),
+                                    tooltipsOnBar.spots[index]),
+                              ],
+                            );
+                          }).toList(),
+                          lineTouchData: LineTouchData(
+                              enabled: false,
+                              touchTooltipData: LineTouchTooltipData(
+                                  tooltipBgColor: Colors.pink,
+                                  tooltipRoundedRadius: 8,
+                                  getTooltipItems:
+                                      (List<LineBarSpot> lineBarsSpot) {
+                                    return lineBarsSpot.map((lineBarSpot) {
+                                      return LineTooltipItem(
+                                        lineBarSpot.y.toString(),
+                                        TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      );
+                                    }).toList();
+                                  })),
+                          lineBarsData: lineBarsData,
+                          minX: 0,
+                          minY: 0,
+                          maxY: 40,
+                          maxX: 56,
+                          gridData: const FlGridData(show: false),
+                          borderData: FlBorderData(border: Border()),
+                          titlesData: FlTitlesData(
+                            leftTitles: const SideTitles(
+                              showTitles: false,
+                            ),
+                            bottomTitles: SideTitles(
+                              showTitles: true,
+                              getTitles: (value) {
+                                switch (value.toInt()) {
+                                  case 0:
+                                    return '1/1';
+                                  case 10:
+                                    return '2/1';
+                                  case 30:
+                                    return '3/1';
+                                  case 50:
+                                    return '4/1';
+                                }
+                                return '';
+                              },
+                            ),
                           ),
-                          bottomTitles: SideTitles(
-                            showTitles: true,
-                            getTitles: (value) {
-                              switch (value.toInt()) {
-                                case 0:
-                                  return '1/1';
-                                case 10:
-                                  return '2/1';
-                                case 30:
-                                  return '3/1';
-                                case 50:
-                                  return '4/1';
-                              }
-                              return '';
-                            },
-                          ),
-                        ),
-                        axisTitleData: FlAxisTitleData(
-                          leftTitle: const AxisTitle(
-                              showTitle: true, titleText: 'Money'),
-                          bottomTitle: const AxisTitle(
-                              showTitle: true, titleText: 'Date'),
-                        ))),
+                          axisTitleData: FlAxisTitleData(
+                            leftTitle: const AxisTitle(
+                                showTitle: true, titleText: 'Money'),
+                            bottomTitle: const AxisTitle(
+                                showTitle: true, titleText: 'Date'),
+                          ))),
+                    ),
                   ),
                   SizedBox(
                     height: Dimens.NORMAL_PADDING,

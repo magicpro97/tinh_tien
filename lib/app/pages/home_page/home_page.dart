@@ -28,6 +28,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
+      margin: const EdgeInsets.all(0.0),
       appBarAction: <Widget>[
         Row(
           children: <Widget>[

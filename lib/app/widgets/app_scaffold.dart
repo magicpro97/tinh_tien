@@ -7,6 +7,7 @@ class AppScaffold extends StatelessWidget {
   final Widget bottomNavigationBar;
   final List<Widget> appBarAction;
   final Widget bottom;
+  final EdgeInsetsGeometry margin;
 
   const AppScaffold({
     Key key,
@@ -14,6 +15,12 @@ class AppScaffold extends StatelessWidget {
     this.bottomNavigationBar,
     @required this.appBarAction,
     this.bottom,
+    this.margin = const EdgeInsets.fromLTRB(
+      Dimens.NORMAL_PADDING,
+      Dimens.NORMAL_PADDING,
+      Dimens.NORMAL_PADDING,
+      Dimens.ZERO,
+    ),
   }) : super(key: key);
 
   @override
@@ -29,12 +36,7 @@ class AppScaffold extends StatelessWidget {
       ),
       body: SafeArea(
           child: Container(
-        padding: const EdgeInsets.fromLTRB(
-          Dimens.NORMAL_PADDING,
-          Dimens.NORMAL_PADDING,
-          Dimens.NORMAL_PADDING,
-          Dimens.ZERO,
-        ),
+            margin: margin,
         child: body,
       )),
       bottomNavigationBar: bottomNavigationBar,
