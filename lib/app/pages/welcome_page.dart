@@ -16,7 +16,12 @@ class _WelcomePageState extends State<WelcomePage>
     with SingleTickerProviderStateMixin {
   WelcomeBloc _welcomeBloc;
   TextEditingController _activityNameController;
-  double size = 300;
+  double _logoSize = 300;
+  double _sloganOpacity = 0;
+  double _nameFieldOpacity = 0;
+  double _createButtonOpacity = 0;
+  double _alreadyHaveButtonOpacity = 0;
+  Duration _opacityDuration;
 
   @override
   void initState() {
@@ -25,7 +30,28 @@ class _WelcomePageState extends State<WelcomePage>
     _activityNameController = TextEditingController();
     Future.delayed(Duration(seconds: 2), () {
       setState(() {
-        size = 150;
+        _logoSize = 150;
+      });
+    });
+    Future.delayed(Duration(seconds: 4), () {
+      setState(() {
+        _sloganOpacity = 1;
+      });
+    });
+    _opacityDuration = Duration(seconds: 1);
+    Future.delayed(Duration(milliseconds: 4500), () {
+      setState(() {
+        _nameFieldOpacity = 1;
+      });
+    });
+    Future.delayed(Duration(milliseconds: 5000), () {
+      setState(() {
+        _createButtonOpacity = 1;
+      });
+    });
+    Future.delayed(Duration(milliseconds: 5500), () {
+      setState(() {
+        _alreadyHaveButtonOpacity = 1;
       });
     });
   }
@@ -48,14 +74,15 @@ class _WelcomePageState extends State<WelcomePage>
               bloc: _welcomeBloc,
               builder: (context, state) =>
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: Dimens.NORMAL_PADDING),
                         child: AnimatedSize(
                           child: AppLogo(
-                            height: size,
-                            width: size,
+                            height: _logoSize,
+                            width: _logoSize,
                           ),
                           vsync: this,
                           duration: Duration(seconds: 3),
@@ -71,27 +98,35 @@ class _WelcomePageState extends State<WelcomePage>
                           color: AppColors.MAIN_COLOR,
                         ),
                       ),
-                      Text(
-                        'Manage team expenses',
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .headline,
+                      AnimatedOpacity(
+                        child: Text(
+                          'Manage team expenses',
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .headline,
+                        ),
+                        opacity: _sloganOpacity,
+                        duration: _opacityDuration,
                       ),
                       SizedBox(
                         height: Dimens.LARGE_PADDING,
                       ),
-                      TextField(
-                        controller: _activityNameController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: "Your activity's name",
-                          errorText:
-                          state is CreateActivityFail ? state.message : null,
+                      AnimatedOpacity(
+                        child: TextField(
+                          controller: _activityNameController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: "Your activity's name",
+                            errorText:
+                            state is CreateActivityFail ? state.message : null,
+                          ),
+                          onSubmitted: (value) {
+                            submitActivity(state, value);
+                          },
                         ),
-                        onSubmitted: (value) {
-                          submitActivity(state, value);
-                        },
+                        duration: _opacityDuration,
+                        opacity: _nameFieldOpacity,
                       ),
                       SizedBox(
                         height: Dimens.LARGE_PADDING,
@@ -99,33 +134,41 @@ class _WelcomePageState extends State<WelcomePage>
                       state is CreateActivityLoading
                           ? CircularProgressIndicator()
                           : Container(),
-                      MaterialButton(
-                        onPressed: () {
-                          if (!(state is CreateActivityLoading)) {
-                            submitActivity(state, _activityNameController.text);
-                          }
-                        },
-                        child: Text(
-                          'CREATE YOUR ACTIVITY',
-                          style: TextStyle(
-                            color: Colors.white,
+                      AnimatedOpacity(
+                        child: MaterialButton(
+                          onPressed: () {
+                            if (!(state is CreateActivityLoading)) {
+                              submitActivity(
+                                  state, _activityNameController.text);
+                            }
+                          },
+                          child: Text(
+                            'CREATE YOUR ACTIVITY',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          color: Colors.blue,
+                        ),
+                        opacity: _createButtonOpacity,
+                        duration: _opacityDuration,
+                      ),
+                      AnimatedOpacity(
+                        child: FlatButton(
+                          onPressed: () {
+                            if (!(state is CreateActivityLoading)) {
+                              Navigator.pushNamed(
+                                  context, ALREADY_HAVE_ACTIVITY_PAGE);
+                            }
+                          },
+                          child: Text(
+                            'I ALREADY HAVE ACTIVITY',
+                            style: TextStyle(color: AppColors.MAIN_COLOR),
                           ),
                         ),
-                        color: Colors.blue,
+                        duration: _opacityDuration,
+                        opacity: _alreadyHaveButtonOpacity,
                       ),
-                      FlatButton(
-                        onPressed: () {
-                          if (!(state is CreateActivityLoading)) {
-                            Navigator.pushNamed(
-                                context, ALREADY_HAVE_ACTIVITY_PAGE);
-                          }
-                        },
-                        child: Text(
-                          'I HAVE ACTIVITY ALREADY',
-                          style: TextStyle(color: AppColors.MAIN_COLOR),
-                        ),
-                      ),
-                      Text('Linh đẹp trai'),
                     ],
                   ),
             ),
