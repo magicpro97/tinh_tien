@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinh_tien/app/blocs/welcome/bloc.dart';
@@ -13,47 +12,64 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   WelcomeBloc _welcomeBloc;
   TextEditingController _activityNameController;
   double _logoSize = 300;
-  double _sloganOpacity = 0;
-  double _nameFieldOpacity = 0;
+  double _sloganFontSize = 0;
   double _createButtonOpacity = 0;
   double _alreadyHaveButtonOpacity = 0;
   Duration _opacityDuration;
+  AnimationController _scaleController;
+  Animation<double> _scaleAnimation;
+  FocusNode _nameFieldFocus;
 
   @override
   void initState() {
     super.initState();
     _welcomeBloc = BlocProvider.of<WelcomeBloc>(context);
     _activityNameController = TextEditingController();
+    _scaleController =
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
+    _nameFieldFocus = FocusNode();
+    _scaleController.addListener(() {
+      Future.delayed(Duration(milliseconds: 1600), () {
+        _nameFieldFocus.requestFocus();
+      });
+    });
+    _scaleAnimation =
+        CurvedAnimation(curve: Curves.linear, parent: _scaleController);
     Future.delayed(Duration(seconds: 2), () {
       setState(() {
         _logoSize = 150;
       });
     });
-    Future.delayed(Duration(seconds: 4), () {
+    Future.delayed(Duration(seconds: 2), () {
       setState(() {
-        _sloganOpacity = 1;
+        _sloganFontSize = 24;
       });
     });
-    _opacityDuration = Duration(seconds: 1);
-    Future.delayed(Duration(milliseconds: 4500), () {
-      setState(() {
-        _nameFieldOpacity = 1;
-      });
+    _opacityDuration = Duration(milliseconds: 200);
+    Future.delayed(Duration(milliseconds: 2200), () {
+      _scaleController.forward();
     });
-    Future.delayed(Duration(milliseconds: 5000), () {
+    Future.delayed(Duration(milliseconds: 2400), () {
       setState(() {
         _createButtonOpacity = 1;
       });
     });
-    Future.delayed(Duration(milliseconds: 5500), () {
+    Future.delayed(Duration(milliseconds: 2600), () {
       setState(() {
         _alreadyHaveButtonOpacity = 1;
       });
     });
+  }
+
+  @override
+  void dispose() {
+    _nameFieldFocus.dispose();
+    _scaleController.dispose();
+    super.dispose();
   }
 
   @override
@@ -85,7 +101,7 @@ class _WelcomePageState extends State<WelcomePage>
                             width: _logoSize,
                           ),
                           vsync: this,
-                          duration: Duration(seconds: 3),
+                          duration: Duration(seconds: 1),
                         ),
                       ),
                       Text(
@@ -98,22 +114,27 @@ class _WelcomePageState extends State<WelcomePage>
                           color: AppColors.MAIN_COLOR,
                         ),
                       ),
-                      AnimatedOpacity(
+                      AnimatedSize(
                         child: Text(
                           'Manage team expenses',
                           style: Theme
                               .of(context)
                               .textTheme
-                              .headline,
+                              .headline
+                              .copyWith(
+                            fontSize: _sloganFontSize,
+                            color: Color(0xffFFCA40),
+                          ),
                         ),
-                        opacity: _sloganOpacity,
                         duration: _opacityDuration,
+                        vsync: this,
                       ),
                       SizedBox(
                         height: Dimens.LARGE_PADDING,
                       ),
-                      AnimatedOpacity(
+                      ScaleTransition(
                         child: TextField(
+                          focusNode: _nameFieldFocus,
                           controller: _activityNameController,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -125,8 +146,7 @@ class _WelcomePageState extends State<WelcomePage>
                             submitActivity(state, value);
                           },
                         ),
-                        duration: _opacityDuration,
-                        opacity: _nameFieldOpacity,
+                        scale: _scaleAnimation,
                       ),
                       SizedBox(
                         height: Dimens.LARGE_PADDING,
