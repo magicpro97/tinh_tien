@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:tinh_tien/app/route.dart';
@@ -6,19 +7,111 @@ import 'package:tinh_tien/app/widgets/app_tabview.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
 class ExpenseTab extends StatelessWidget {
+  final showIndexes = const [1, 2, 3];
+
   @override
   Widget build(BuildContext context) {
+    final lineBarsData = [
+      LineChartBarData(
+        showingIndicators: showIndexes,
+        isCurved: true,
+        spots: [
+          FlSpot(0, 0),
+          FlSpot(10, 20),
+          FlSpot(30, 30),
+          FlSpot(50, 10),
+        ],
+        barWidth: 4.0,
+        belowBarData: BarAreaData(
+          show: true,
+        ),
+        dotData: FlDotData(show: false),
+      ),
+    ];
+    final LineChartBarData tooltipsOnBar = lineBarsData[0];
+
     return AppTabView(
       title: 'Expenses',
       body: Expanded(
         child: Scaffold(
           body: Container(
-            color: Colors.white,
             child: SingleChildScrollView(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: Dimens.NORMAL_PADDING),
               child: Column(
-                children: <Widget>[_buildExpenseItem(context)],
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(
+                      0,
+                      Dimens.NORMAL_PADDING,
+                      Dimens.NORMAL_PADDING,
+                      0,
+                    ),
+                    width: double.infinity,
+                    color: Colors.white,
+                    child: LineChart(LineChartData(
+                        showingTooltipIndicators: showIndexes.map((index) {
+                          return MapEntry(
+                            index,
+                            [
+                              LineBarSpot(
+                                  tooltipsOnBar,
+                                  lineBarsData.indexOf(tooltipsOnBar),
+                                  tooltipsOnBar.spots[index]),
+                            ],
+                          );
+                        }).toList(),
+                        lineTouchData: LineTouchData(
+                            enabled: false,
+                            touchTooltipData: LineTouchTooltipData(
+                                tooltipBgColor: Colors.pink,
+                                tooltipRoundedRadius: 8,
+                                getTooltipItems: (
+                                    List<LineBarSpot> lineBarsSpot) {
+                                  return lineBarsSpot.map((lineBarSpot) {
+                                    return LineTooltipItem(
+                                      lineBarSpot.y.toString(),
+                                      TextStyle(color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    );
+                                  }).toList();
+                                })),
+                        lineBarsData: lineBarsData,
+                        minX: 0,
+                        minY: 0,
+                        maxY: 35,
+                        gridData: const FlGridData(show: false),
+                        titlesData: FlTitlesData(
+                          leftTitles: const SideTitles(
+                            showTitles: false,
+                          ),
+                          bottomTitles: SideTitles(
+                            showTitles: true,
+                            getTitles: (value) {
+                              switch (value.toInt()) {
+                                case 0:
+                                  return '1/1';
+                                case 10:
+                                  return '2/1';
+                                case 30:
+                                  return '3/1';
+                                case 50:
+                                  return '4/1';
+                              }
+                              return '';
+                            },
+                          ),
+                        ),
+                        axisTitleData: FlAxisTitleData(
+                          leftTitle: const AxisTitle(
+                              showTitle: true, titleText: 'Money'),
+                          bottomTitle: const AxisTitle(
+                              showTitle: true, titleText: 'Date'),
+                        ))),
+                  ),
+                  SizedBox(
+                    height: Dimens.NORMAL_PADDING,
+                  ),
+                  _buildExpenseItem(context),
+                ],
               ),
             ),
           ),
