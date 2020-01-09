@@ -12,15 +12,22 @@ class WelcomePage extends StatefulWidget {
   _WelcomePageState createState() => _WelcomePageState();
 }
 
-class _WelcomePageState extends State<WelcomePage> {
+class _WelcomePageState extends State<WelcomePage>
+    with SingleTickerProviderStateMixin {
   WelcomeBloc _welcomeBloc;
   TextEditingController _activityNameController;
+  double size = 300;
 
   @override
   void initState() {
     super.initState();
     _welcomeBloc = BlocProvider.of<WelcomeBloc>(context);
     _activityNameController = TextEditingController();
+    Future.delayed(Duration(seconds: 2), () {
+      setState(() {
+        size = 150;
+      });
+    });
   }
 
   @override
@@ -45,9 +52,13 @@ class _WelcomePageState extends State<WelcomePage> {
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: Dimens.NORMAL_PADDING),
-                        child: AppLogo(
-                          height: 150,
-                          width: 150,
+                        child: AnimatedSize(
+                          child: AppLogo(
+                            height: size,
+                            width: size,
+                          ),
+                          vsync: this,
+                          duration: Duration(seconds: 3),
                         ),
                       ),
                       Text(
