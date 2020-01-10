@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:tinh_tien/app/widgets/action_item.dart';
+import 'package:tinh_tien/app/widgets/app_button.dart';
 import 'package:tinh_tien/app/widgets/app_tabview.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
@@ -20,7 +21,6 @@ class PeopleTab extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: Dimens.NORMAL_PADDING),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Card(
                 elevation: 10.0,
@@ -47,6 +47,10 @@ class PeopleTab extends StatelessWidget {
                           ),
                       itemCount: list.length),
                 ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(Dimens.SMALL_PADDING),
+                child: AppButton(text: 'Send a invite', onPressed: () {}),
               ),
             ],
           ),
