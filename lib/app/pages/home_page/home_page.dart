@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tinh_tien/app/widgets/app_scaffold.dart';
 
+import 'balance_tab.dart';
 import 'expense_tab.dart';
 import 'people_tab.dart';
 
@@ -13,7 +14,7 @@ class _HomePageState extends State<HomePage> {
   final tabs = <Widget>[
     PeopleTab(),
     ExpenseTab(),
-    PeopleTab(),
+    BalanceTab(),
     PeopleTab(),
   ];
 
