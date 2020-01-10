@@ -9,26 +9,47 @@ class PeopleTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final list = List.generate(
+      10,
+          (index) => _peopleItem(context, index),
+    );
+
     return AppTabView(
       title: 'People',
-      body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: Dimens.NORMAL_PADDING),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            TextField(
-              minLines: 1,
-              decoration: InputDecoration(
-                hintText: 'Enter name...',
-                suffixIcon: Icon(Icons.add),
-                border: InputBorder.none,
+      body: Expanded(
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: Dimens.NORMAL_PADDING),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Card(
+                elevation: 10.0,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: Dimens.NORMAL_PADDING),
+                  child: TextField(
+                    minLines: 1,
+                    decoration: InputDecoration(
+                      hintText: 'Enter name...',
+                      suffixIcon: Icon(Icons.add),
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
               ),
-            ),
-            ...List.generate(
-              10,
-                  (index) => _peopleItem(context, index),
-            ),
-          ],
+              Expanded(
+                child: Card(
+                  elevation: 10.0,
+                  child: ListView.separated(
+                      itemBuilder: (_, index) => list[index],
+                      separatorBuilder: (_, __) =>
+                          SizedBox(
+                            height: Dimens.XSMALL_PADDING,
+                          ),
+                      itemCount: list.length),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -40,13 +61,10 @@ class PeopleTab extends StatelessWidget {
       controller: slidableController,
       dismissal: defaultDismissal(
           context, 'People will be delete', 'People is deleted.'),
-      child: Container(
-        color: Colors.white,
-        child: ListTile(
-          title: Text('1'),
-        ),
+      child: ListTile(
+        title: Text('1'),
       ),
-      actionPane: SlidableBehindActionPane(),
+      actionPane: SlidableDrawerActionPane(),
       secondaryActions: defaultActionItems,
     );
   }
