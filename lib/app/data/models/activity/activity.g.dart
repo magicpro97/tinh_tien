@@ -7,9 +7,15 @@ part of 'activity.dart';
 // **************************************************************************
 
 Activity _$ActivityFromJson(Map<String, dynamic> json) {
-  $checkKeys(json, requiredKeys: const ['_id', 'name']);
+  $checkKeys(json, requiredKeys: const ['name']);
   return Activity(
-    id: json['_id'] as String,
+    id: json['id'] as String,
+    createdAt: json['createdAt'] == null
+        ? null
+        : DateTime.parse(json['createdAt'] as String),
+    updatedAt: json['updatedAt'] == null
+        ? null
+        : DateTime.parse(json['updatedAt'] as String),
     name: json['name'] as String,
     people: (json['people'] as List)
         ?.map((e) =>
@@ -23,7 +29,9 @@ Activity _$ActivityFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$ActivityToJson(Activity instance) => <String, dynamic>{
-      '_id': instance.id,
+  'id': instance.id,
+  'createdAt': instance.createdAt?.toIso8601String(),
+  'updatedAt': instance.updatedAt?.toIso8601String(),
       'name': instance.name,
   'people': instance.people,
   'expense': instance.expense,

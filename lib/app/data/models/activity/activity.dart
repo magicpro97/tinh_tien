@@ -2,13 +2,12 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:tinh_tien/app/data/models/expense/expense.dart';
 import 'package:tinh_tien/app/data/models/people/person.dart';
 
+import '../base.dart';
+
 part 'activity.g.dart';
 
 @JsonSerializable()
-class Activity {
-  @JsonKey(required: true, name: '_id')
-  final String id;
-
+class Activity extends Base {
   @JsonKey(required: true)
   final String name;
 
@@ -17,11 +16,13 @@ class Activity {
   final List<Expense> expense;
 
   Activity({
-    this.id,
+    @JsonKey(name: '_id') String id,
+    @JsonKey(name: 'created_at') DateTime createdAt,
+    @JsonKey(name: 'updated_at') DateTime updatedAt,
     this.name,
     this.people,
     this.expense,
-  });
+  }) : super(id, createdAt, updatedAt);
 
   factory Activity.fromJson(Map<String, dynamic> json) =>
       _$ActivityFromJson(json);

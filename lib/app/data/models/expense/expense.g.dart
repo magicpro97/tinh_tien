@@ -7,16 +7,22 @@ part of 'expense.dart';
 // **************************************************************************
 
 Expense _$ExpenseFromJson(Map<String, dynamic> json) {
-  $checkKeys(json, requiredKeys: const ['_id', 'amount']);
+  $checkKeys(json, requiredKeys: const ['amount']);
   return Expense(
-    id: json['_id'] as String,
+    id: json['id'] as String,
+    createdAt: json['createdAt'] == null
+        ? null
+        : DateTime.parse(json['createdAt'] as String),
+    updatedAt: json['updatedAt'] == null
+        ? null
+        : DateTime.parse(json['updatedAt'] as String),
     amount: (json['amount'] as num)?.toDouble(),
     people: (json['people'] as List)
             ?.map((e) =>
                 e == null ? null : Person.fromJson(e as Map<String, dynamic>))
             ?.toList() ??
         [],
-    paidBy: (json['paidBy'] as List)
+    paidBy: (json['paid_by'] as List)
             ?.map((e) =>
                 e == null ? null : Person.fromJson(e as Map<String, dynamic>))
             ?.toList() ??
@@ -25,8 +31,10 @@ Expense _$ExpenseFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$ExpenseToJson(Expense instance) => <String, dynamic>{
-      '_id': instance.id,
+  'id': instance.id,
+  'createdAt': instance.createdAt?.toIso8601String(),
+  'updatedAt': instance.updatedAt?.toIso8601String(),
       'amount': instance.amount,
       'people': instance.people,
-      'paidBy': instance.paidBy,
+  'paid_by': instance.paidBy,
     };
