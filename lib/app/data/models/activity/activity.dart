@@ -8,12 +8,11 @@ part 'activity.g.dart';
 
 @JsonSerializable()
 class Activity extends Base {
-  @JsonKey(required: true)
   final String name;
 
   final List<Person> people;
 
-  final List<Expense> expense;
+  final List<Expense> expenses;
 
   Activity({
     @JsonKey(name: '_id') String id,
@@ -21,7 +20,7 @@ class Activity extends Base {
     @JsonKey(name: 'updated_at') DateTime updatedAt,
     this.name,
     this.people,
-    this.expense,
+    this.expenses,
   }) : super(id, createdAt, updatedAt);
 
   factory Activity.fromJson(Map<String, dynamic> json) =>

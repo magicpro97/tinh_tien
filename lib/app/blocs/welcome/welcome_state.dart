@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:tinh_tien/app/data/models/activity/activity.dart';
 
 abstract class WelcomeState extends Equatable {
   const WelcomeState();
@@ -24,6 +25,10 @@ class CreateActivityLoading extends WelcomeState {
 }
 
 class CreateActivitySuccess extends WelcomeState {
+  final Activity activity;
+
+  CreateActivitySuccess(this.activity);
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [activity];
 }

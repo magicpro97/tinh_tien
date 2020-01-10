@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:timeline_list/timeline.dart';
 import 'package:timeline_list/timeline_model.dart';
+import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/route.dart';
 import 'package:tinh_tien/app/widgets/action_item.dart';
 import 'package:tinh_tien/app/widgets/app_tabview.dart';
@@ -10,71 +11,55 @@ import 'package:tinh_tien/common/colors.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
 class ExpenseTab extends StatelessWidget {
-  final showIndexes = const [1, 2, 3];
+  final Activity activity;
+
+  const ExpenseTab({Key key, @required this.activity}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final list1 = List.generate(5, (index) => _buildExpenseItem(context));
-    final expenses = [
-      TimelineModel(
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: Card(
-            elevation: 10.0,
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    '1-1-2020',
-                    style: Theme.of(context).textTheme.title,
+    final showIndexes = const [1, 2, 3];
+    final expenses = activity.expenses;
+    final expensesItems =
+    expenses.map((expense) => _buildExpenseItem(context)).toList();
+    final expenseTimelines = <TimelineModel>[];
+    var tempCreatedDate = DateTime.now();
+    expenses.forEach((expense) {
+      if (expense.createdAt.millisecond != tempCreatedDate.millisecond) {
+        expenseTimelines.add(TimelineModel(
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Card(
+              elevation: 10.0,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text(
+                      '1-1-2020',
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .title,
+                    ),
                   ),
-                ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemBuilder: (_, index) => list1[index],
-                  itemCount: list1.length,
-                  physics: NeverScrollableScrollPhysics(),
-                ),
-              ],
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemBuilder: (_, index) => expensesItems[index],
+                    itemCount: expenses.length,
+                    physics: NeverScrollableScrollPhysics(),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        //icon: Icon(Icons.ac_unit),
-        iconBackground: AppColors.MAIN_COLOR,
-      ),
-      TimelineModel(
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: Card(
-            elevation: 10.0,
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    '1-1-2020',
-                    style: Theme.of(context).textTheme.title,
-                  ),
-                ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemBuilder: (_, index) => list1[index],
-                  itemCount: list1.length,
-                  physics: NeverScrollableScrollPhysics(),
-                ),
-              ],
-            ),
-          ),
-        ),
-        //icon: Icon(Icons.ac_unit),
-        iconBackground: AppColors.MAIN_COLOR,
-      ),
-    ];
+          //icon: Icon(Icons.ac_unit),
+          iconBackground: AppColors.MAIN_COLOR,
+        ));
+        tempCreatedDate = expense.createdAt;
+      }
+    });
     final lineBarsData = [
       LineChartBarData(
         showingIndicators: showIndexes,
@@ -118,7 +103,7 @@ class ExpenseTab extends StatelessWidget {
               SliverFillRemaining(
                 hasScrollBody: false,
                 child: Timeline(
-                  children: expenses,
+                  children: expenseTimelines,
                   position: TimelinePosition.Left,
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -139,6 +124,7 @@ class ExpenseTab extends StatelessWidget {
 
   Widget _buildExpenseChart(
       LineChartBarData tooltipsOnBar, List<LineChartBarData> lineBarsData) {
+    final showIndexes = const [1, 2, 3];
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(

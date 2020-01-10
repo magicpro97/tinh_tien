@@ -7,7 +7,6 @@ part of 'activity.dart';
 // **************************************************************************
 
 Activity _$ActivityFromJson(Map<String, dynamic> json) {
-  $checkKeys(json, requiredKeys: const ['name']);
   return Activity(
     id: json['id'] as String,
     createdAt: json['createdAt'] == null
@@ -21,7 +20,7 @@ Activity _$ActivityFromJson(Map<String, dynamic> json) {
         ?.map((e) =>
     e == null ? null : Person.fromJson(e as Map<String, dynamic>))
         ?.toList(),
-    expense: (json['expense'] as List)
+    expenses: (json['expenses'] as List)
         ?.map((e) =>
     e == null ? null : Expense.fromJson(e as Map<String, dynamic>))
         ?.toList(),
@@ -34,5 +33,5 @@ Map<String, dynamic> _$ActivityToJson(Activity instance) => <String, dynamic>{
   'updatedAt': instance.updatedAt?.toIso8601String(),
       'name': instance.name,
   'people': instance.people,
-  'expense': instance.expense,
+  'expenses': instance.expenses,
     };

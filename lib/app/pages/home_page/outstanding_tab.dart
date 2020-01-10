@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/widgets/action_item.dart';
 import 'package:tinh_tien/app/widgets/app_tabview.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
 class OutstandingTab extends StatelessWidget {
-  final SlidableController slidableController = SlidableController();
+  final Activity activity;
+
+  const OutstandingTab({Key key, @required this.activity}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final list = List.generate(
-      10,
-      (index) => _peopleItem(context, index),
-    );
-
     return AppTabView(
       title: 'Outstanding',
       body: Expanded(
@@ -28,17 +26,17 @@ class OutstandingTab extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Expanded(
-                child: Card(
-                  elevation: 10.0,
-                  child: ListView.separated(
-                      itemBuilder: (_, index) => list[index],
-                      separatorBuilder: (_, __) => SizedBox(
-                            height: Dimens.XSMALL_PADDING,
-                          ),
-                      itemCount: list.length),
-                ),
-              ),
+//              Expanded(
+//                child: Card(
+//                  elevation: 10.0,
+//                  child: ListView.separated(
+//                      itemBuilder: (_, index) => list[index],
+//                      separatorBuilder: (_, __) => SizedBox(
+//                            height: Dimens.XSMALL_PADDING,
+//                          ),
+//                      itemCount: list.length),
+//                ),
+//              ),
               Padding(
                 child: Text('Total transaction'),
                 padding: const EdgeInsets.all(Dimens.NORMAL_PADDING),
@@ -51,6 +49,7 @@ class OutstandingTab extends StatelessWidget {
   }
 
   Widget _peopleItem(BuildContext context, int index) {
+    final SlidableController slidableController = SlidableController();
     return Slidable(
       key: Key('$index'),
       controller: slidableController,

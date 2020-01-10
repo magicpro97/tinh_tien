@@ -83,7 +83,8 @@ class _WelcomePageState extends State<WelcomePage>
             bloc: _welcomeBloc,
             listener: (_, state) {
               if (state is CreateActivitySuccess) {
-                Navigator.pushNamed(context, HOME_PAGE);
+                Navigator.pushNamed(context, HOME_PAGE,
+                    arguments: state.activity);
               }
             },
             child: BlocBuilder<WelcomeBloc, WelcomeState>(

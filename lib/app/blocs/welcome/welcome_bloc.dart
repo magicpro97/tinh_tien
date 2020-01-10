@@ -29,7 +29,7 @@ class WelcomeBloc extends Bloc<WelcomeEvent, WelcomeState> {
           yield data.fold((fail) {
             return CreateActivityFail(fail.message);
           }, (activity) {
-            return CreateActivitySuccess();
+            return CreateActivitySuccess(activity);
           });
         }
       } catch (e) {

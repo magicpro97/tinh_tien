@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/route.dart';
 import 'package:tinh_tien/app/widgets/action_item.dart';
 import 'package:tinh_tien/app/widgets/app_button.dart';
@@ -7,14 +8,15 @@ import 'package:tinh_tien/app/widgets/app_tabview.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
 class PeopleTab extends StatelessWidget {
-  final SlidableController slidableController = SlidableController();
+  final Activity activity;
+
+  const PeopleTab({Key key, this.activity}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final list = List.generate(
-      10,
-          (index) => _peopleItem(context, index),
-    );
+    final people = activity.people
+        .map((person) => _peopleItem(context, person.id))
+        .toList();
 
     return AppTabView(
       title: 'People',
@@ -41,19 +43,22 @@ class PeopleTab extends StatelessWidget {
                 child: Card(
                   elevation: 10.0,
                   child: ListView.separated(
-                      itemBuilder: (_, index) => list[index],
+                      itemBuilder: (_, index) => people[index],
                       separatorBuilder: (_, __) =>
                           SizedBox(
                             height: Dimens.XSMALL_PADDING,
                           ),
-                      itemCount: list.length),
+                      itemCount: people.length),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(Dimens.SMALL_PADDING),
-                child: AppButton(text: 'Share', onPressed: () {
-                  Navigator.pushNamed(context, SHARE_PAGE);
-                }),
+                child: AppButton(
+                    text: 'Share',
+                    onPressed: () {
+                      Navigator.pushNamed(context, SHARE_PAGE,
+                          arguments: activity);
+                    }),
               ),
             ],
           ),
@@ -62,9 +67,11 @@ class PeopleTab extends StatelessWidget {
     );
   }
 
-  Widget _peopleItem(BuildContext context, int index) {
+  Widget _peopleItem(BuildContext context, String id) {
+    final SlidableController slidableController = SlidableController();
+
     return Slidable(
-      key: Key('$index'),
+      key: Key(id),
       controller: slidableController,
       dismissal: defaultDismissal(
           context, 'People will be delete', 'People is deleted.'),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/pages/home_page/outstanding_tab.dart';
 import 'package:tinh_tien/app/widgets/app_scaffold.dart';
 
@@ -12,13 +13,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final tabs = <Widget>[
-    PeopleTab(),
-    ExpenseTab(),
-    BalanceTab(),
-    OutstandingTab(),
-  ];
-
   void _onTapNavigationItem(int index) {
     setState(() {
       _currentIndex = index;
@@ -26,6 +20,32 @@ class _HomePageState extends State<HomePage> {
   }
 
   int _currentIndex = 0;
+  Activity _activity;
+  final _tabs = [];
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _activity = ModalRoute
+        .of(context)
+        .settings
+        .arguments as Activity;
+    _tabs.clear();
+    _tabs.addAll([
+      PeopleTab(
+        activity: _activity,
+      ),
+      ExpenseTab(
+        activity: _activity,
+      ),
+      BalanceTab(
+        activity: _activity,
+      ),
+      OutstandingTab(
+        activity: _activity,
+      ),
+    ]);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +58,7 @@ class _HomePageState extends State<HomePage> {
           ],
         )
       ],
-      body: tabs[_currentIndex],
+      body: _tabs[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _onTapNavigationItem,
@@ -60,8 +80,9 @@ class _HomePageState extends State<HomePage> {
         color: Colors.white,
         alignment: Alignment.center,
         child: Text(
-          "Activity's name",
-          style: Theme.of(context)
+          _activity.name,
+          style: Theme
+              .of(context)
               .textTheme
               .title,
         ),

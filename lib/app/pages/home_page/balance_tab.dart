@@ -2,18 +2,17 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:random_color/random_color.dart';
+import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/common/colors.dart';
 
 class BalanceTab extends StatelessWidget {
-  final _randomColor = RandomColor();
-  final list = List.generate(
-      10,
-      (index) => Card(
-            child: Text('$index'),
-          ));
+  final Activity activity;
+
+  const BalanceTab({Key key, @required this.activity}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final _randomColor = RandomColor();
     return Container(
       child: CustomScrollView(
         slivers: <Widget>[
@@ -32,13 +31,13 @@ class BalanceTab extends StatelessWidget {
                   Text(
                     'Total: 0.00',
                     style: Theme.of(context).textTheme.subtitle.apply(
-                          color: AppColors.WHITE_TEXT,
-                        ),
+                      color: AppColors.WHITE_TEXT,
+                    ),
                   ),
                   Text('Average: 0.00',
                       style: Theme.of(context).textTheme.subtitle.apply(
-                            color: AppColors.WHITE_TEXT,
-                          )),
+                        color: AppColors.WHITE_TEXT,
+                      )),
                 ],
               )
             ],
@@ -74,9 +73,9 @@ class BalanceTab extends StatelessWidget {
               ),
             ),
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate((_, index) => list[9]),
-          ),
+//          SliverList(
+//            delegate: SliverChildBuilderDelegate((_, index) => activ),
+//          ),
         ],
       ),
     );
