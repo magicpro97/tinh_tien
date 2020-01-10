@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tinh_tien/app/pages/home_page/outstanding_tab.dart';
 import 'package:tinh_tien/app/widgets/app_scaffold.dart';
 
 import 'balance_tab.dart';
@@ -15,7 +16,7 @@ class _HomePageState extends State<HomePage> {
     PeopleTab(),
     ExpenseTab(),
     BalanceTab(),
-    PeopleTab(),
+    OutstandingTab(),
   ];
 
   void _onTapNavigationItem(int index) {
