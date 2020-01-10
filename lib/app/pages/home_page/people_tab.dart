@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:tinh_tien/app/route.dart';
 import 'package:tinh_tien/app/widgets/action_item.dart';
 import 'package:tinh_tien/app/widgets/app_button.dart';
 import 'package:tinh_tien/app/widgets/app_tabview.dart';
@@ -50,7 +51,9 @@ class PeopleTab extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(Dimens.SMALL_PADDING),
-                child: AppButton(text: 'Send a invite', onPressed: () {}),
+                child: AppButton(text: 'Share', onPressed: () {
+                  Navigator.pushNamed(context, SHARE_PAGE);
+                }),
               ),
             ],
           ),
