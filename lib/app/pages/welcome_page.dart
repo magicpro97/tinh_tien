@@ -78,120 +78,110 @@ class _WelcomePageState extends State<WelcomePage>
       body: SafeArea(
         child: SingleChildScrollView(
           padding:
-          const EdgeInsets.symmetric(horizontal: Dimens.NORMAL_PADDING),
+              const EdgeInsets.symmetric(horizontal: Dimens.NORMAL_PADDING),
           child: BlocListener(
             bloc: _welcomeBloc,
             listener: (_, state) {
               if (state is CreateActivitySuccess) {
-                Navigator.pushNamed(context, HOME_PAGE,
+                Navigator.pushReplacementNamed(context, HOME_PAGE,
                     arguments: state.activity);
               }
             },
             child: BlocBuilder<WelcomeBloc, WelcomeState>(
               bloc: _welcomeBloc,
-              builder: (context, state) =>
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: Dimens.NORMAL_PADDING),
-                        child: AnimatedSize(
-                          child: AppLogo(
-                            height: _logoSize,
-                            width: _logoSize,
-                          ),
-                          vsync: this,
-                          duration: Duration(seconds: 1),
-                        ),
+              builder: (context, state) => Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: Dimens.NORMAL_PADDING),
+                    child: AnimatedSize(
+                      child: AppLogo(
+                        height: _logoSize,
+                        width: _logoSize,
                       ),
-                      Text(
-                        'Tinh Tien',
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .display1
-                            .apply(
+                      vsync: this,
+                      duration: Duration(seconds: 1),
+                    ),
+                  ),
+                  Text(
+                    'Tinh Tien',
+                    style: Theme.of(context).textTheme.display1.apply(
                           color: AppColors.MAIN_COLOR,
                         ),
-                      ),
-                      AnimatedSize(
-                        child: Text(
-                          'Manage team expenses',
-                          style: Theme
-                              .of(context)
-                              .textTheme
-                              .headline
-                              .copyWith(
+                  ),
+                  AnimatedSize(
+                    child: Text(
+                      'Manage team expenses',
+                      style: Theme.of(context).textTheme.headline.copyWith(
                             fontSize: _sloganFontSize,
                             color: Color(0xffFFCA40),
                           ),
-                        ),
-                        duration: _opacityDuration,
-                        vsync: this,
-                      ),
-                      SizedBox(
-                        height: Dimens.LARGE_PADDING,
-                      ),
-                      ScaleTransition(
-                        child: TextField(
-                          focusNode: _nameFieldFocus,
-                          controller: _activityNameController,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: "Your activity's name",
-                            errorText:
-                            state is CreateActivityFail ? state.message : null,
-                          ),
-                          onSubmitted: (value) {
-                            submitActivity(state, value);
-                          },
-                        ),
-                        scale: _scaleAnimation,
-                      ),
-                      SizedBox(
-                        height: Dimens.LARGE_PADDING,
-                      ),
-                      state is CreateActivityLoading
-                          ? CircularProgressIndicator()
-                          : Container(),
-                      AnimatedOpacity(
-                        child: MaterialButton(
-                          onPressed: () {
-                            if (!(state is CreateActivityLoading)) {
-                              submitActivity(
-                                  state, _activityNameController.text);
-                            }
-                          },
-                          child: Text(
-                            'CREATE YOUR ACTIVITY',
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                          color: Colors.blue,
-                        ),
-                        opacity: _createButtonOpacity,
-                        duration: _opacityDuration,
-                      ),
-                      AnimatedOpacity(
-                        child: FlatButton(
-                          onPressed: () {
-                            if (!(state is CreateActivityLoading)) {
-                              Navigator.pushNamed(
-                                  context, ALREADY_HAVE_ACTIVITY_PAGE);
-                            }
-                          },
-                          child: Text(
-                            'I ALREADY HAVE ACTIVITY',
-                            style: TextStyle(color: AppColors.MAIN_COLOR),
-                          ),
-                        ),
-                        duration: _opacityDuration,
-                        opacity: _alreadyHaveButtonOpacity,
-                      ),
-                    ],
+                    ),
+                    duration: _opacityDuration,
+                    vsync: this,
                   ),
+                  SizedBox(
+                    height: Dimens.LARGE_PADDING,
+                  ),
+                  ScaleTransition(
+                    child: TextField(
+                      focusNode: _nameFieldFocus,
+                      controller: _activityNameController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: "Your activity's name",
+                        errorText:
+                            state is CreateActivityFail ? state.message : null,
+                      ),
+                      onSubmitted: (value) {
+                        submitActivity(state, value);
+                      },
+                    ),
+                    scale: _scaleAnimation,
+                  ),
+                  SizedBox(
+                    height: Dimens.LARGE_PADDING,
+                  ),
+                  state is CreateActivityLoading
+                      ? CircularProgressIndicator()
+                      : Container(),
+                  AnimatedOpacity(
+                    child: MaterialButton(
+                      onPressed: () {
+                        if (!(state is CreateActivityLoading)) {
+                          submitActivity(state, _activityNameController.text);
+                        }
+                      },
+                      child: Text(
+                        'CREATE YOUR ACTIVITY',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      color: Colors.blue,
+                    ),
+                    opacity: _createButtonOpacity,
+                    duration: _opacityDuration,
+                  ),
+                  AnimatedOpacity(
+                    child: FlatButton(
+                      onPressed: () {
+                        if (!(state is CreateActivityLoading)) {
+                          Navigator.pushNamed(
+                              context, ALREADY_HAVE_ACTIVITY_PAGE);
+                        }
+                      },
+                      child: Text(
+                        'I ALREADY HAVE ACTIVITY',
+                        style: TextStyle(color: AppColors.MAIN_COLOR),
+                      ),
+                    ),
+                    duration: _opacityDuration,
+                    opacity: _alreadyHaveButtonOpacity,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
