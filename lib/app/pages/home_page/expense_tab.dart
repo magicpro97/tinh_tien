@@ -1,13 +1,12 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:timeline_list/timeline.dart';
 import 'package:timeline_list/timeline_model.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/route.dart';
-import 'package:tinh_tien/app/widgets/action_item.dart';
 import 'package:tinh_tien/app/widgets/app_tabview.dart';
-import 'package:tinh_tien/common/colors.dart';
+import 'package:tinh_tien/app/widgets/expense_item.dart';
+import 'package:tinh_tien/app/widgets/timeline_expense_body_item.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
 class ExpenseTab extends StatelessWidget {
@@ -17,58 +16,29 @@ class ExpenseTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showIndexes = const [1, 2, 3];
-    final expenses = activity.expenses;
-    final expensesItems =
-    expenses.map((expense) => _buildExpenseItem(context)).toList();
-    final expenseTimelines = <TimelineModel>[];
-    var tempCreatedDate = DateTime.now();
-    expenses.forEach((expense) {
-      if (expense.createdAt.millisecond != tempCreatedDate.millisecond) {
-        expenseTimelines.add(TimelineModel(
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Card(
-              elevation: 10.0,
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Text(
-                      '1-1-2020',
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .title,
-                    ),
-                  ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemBuilder: (_, index) => expensesItems[index],
-                    itemCount: expenses.length,
-                    physics: NeverScrollableScrollPhysics(),
-                  ),
-                ],
+    final showIndexes = activity.expenses.fold<List<int>>(
+        [], (previous, expense) => previous..add(previous.last + 1));
+    final expenseTimelines = activity.expenseADay
+        .map((activityExpense) => TimelineModel(
+              TimeLineExpenseBodyItem(
+                title: activityExpense.createdAt.toIso8601String(),
+                expenseItems:
+                    activityExpense.expenses.map((expense) => ExpenseItem(
+                          expense: expense,
+                        )),
               ),
-            ),
-          ),
-          //icon: Icon(Icons.ac_unit),
-          iconBackground: AppColors.MAIN_COLOR,
-        ));
-        tempCreatedDate = expense.createdAt;
-      }
-    });
+            ))
+        .toList();
     final lineBarsData = [
       LineChartBarData(
         showingIndicators: showIndexes,
         isCurved: true,
         spots: [
           FlSpot(0, 0),
-          FlSpot(10, 20),
-          FlSpot(30, 30),
-          FlSpot(50, 10),
+          ...activity.expenseADay
+              .asMap()
+              .entries
+              .map((entry) => FlSpot(entry.key.toDouble(), entry.value.total)),
         ],
         barWidth: 4.0,
         belowBarData: BarAreaData(
@@ -92,7 +62,8 @@ class ExpenseTab extends StatelessWidget {
               SliverAppBar(
                 expandedHeight: 250,
                 automaticallyImplyLeading: false,
-                flexibleSpace: _buildExpenseChart(tooltipsOnBar, lineBarsData),
+                flexibleSpace: _buildExpenseChart(
+                    tooltipsOnBar, lineBarsData, showIndexes),
               ),
               SliverAppBar(
                 title: Text('Expenses'),
@@ -122,9 +93,8 @@ class ExpenseTab extends StatelessWidget {
     );
   }
 
-  Widget _buildExpenseChart(
-      LineChartBarData tooltipsOnBar, List<LineChartBarData> lineBarsData) {
-    final showIndexes = const [1, 2, 3];
+  Widget _buildExpenseChart(LineChartBarData tooltipsOnBar,
+      List<LineChartBarData> lineBarsData, List<int> showIndexes) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(
@@ -135,112 +105,63 @@ class ExpenseTab extends StatelessWidget {
       ),
       child: Card(
         elevation: 10.0,
-        child: LineChart(LineChartData(
-            showingTooltipIndicators: showIndexes.map((index) {
-              return MapEntry(
-                index,
-                [
-                  LineBarSpot(
-                      tooltipsOnBar,
-                      lineBarsData.indexOf(tooltipsOnBar),
-                      tooltipsOnBar.spots[index]),
-                ],
-              );
-            }).toList(),
-            lineTouchData: LineTouchData(
-                enabled: false,
-                touchTooltipData: LineTouchTooltipData(
-                    tooltipBgColor: Colors.orange,
-                    tooltipRoundedRadius: 8,
-                    getTooltipItems: (List<LineBarSpot> lineBarsSpot) {
-                      return lineBarsSpot.map((lineBarSpot) {
-                        return LineTooltipItem(
-                          lineBarSpot.y.toString(),
-                          TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                        );
-                      }).toList();
-                    })),
-            lineBarsData: lineBarsData,
-            minX: 0,
-            minY: 0,
-            maxY: 40,
-            maxX: 56,
-            gridData: const FlGridData(show: false),
-            borderData: FlBorderData(border: Border()),
-            titlesData: FlTitlesData(
-              leftTitles: const SideTitles(
-                showTitles: false,
+        child: activity.expenseADay.isNotEmpty
+            ? _buildChart(showIndexes, tooltipsOnBar, lineBarsData)
+            : Center(
+                child: Text('Nothing to show'),
               ),
-              bottomTitles: SideTitles(
-                showTitles: true,
-                getTitles: (value) {
-                  switch (value.toInt()) {
-                    case 0:
-                      return '1/1';
-                    case 10:
-                      return '2/1';
-                    case 30:
-                      return '3/1';
-                    case 50:
-                      return '4/1';
-                  }
-                  return '';
-                },
-              ),
-            ),
-            axisTitleData: FlAxisTitleData(
-              leftTitle: const AxisTitle(showTitle: true, titleText: 'Money'),
-              bottomTitle: const AxisTitle(showTitle: true, titleText: 'Date'),
-            ))),
       ),
     );
   }
 
-  Widget _buildExpenseItem(BuildContext context) {
-    return Slidable(
-      key: Key('aa'),
-      child: ListTile(
-        title: Row(
-          children: <Widget>[
-            Text(
-              'dđ ',
-              style: TextStyle(color: Colors.red),
-            ),
-            Text('paid '),
-            Text(
-              '423,423 ',
-              style: TextStyle(color: Colors.blueAccent),
-            ),
-            Text('for '),
-            Text(
-              'gghg.',
-              style: TextStyle(color: Colors.green),
-            ),
-            Expanded(
-              child: Container(),
-            ),
-          ],
+  Widget _buildChart(List<int> showIndexes, LineChartBarData tooltipsOnBar,
+      List<LineChartBarData> lineBarsData) {
+    return LineChart(LineChartData(
+        showingTooltipIndicators: showIndexes.map((index) {
+          return MapEntry(
+            index,
+            [
+              LineBarSpot(tooltipsOnBar, lineBarsData.indexOf(tooltipsOnBar),
+                  tooltipsOnBar.spots[index]),
+            ],
+          );
+        }).toList(),
+        lineTouchData: LineTouchData(
+            enabled: false,
+            touchTooltipData: LineTouchTooltipData(
+                tooltipBgColor: Colors.orange,
+                tooltipRoundedRadius: 8,
+                getTooltipItems: (List<LineBarSpot> lineBarsSpot) {
+                  return lineBarsSpot.map((lineBarSpot) {
+                    return LineTooltipItem(
+                      lineBarSpot.y.toString(),
+                      TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    );
+                  }).toList();
+                })),
+        lineBarsData: lineBarsData,
+        minX: 0,
+        minY: 0,
+        maxY: activity.maxExpenseADay,
+        maxX: activity.expenseADay.length.toDouble(),
+        gridData: const FlGridData(show: false),
+        borderData: FlBorderData(border: Border()),
+        titlesData: FlTitlesData(
+          leftTitles: const SideTitles(
+            showTitles: false,
+          ),
+          bottomTitles: SideTitles(
+            showTitles: true,
+            getTitles: (value) => activity.expenseADay
+                .firstWhere((expense) => expense.total == value)
+                .createdAt
+                .toIso8601String(),
+          ),
         ),
-        subtitle: Text('at 10:00'),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Icon(
-              Icons.lens,
-              size: 16.0,
-            ),
-            Text('pending'),
-          ],
-        ),
-      ),
-      actionPane: SlidableDrawerActionPane(),
-      secondaryActions: defaultActionItems,
-      dismissal: defaultDismissal(
-        context,
-        'Expense will be deteled',
-        'Expense is deleted',
-      ),
-    );
+        axisTitleData: FlAxisTitleData(
+          leftTitle: const AxisTitle(showTitle: true, titleText: 'Money'),
+          bottomTitle: const AxisTitle(showTitle: true, titleText: 'Date'),
+        )));
   }
 }
