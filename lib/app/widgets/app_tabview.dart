@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tinh_tien/common/colors.dart';
-import 'package:tinh_tien/common/dimens.dart';
 
 class AppTabView extends StatelessWidget {
   final String title;
