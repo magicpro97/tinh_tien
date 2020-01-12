@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:random_color/random_color.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
+import 'package:tinh_tien/app/widgets/empty_list.dart';
 import 'package:tinh_tien/common/colors.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
@@ -80,10 +81,13 @@ class BalanceTab extends StatelessWidget {
                 ],
               )
             ],
-          )
+          ),
 //          SliverList(
 //            delegate: SliverChildBuilderDelegate((_, index) => activ),
 //          ),
+          SliverFillRemaining(
+            child: EmptyList(),
+          )
         ],
       ),
     );

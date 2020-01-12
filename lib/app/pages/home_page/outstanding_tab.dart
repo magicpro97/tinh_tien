@@ -3,6 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/widgets/action_item.dart';
 import 'package:tinh_tien/app/widgets/app_tabview.dart';
+import 'package:tinh_tien/app/widgets/empty_list.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
 class OutstandingTab extends StatelessWidget {
@@ -34,12 +35,7 @@ class OutstandingTab extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: Card(
-                  elevation: 10.0,
-                  child: Center(
-                    child: Text('Noting to show'),
-                  ),
-                ),
+                child: EmptyList(),
               ),
             ],
           ),
