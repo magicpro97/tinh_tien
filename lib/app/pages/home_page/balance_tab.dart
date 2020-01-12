@@ -23,6 +23,7 @@ class BalanceTab extends StatelessWidget {
             snap: true,
             pinned: true,
             title: Text('Balance'),
+            centerTitle: false,
             actions: <Widget>[
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -31,13 +32,13 @@ class BalanceTab extends StatelessWidget {
                   Text(
                     'Total: 0.00',
                     style: Theme.of(context).textTheme.subtitle.apply(
-                      color: AppColors.WHITE_TEXT,
-                    ),
+                          color: AppColors.WHITE_TEXT,
+                        ),
                   ),
                   Text('Average: 0.00',
                       style: Theme.of(context).textTheme.subtitle.apply(
-                        color: AppColors.WHITE_TEXT,
-                      )),
+                            color: AppColors.WHITE_TEXT,
+                          )),
                 ],
               )
             ],
