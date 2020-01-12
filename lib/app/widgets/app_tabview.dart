@@ -18,20 +18,10 @@ class AppTabView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-         title != null ? Padding(
-            padding: const EdgeInsets.all(Dimens.NORMAL_PADDING),
-            child: Text(
-              title,
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .title
-                  .apply(
-                color: AppColors.MAIN_COLOR,
-                decoration: TextDecoration.underline,
-              ),
-            ),
-          ) : Container(),
+         title != null ? AppBar(
+          title: Text(title),
+          centerTitle: false,
+         ) : Container(),
           body,
         ],
       ),
