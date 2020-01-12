@@ -24,22 +24,22 @@ class OutstandingTab extends StatelessWidget {
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-//              Expanded(
-//                child: Card(
-//                  elevation: 10.0,
-//                  child: ListView.separated(
-//                      itemBuilder: (_, index) => list[index],
-//                      separatorBuilder: (_, __) => SizedBox(
-//                            height: Dimens.XSMALL_PADDING,
-//                          ),
-//                      itemCount: list.length),
-//                ),
-//              ),
-              Padding(
-                child: Text('Total transaction'),
-                padding: const EdgeInsets.all(Dimens.NORMAL_PADDING),
+              Card(
+                elevation: 10.0,
+                child: Padding(
+                  child: Text('Total transaction: '),
+                  padding: const EdgeInsets.all(Dimens.NORMAL_PADDING),
+                ),
+              ),
+              Expanded(
+                child: Card(
+                  elevation: 10.0,
+                  child: Center(
+                    child: Text('Noting to show'),
+                  ),
+                ),
               ),
             ],
           ),
@@ -47,6 +47,13 @@ class OutstandingTab extends StatelessWidget {
       ),
     );
   }
+
+  // activity.expenses.isNotEmpty ? ListView.separated(
+  //                    itemBuilder: (_, index) => list[index],
+  //                    separatorBuilder: (_, __) => SizedBox(
+  //                          height: Dimens.XSMALL_PADDING,
+  //                        ),
+  //                    itemCount: list.length) :
 
   Widget _peopleItem(BuildContext context, int index) {
     final SlidableController slidableController = SlidableController();
