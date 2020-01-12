@@ -73,12 +73,22 @@ class ExpenseTab extends StatelessWidget {
               ),
               SliverFillRemaining(
                 hasScrollBody: false,
-                child: Timeline(
-                  children: expenseTimelines,
-                  position: TimelinePosition.Left,
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                ),
+                child: activity.expenses.isNotEmpty
+                    ? Timeline(
+                        children: expenseTimelines,
+                        position: TimelinePosition.Left,
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.all(Dimens.NORMAL_PADDING),
+                        child: Card(
+                          elevation: 10.0,
+                          child: Center(
+                            child: Text('Nothing to show'),
+                          ),
+                        ),
+                      ),
               ),
             ],
           ),
