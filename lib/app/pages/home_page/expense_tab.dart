@@ -94,7 +94,7 @@ class ExpenseTab extends StatelessWidget {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              Navigator.pushNamed(context, EXPENSE_PAGE);
+              Navigator.pushNamed(context, EXPENSE_PAGE, arguments: activity);
             },
             child: Icon(Icons.add),
           ),
