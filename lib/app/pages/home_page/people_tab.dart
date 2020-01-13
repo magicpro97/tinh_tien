@@ -5,6 +5,7 @@ import 'package:tinh_tien/app/route.dart';
 import 'package:tinh_tien/app/widgets/action_item.dart';
 import 'package:tinh_tien/app/widgets/app_button.dart';
 import 'package:tinh_tien/app/widgets/app_tabview.dart';
+import 'package:tinh_tien/app/widgets/empty_list.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
 class PeopleTab extends StatelessWidget {
@@ -42,13 +43,13 @@ class PeopleTab extends StatelessWidget {
               Expanded(
                 child: Card(
                   elevation: 10.0,
-                  child: ListView.separated(
+                  child: activity.people.isNotEmpty ? ListView.separated(
                       itemBuilder: (_, index) => people[index],
                       separatorBuilder: (_, __) =>
                           SizedBox(
                             height: Dimens.XSMALL_PADDING,
                           ),
-                      itemCount: people.length),
+                      itemCount: people.length) : EmptyList(),
                 ),
               ),
               Padding(

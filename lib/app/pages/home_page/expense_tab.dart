@@ -5,6 +5,7 @@ import 'package:timeline_list/timeline_model.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/route.dart';
 import 'package:tinh_tien/app/widgets/app_tabview.dart';
+import 'package:tinh_tien/app/widgets/empty_list.dart';
 import 'package:tinh_tien/app/widgets/expense_item.dart';
 import 'package:tinh_tien/app/widgets/timeline_expense_body_item.dart';
 import 'package:tinh_tien/common/dimens.dart';
@@ -73,22 +74,12 @@ class ExpenseTab extends StatelessWidget {
               ),
               SliverFillRemaining(
                 hasScrollBody: false,
-                child: activity.expenses.isNotEmpty
-                    ? Timeline(
-                        children: expenseTimelines,
-                        position: TimelinePosition.Left,
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.all(Dimens.NORMAL_PADDING),
-                        child: Card(
-                          elevation: 10.0,
-                          child: Center(
-                            child: Text('Nothing to show'),
-                          ),
-                        ),
-                      ),
+                child: activity.expenses.isNotEmpty ? Timeline(
+                  children: expenseTimelines,
+                  position: TimelinePosition.Left,
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                ) : EmptyList(),
               ),
             ],
           ),
@@ -117,9 +108,7 @@ class ExpenseTab extends StatelessWidget {
         elevation: 10.0,
         child: activity.expenseADay.isNotEmpty
             ? _buildChart(showIndexes, tooltipsOnBar, lineBarsData)
-            : Center(
-                child: Text('Nothing to show'),
-              ),
+            : EmptyList()
       ),
     );
   }
