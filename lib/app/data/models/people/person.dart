@@ -6,13 +6,22 @@ part 'person.g.dart';
 
 @JsonSerializable()
 class Person extends Base {
-  @JsonKey(required: true)
+  @JsonKey(name: '_id')
+  final String id;
+
+  @JsonKey(name: 'created_at')
+  final DateTime createdAt;
+
+  @JsonKey(name: 'updated_at')
+  final DateTime updatedAt;
+
+  @JsonKey()
   final String name;
 
   Person({
-    @JsonKey(name: '_id') String id,
-    @JsonKey(name: 'created_at') DateTime createdAt,
-    @JsonKey(name: 'updated_at') DateTime updatedAt,
+    this.id,
+    this.createdAt,
+    this.updatedAt,
     this.name,
   }) : super(id, createdAt, updatedAt);
 

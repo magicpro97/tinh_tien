@@ -9,13 +9,13 @@ part of 'expense.dart';
 Expense _$ExpenseFromJson(Map<String, dynamic> json) {
   $checkKeys(json, requiredKeys: const ['amount']);
   return Expense(
-    id: json['id'] as String,
-    createdAt: json['createdAt'] == null
+    id: json['_id'] as String,
+    createdAt: json['created_at'] == null
         ? null
-        : DateTime.parse(json['createdAt'] as String),
-    updatedAt: json['updatedAt'] == null
+        : DateTime.parse(json['created_at'] as String),
+    updatedAt: json['updated_at'] == null
         ? null
-        : DateTime.parse(json['updatedAt'] as String),
+        : DateTime.parse(json['updated_at'] as String),
     amount: (json['amount'] as num)?.toDouble(),
     people: (json['people'] as List)
             ?.map((e) =>
@@ -31,9 +31,9 @@ Expense _$ExpenseFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$ExpenseToJson(Expense instance) => <String, dynamic>{
-  'id': instance.id,
-  'createdAt': instance.createdAt?.toIso8601String(),
-  'updatedAt': instance.updatedAt?.toIso8601String(),
+  '_id': instance.id,
+  'created_at': instance.createdAt?.toIso8601String(),
+  'updated_at': instance.updatedAt?.toIso8601String(),
       'amount': instance.amount,
       'people': instance.people,
   'paid_by': instance.paidBy,

@@ -1,3 +1,3 @@
 class UnknownException implements Exception {
-  String get message => '';
+  String get message => 'Unknown error';
 }

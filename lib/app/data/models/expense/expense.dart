@@ -7,6 +7,13 @@ part 'expense.g.dart';
 
 @JsonSerializable()
 class Expense extends Base {
+  @JsonKey(name: '_id')
+  final String id;
+  @JsonKey(name: 'created_at')
+  final DateTime createdAt;
+  @JsonKey(name: 'updated_at')
+  final DateTime updatedAt;
+
   @JsonKey(required: true)
   final double amount;
 
@@ -17,9 +24,9 @@ class Expense extends Base {
   final List<Person> paidBy;
 
   Expense({
-    @JsonKey(name: '_id') String id,
-    @JsonKey(name: 'created_at') DateTime createdAt,
-    @JsonKey(name: 'updated_at') DateTime updatedAt,
+    this.id,
+    this.createdAt,
+    this.updatedAt,
     this.amount,
     this.people,
     this.paidBy,
