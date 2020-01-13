@@ -8,10 +8,11 @@ class PeopleDatasouce {
   Future<Either<ErrorResponse, Person>> createPeople(
       String activityId, String name) async {
     try {
-      final response = await dio.post('$ACTIVITIES/$activityId/people');
+      final response = await dio.post(
+          '$ACTIVITIES/$activityId/people', data: {"name": name});
       return Right(Person.fromJson(response.data));
     } on DioError catch (e) {
-      return Left(ErrorResponse(e.message));
+      return Left(ErrorResponse.fromJson(e.response.data));
     }
   }
 }
