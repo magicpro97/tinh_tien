@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:tinh_tien/app/data/models/activity/activity.dart';
+import 'package:tinh_tien/app/data/models/people/person.dart';
 import 'package:tinh_tien/app/widgets/app_chip.dart';
 import 'package:tinh_tien/app/widgets/app_scaffold.dart';
 import 'package:tinh_tien/app/widgets/chip_list.dart';
@@ -14,16 +16,27 @@ class ExpensePage extends StatefulWidget {
 }
 
 class _ExpensePageState extends State<ExpensePage> {
-  final chips = [
-    AppChip(
-      label: '1cxzcxzcxczxz',
-      onChanged: (value) {},
-    ),
-    AppChip(
-      label: '1cxzcxzcxczxz',
-      onChanged: (value) {},
-    ),
-  ];
+  Activity activity;
+  List<AppChip> peopleItemList;
+
+  @override
+  void didChangeDependencies() {
+    activity = activity ?? ModalRoute.of(context).settings.arguments;
+    activity.people
+        .addAll([Person(name: 'tri dep  trai'), Person(name: 'tri dep  trai 1')]);
+    peopleItemList = activity.people
+        .map((person) => AppChip(
+              label: person.name,
+            ))
+        .toList();
+    super.didChangeDependencies();
+  }
+
+  // @override
+  // void initState() {
+
+  //   super.initState();
+  // }
 
   DateTime selectedTime = DateTime.now();
 
@@ -37,7 +50,7 @@ class _ExpensePageState extends State<ExpensePage> {
           children: <Widget>[
             Text('Paid by:'),
             ChipList(
-              chips: chips,
+              chips: peopleItemList,
             ),
             SizedBox(
               height: Dimens.NORMAL_PADDING,
@@ -63,7 +76,7 @@ class _ExpensePageState extends State<ExpensePage> {
             ),
             Text('Participants:'),
             ChipList(
-              chips: chips,
+              chips: peopleItemList,
             ),
             SizedBox(
               height: Dimens.NORMAL_PADDING,
@@ -82,12 +95,16 @@ class _ExpensePageState extends State<ExpensePage> {
                 color: Colors.grey[200],
                 padding: const EdgeInsets.all(Dimens.NORMAL_PADDING),
                 child: Row(children: <Widget>[
-                  Icon(Icons.date_range, color: AppColors.MAIN_COLOR,),
-                  SizedBox(width: Dimens.NORMAL_PADDING,),
+                  Icon(
+                    Icons.date_range,
+                    color: AppColors.MAIN_COLOR,
+                  ),
+                  SizedBox(
+                    width: Dimens.NORMAL_PADDING,
+                  ),
                   Text(
                     '$selectedTime',
                   )
-              
                 ]),
               ),
             ),
