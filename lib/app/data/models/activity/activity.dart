@@ -11,6 +11,15 @@ part 'activity.g.dart';
 
 @JsonSerializable()
 class Activity extends Base {
+  @JsonKey(name: '_id')
+  final String id;
+
+  @JsonKey(name: 'created_at')
+  final DateTime createdAt;
+
+  @JsonKey(name: 'updated_at')
+  final DateTime updatedAt;
+
   final String name;
 
   final List<Person> people;
@@ -18,9 +27,9 @@ class Activity extends Base {
   final List<Expense> expenses;
 
   Activity({
-    @JsonKey(name: '_id') String id,
-    @JsonKey(name: 'created_at') DateTime createdAt,
-    @JsonKey(name: 'updated_at') DateTime updatedAt,
+    this.id,
+    this.createdAt,
+    this.updatedAt,
     this.name,
     this.people,
     this.expenses,
@@ -36,7 +45,7 @@ class Activity extends Base {
         if (previous.isNotEmpty) {
           final lastExpense = previous.last;
           final isSameDay =
-              DateUtils.isTheSameDate(lastExpense.createdAt, expense.createdAt);
+          DateUtils.isTheSameDate(lastExpense.createdAt, expense.createdAt);
           if (isSameDay) {
             previous.last.expenses.add(expense);
           } else {
@@ -51,9 +60,9 @@ class Activity extends Base {
       });
 
   double get maxExpenseADay => expenseADay.fold(0, (previous, expense) {
-        previous = max(previous, expense.total);
-        return previous;
-      });
+    previous = max(previous, expense.total);
+    return previous;
+  });
 }
 
 class ActivityExpenseInDay {

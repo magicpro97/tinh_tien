@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:tinh_tien/app/data/repositories/activity_repository.dart';
 import 'package:tinh_tien/app/network/no_network_connection_exception.dart';
+import 'package:tinh_tien/core/errors/exceptions/unknown_exception.dart';
 
 import './bloc.dart';
 
@@ -34,9 +35,9 @@ class WelcomeBloc extends Bloc<WelcomeEvent, WelcomeState> {
         }
       } catch (e) {
         if (e is NoNetworkConnection) {
-          yield CreateActivityFail('Please connect to internet and try again.');
+          yield CreateActivityFail(e.message);
         } else {
-          yield CreateActivityFail('Unknown error.');
+          yield CreateActivityFail((e as UnknownException).message);
         }
       }
     }

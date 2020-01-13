@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tinh_tien/app/blocs/home/bloc.dart';
 import 'package:tinh_tien/app/blocs/welcome/welcome_bloc.dart';
 import 'package:tinh_tien/app/route.dart';
 
@@ -11,6 +12,9 @@ class App extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<WelcomeBloc>(
+          create: (_) => sl(),
+        ),
+        BlocProvider<HomeBloc>(
           create: (_) => sl(),
         ),
       ],

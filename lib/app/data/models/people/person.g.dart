@@ -7,22 +7,21 @@ part of 'person.dart';
 // **************************************************************************
 
 Person _$PersonFromJson(Map<String, dynamic> json) {
-  $checkKeys(json, requiredKeys: const ['name']);
   return Person(
-    id: json['id'] as String,
-    createdAt: json['createdAt'] == null
+    id: json['_id'] as String,
+    createdAt: json['created_at'] == null
         ? null
-        : DateTime.parse(json['createdAt'] as String),
-    updatedAt: json['updatedAt'] == null
+        : DateTime.parse(json['created_at'] as String),
+    updatedAt: json['updated_at'] == null
         ? null
-        : DateTime.parse(json['updatedAt'] as String),
+        : DateTime.parse(json['updated_at'] as String),
     name: json['name'] as String,
   );
 }
 
 Map<String, dynamic> _$PersonToJson(Person instance) => <String, dynamic>{
-  'id': instance.id,
-  'createdAt': instance.createdAt?.toIso8601String(),
-  'updatedAt': instance.updatedAt?.toIso8601String(),
+  '_id': instance.id,
+  'created_at': instance.createdAt?.toIso8601String(),
+  'updated_at': instance.updatedAt?.toIso8601String(),
       'name': instance.name,
     };

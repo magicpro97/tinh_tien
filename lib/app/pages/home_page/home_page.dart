@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tinh_tien/app/blocs/home/bloc.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/pages/home_page/outstanding_tab.dart';
 import 'package:tinh_tien/app/widgets/app_scaffold.dart';
@@ -22,6 +24,19 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   Activity _activity;
   final _tabs = [];
+  HomeBloc _homeBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _homeBloc = BlocProvider.of<HomeBloc>(context);
+  }
+
+  @override
+  void dispose() {
+    _homeBloc.close();
+    super.dispose();
+  }
 
   @override
   void didChangeDependencies() {
