@@ -25,6 +25,7 @@ dependencies:
   fl_chart: ^0.6.3
   timeline_list: ^0.0.5
   random_color: ^1.0.3
+  flash: "^1.1.0"
 
 dev_dependencies:
   flutter_test:
