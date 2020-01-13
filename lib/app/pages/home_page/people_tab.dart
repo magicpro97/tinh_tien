@@ -41,7 +41,7 @@ class _PeopleTabState extends State<PeopleTab> {
   @override
   Widget build(BuildContext context) {
     final people = widget.activity.people
-        .map((person) => _peopleItem(context, person.id))
+        .map((person) => _peopleItem(context, person))
         .toList();
 
     return AppTabView(
@@ -66,6 +66,7 @@ class _PeopleTabState extends State<PeopleTab> {
                       padding:
                           const EdgeInsets.only(left: Dimens.NORMAL_PADDING),
                       child: TextField(
+                        controller: _peopleNameController,
                         minLines: 1,
                         decoration: InputDecoration(
                           hintText: 'Enter name...',
@@ -90,16 +91,18 @@ class _PeopleTabState extends State<PeopleTab> {
                     ),
                   ),
                   Expanded(
-                    child: Card(
+                    child: widget.activity.people.isNotEmpty
+                        ? Card(
                       elevation: 10.0,
-                      child: widget.activity.people.isNotEmpty ? ListView.separated(
+                      child: ListView.separated(
                           itemBuilder: (_, index) => people[index],
                           separatorBuilder: (_, __) =>
                               SizedBox(
                                 height: Dimens.XSMALL_PADDING,
                               ),
-                          itemCount: people.length) : EmptyList(),
-                    ),
+                          itemCount: people.length),
+                    )
+                        : EmptyList(),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(Dimens.SMALL_PADDING),
@@ -119,16 +122,16 @@ class _PeopleTabState extends State<PeopleTab> {
     );
   }
 
-  Widget _peopleItem(BuildContext context, String id) {
+  Widget _peopleItem(BuildContext context, Person person) {
     final SlidableController slidableController = SlidableController();
 
     return Slidable(
-      key: Key(id),
+      key: Key(person.id),
       controller: slidableController,
       dismissal: defaultDismissal(
           context, 'People will be delete', 'People is deleted.'),
       child: ListTile(
-        title: Text('1'),
+        title: Text(person.name),
       ),
       actionPane: SlidableDrawerActionPane(),
       secondaryActions: defaultActionItems,
