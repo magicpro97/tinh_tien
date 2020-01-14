@@ -21,8 +21,8 @@ class ExpensePage extends StatefulWidget {
 
 class _ExpensePageState extends State<ExpensePage> {
   Activity activity;
-  List<AppChip> participantList;
-  List<AppChip> paidByList;
+  List<AppChip<Person>> participantList;
+  List<AppChip<Person>> paidByList;
   HomeBloc _homeBloc;
   List<Person> checkedPaidBy = [];
   List<Person> checkedParticipants = [];
@@ -200,4 +200,6 @@ class _ExpensePageState extends State<ExpensePage> {
       ),
     );
   }
+
+
 }
