@@ -15,21 +15,41 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int _currentIndex = 0;
+  final _tabs = [];
+  HomeBloc _homeBloc;
+
   void _onTapNavigationItem(int index) {
     setState(() {
       _currentIndex = index;
     });
   }
 
-  int _currentIndex = 0;
-  Activity _activity;
-  final _tabs = [];
-  HomeBloc _homeBloc;
 
   @override
   void initState() {
     super.initState();
     _homeBloc = BlocProvider.of<HomeBloc>(context);
+    _homeBloc.add(GetActivity());
+    final peopleTab = PeopleTab(
+      activity: _activity,
+    );
+    final expenseTab = ExpenseTab(
+      activity: _activity,
+    );
+    final balanceTab = BalanceTab(
+      activity: _activity,
+    );
+    final outstandingTab = OutstandingTab(
+      activity: _activity,
+    );
+    _tabs.clear();
+    _tabs.addAll([
+      peopleTab,
+      expenseTab,
+      balanceTab,
+      outstandingTab,
+    ]);
   }
 
   @override
@@ -41,25 +61,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _activity = ModalRoute
-        .of(context)
-        .settings
-        .arguments as Activity;
-    _tabs.clear();
-    _tabs.addAll([
-      PeopleTab(
-        activity: _activity,
-      ),
-      ExpenseTab(
-        activity: _activity,
-      ),
-      BalanceTab(
-        activity: _activity,
-      ),
-      OutstandingTab(
-        activity: _activity,
-      ),
-    ]);
   }
 
   @override

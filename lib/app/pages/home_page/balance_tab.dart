@@ -1,7 +1,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:random_color/random_color.dart';
+import 'package:tinh_tien/app/blocs/home/bloc.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/widgets/empty_list.dart';
 import 'package:tinh_tien/common/colors.dart';
@@ -14,82 +16,114 @@ class BalanceTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _randomColor = RandomColor();
-    return Container(
-      child: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            expandedHeight: 240.0,
-            automaticallyImplyLeading: false,
-            flexibleSpace: Container(
-              padding: const EdgeInsets.all(Dimens.NORMAL_PADDING),
-              child: Card(
-                elevation: 10.0,
-                child: PieChart(
-                  PieChartData(
-                    sections: [
-                      PieChartSectionData(
-                        radius: 90.0,
-                        value: 10,
-                        color: _randomColor.randomColor(),
+    return BlocBuilder<HomeBloc, HomeState>(
+        bloc: BlocProvider.of<HomeBloc>(context),
+        builder: (_, state) {
+          if (state is SummaryLoadedState) {
+            final _randomColor = RandomColor();
+            final summary = state.activitySummary;
+            final expenseSummary = summary.expenseSummary;
+            final expenseSummaryItems = expenseSummary
+                .map(
+                  (summary) =>
+                  ListTile(
+                    title: Text(summary.name),
+                    subtitle: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text('Spent: ${summary.spent}'),
+                        Text('Paid: ${summary.paid}'),
+                      ],
+                    ),
+                    trailing: Text(
+                      '${summary.amount}',
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .body1
+                          .apply(
+                        color: summary.amount < 0 ? Colors.red : Colors.green,
                       ),
-                      PieChartSectionData(
-                        value: 30,
-                        radius: 90.0,
-                        color: _randomColor.randomColor(),
-                      ),
-                      PieChartSectionData(
-                        value: 40,
-                        radius: 90.0,
-                        color: _randomColor.randomColor(),
-                      ),
-                      PieChartSectionData(
-                        value: 20,
-                        radius: 90.0,
-                        color: _randomColor.randomColor(),
-                      ),
-                    ],
-                    centerSpaceRadius: 0.0,
-                    sectionsSpace: 10.0,
-                    borderData: FlBorderData(show: false),
+                    ),
                   ),
-                ),
-              ),
-            ),
-          ),
-          SliverAppBar(
-            title: Text('Balance'),
-            centerTitle: false,
-            floating: true,
-            snap: true,
-            pinned: true,
-            actions: <Widget>[
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Text(
-                    'Total: 0.00',
-                    style: Theme.of(context).textTheme.subtitle.apply(
-                          color: AppColors.WHITE_TEXT,
+            )
+                .toList();
+            final pieCharDataList = expenseSummary.map(
+                  (summary) =>
+                  PieChartSectionData(
+                    radius: 90.0,
+                    value: summary.spent,
+                    color: _randomColor.randomColor(),
+                  ),
+            );
+
+            return Container(
+              child: CustomScrollView(
+                slivers: <Widget>[
+                  SliverAppBar(
+                    expandedHeight: 240.0,
+                    automaticallyImplyLeading: false,
+                    flexibleSpace: Container(
+                      padding: const EdgeInsets.all(Dimens.NORMAL_PADDING),
+                      child: expenseSummary.isNotEmpty
+                          ? Card(
+                        elevation: 10.0,
+                        child: PieChart(
+                          PieChartData(
+                            sections: pieCharDataList,
+                            centerSpaceRadius: 0.0,
+                            sectionsSpace: 10.0,
+                            borderData: FlBorderData(show: false),
+                          ),
                         ),
+                      )
+                          : EmptyList(),
+                    ),
                   ),
-                  Text('Average: 0.00',
-                      style: Theme.of(context).textTheme.subtitle.apply(
-                            color: AppColors.WHITE_TEXT,
-                          )),
+                  SliverAppBar(
+                    title: Text('Balance'),
+                    centerTitle: false,
+                    floating: true,
+                    snap: true,
+                    pinned: true,
+                    actions: <Widget>[
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          Text(
+                            'Total: ${activity.totalExpense}',
+                            style: Theme
+                                .of(context)
+                                .textTheme
+                                .subtitle
+                                .apply(
+                              color: AppColors.WHITE_TEXT,
+                            ),
+                          ),
+                          Text('Average: ${activity.averageExpense}',
+                              style: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .subtitle
+                                  .apply(
+                                color: AppColors.WHITE_TEXT,
+                              )),
+                        ],
+                      )
+                    ],
+                  ),
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                            (_, index) => expenseSummaryItems[index],
+                        childCount: summary.expenseSummary.length),
+                  ),
                 ],
-              )
-            ],
-          ),
-//          SliverList(
-//            delegate: SliverChildBuilderDelegate((_, index) => activ),
-//          ),
-          SliverFillRemaining(
-            child: EmptyList(),
-          )
-        ],
-      ),
-    );
+              ),
+            );
+          } else {
+            return Container();
+          }
+        });
   }
 }

@@ -51,9 +51,9 @@ class _PeopleTabState extends State<PeopleTab> {
           margin: const EdgeInsets.symmetric(horizontal: Dimens.NORMAL_PADDING),
           child: BlocListener<HomeBloc, HomeState>(
             listener: (_, state) {
-              if (state is LoadedState) {
+              if (state is PeopleCreatedState) {
                 setState(() {
-                  widget.activity.people.add(state.object as Person);
+                  widget.activity.people.add(state.person);
                 });
               }
             },
