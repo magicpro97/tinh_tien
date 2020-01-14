@@ -36,7 +36,7 @@ class AppScaffold extends StatelessWidget {
       ),
       body: SafeArea(
           child: Container(
-            margin: margin,
+        margin: margin,
         child: body,
       )),
       bottomNavigationBar: bottomNavigationBar,

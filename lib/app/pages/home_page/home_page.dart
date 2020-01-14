@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinh_tien/app/blocs/home/bloc.dart';
-import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/pages/home_page/outstanding_tab.dart';
 import 'package:tinh_tien/app/widgets/app_scaffold.dart';
 
@@ -25,42 +24,17 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-
   @override
   void initState() {
     super.initState();
     _homeBloc = BlocProvider.of<HomeBloc>(context);
     _homeBloc.add(GetActivity());
-    final peopleTab = PeopleTab(
-      activity: _activity,
-    );
-    final expenseTab = ExpenseTab(
-      activity: _activity,
-    );
-    final balanceTab = BalanceTab(
-      activity: _activity,
-    );
-    final outstandingTab = OutstandingTab(
-      activity: _activity,
-    );
-    _tabs.clear();
-    _tabs.addAll([
-      peopleTab,
-      expenseTab,
-      balanceTab,
-      outstandingTab,
-    ]);
   }
 
   @override
   void dispose() {
     _homeBloc.close();
     super.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
   }
 
   @override
@@ -74,7 +48,36 @@ class _HomePageState extends State<HomePage> {
           ],
         )
       ],
-      body: _tabs[_currentIndex],
+      body: BlocBuilder(
+        bloc: _homeBloc,
+        builder: (context, state) {
+          if (state is ActivityLoadedState) {
+            final activity = state.activity;
+            final peopleTab = PeopleTab(
+              activity: activity,
+            );
+            final expenseTab = ExpenseTab(
+              activity: activity,
+            );
+            final balanceTab = BalanceTab(
+              activity: activity,
+            );
+            final outstandingTab = OutstandingTab(
+              activity: activity,
+            );
+            _tabs.clear();
+            _tabs.addAll([
+              peopleTab,
+              expenseTab,
+              balanceTab,
+              outstandingTab,
+            ]);
+            return _tabs[_currentIndex];
+          }
+
+          return Container();
+        },
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _onTapNavigationItem,
@@ -95,12 +98,14 @@ class _HomePageState extends State<HomePage> {
         width: double.infinity,
         color: Colors.white,
         alignment: Alignment.center,
-        child: Text(
-          _activity.name,
-          style: Theme
-              .of(context)
-              .textTheme
-              .title,
+        child: BlocBuilder<HomeBloc, HomeState>(
+          bloc: _homeBloc,
+          builder: (coantext, state) {
+            return Text(
+              state is ActivityLoadedState ? state.activity.name : "Welcomne",
+              style: Theme.of(context).textTheme.title,
+            );
+          },
         ),
       ),
     );

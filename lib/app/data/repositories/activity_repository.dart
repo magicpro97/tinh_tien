@@ -22,8 +22,8 @@ class ActivityRepository extends BaseRepository {
       final data =
           await activityDatasource.createActivity(ActivityRequest(name));
       return data.fold(
-            (error) => Left(ActivityFailure(error.message)),
-            (activity) => Right(activity),
+        (error) => Left(ActivityFailure(error.message)),
+        (activity) => Right(activity),
       );
     } else {
       throw NoNetworkConnection();
@@ -34,8 +34,20 @@ class ActivityRepository extends BaseRepository {
     if (await hasNetworkConnection()) {
       final data = await activityDatasource.getSummary(id);
       return data.fold(
-            (error) => Left(ActivityFailure(error.message)),
-            (summary) => Right(summary),
+        (error) => Left(ActivityFailure(error.message)),
+        (summary) => Right(summary),
+      );
+    } else {
+      throw NoNetworkConnection();
+    }
+  }
+
+  Future<Either<ActivityFailure, Activity>> getById(String id) async {
+    if (await hasNetworkConnection()) {
+      final data = await activityDatasource.get(id);
+      return data.fold(
+        (error) => Left(ActivityFailure(error.message)),
+        (activity) => Right(activity),
       );
     } else {
       throw NoNetworkConnection();

@@ -32,9 +32,13 @@ Future<void> init() async {
       ));
 
   // bloc
-  sl.registerFactory(() => WelcomeBloc(activityRepository: sl()));
+  sl.registerFactory(() => WelcomeBloc(
+        activityRepository: sl(),
+        sharedPreferences: sl(),
+      ));
   sl.registerFactory(() => HomeBloc(
         activityRepository: sl(),
         peopleRepository: sl(),
+        sharedPreferences: sl(),
       ));
 }
