@@ -74,12 +74,14 @@ class ExpenseTab extends StatelessWidget {
               ),
               SliverFillRemaining(
                 hasScrollBody: false,
-                child: activity.expenses.isNotEmpty ? Timeline(
+                child: activity.expenses.isNotEmpty
+                    ? Timeline(
                   children: expenseTimelines,
                   position: TimelinePosition.Left,
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                ) : EmptyList(),
+                )
+                    : EmptyList(),
               ),
             ],
           ),
@@ -104,12 +106,12 @@ class ExpenseTab extends StatelessWidget {
         Dimens.NORMAL_PADDING,
         0,
       ),
-      child: Card(
+      child: activity.expenseADay.isNotEmpty
+          ? Card(
         elevation: 10.0,
-        child: activity.expenseADay.isNotEmpty
-            ? _buildChart(showIndexes, tooltipsOnBar, lineBarsData)
-            : EmptyList()
-      ),
+        child: _buildChart(showIndexes, tooltipsOnBar, lineBarsData),
+      )
+          : EmptyList(),
     );
   }
 
