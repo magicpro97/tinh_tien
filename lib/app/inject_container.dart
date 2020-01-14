@@ -4,15 +4,18 @@ import 'package:tinh_tien/app/blocs/welcome/bloc.dart';
 import 'package:tinh_tien/app/data/datasources/activity_datasource.dart';
 import 'package:tinh_tien/app/data/repositories/activity_repository.dart';
 import 'package:tinh_tien/app/data/repositories/people_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'blocs/home/home_bloc.dart';
 import 'data/datasources/people_datasouce.dart';
 
 final sl = GetIt.instance;
 
-void init() {
+Future<void> init() async {
   // external
   sl.registerLazySingleton(() => DataConnectionChecker());
+  final prefs = await SharedPreferences.getInstance();
+  sl.registerLazySingleton(() => prefs);
 
   // data source
   sl.registerLazySingleton(() => ActivityDatasource());

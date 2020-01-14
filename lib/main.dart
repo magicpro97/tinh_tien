@@ -3,7 +3,7 @@ import 'package:tinh_tien/app/inject_container.dart';
 
 import 'app/app.dart';
 
-void main() {
-  init();
+void main() async {
+  await init();
   runApp(App());
 }
