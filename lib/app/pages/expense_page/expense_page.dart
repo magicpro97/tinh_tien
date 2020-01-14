@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:tinh_tien/app/blocs/home/bloc.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/data/models/people/person.dart';
 import 'package:tinh_tien/app/widgets/app_chip.dart';
@@ -17,26 +21,46 @@ class ExpensePage extends StatefulWidget {
 
 class _ExpensePageState extends State<ExpensePage> {
   Activity activity;
-  List<AppChip> peopleItemList;
+  List<AppChip> participantList;
+  List<AppChip> paidByList;
+  HomeBloc _homeBloc;
 
   @override
   void didChangeDependencies() {
     activity = activity ?? ModalRoute.of(context).settings.arguments;
+    activity.people.clear();
     activity.people
-        .addAll([Person(name: 'tri dep  trai'), Person(name: 'tri dep  trai 1')]);
-    peopleItemList = activity.people
+        .addAll([Person(name: 'tri dep trai'), Person(name: 'tri dep trai 1')]);
+    // paidByList = activity.people
+    //     .map((person) => AppChip(
+    //           label: person.name,
+    //           onChanged: (data) {
+
+    //           },
+    //         ))
+    //     .toList();
+    participantList = activity.people
         .map((person) => AppChip(
               label: person.name,
+              onChanged: (data) {
+                //if() {}
+              },
             ))
         .toList();
     super.didChangeDependencies();
   }
 
-  // @override
-  // void initState() {
+  @override
+  void initState() {
+    _homeBloc = BlocProvider.of<HomeBloc>(context);
+    super.initState();
+  }
 
-  //   super.initState();
-  // }
+  @override
+  void dispose() {
+    _homeBloc.close();
+    super.dispose();
+  }
 
   DateTime selectedTime = DateTime.now();
 
@@ -50,7 +74,7 @@ class _ExpensePageState extends State<ExpensePage> {
           children: <Widget>[
             Text('Paid by:'),
             ChipList(
-              chips: peopleItemList,
+              chips: participantList,
             ),
             SizedBox(
               height: Dimens.NORMAL_PADDING,
@@ -70,13 +94,14 @@ class _ExpensePageState extends State<ExpensePage> {
               inputFormatters: <TextInputFormatter>[
                 WhitelistingTextInputFormatter.digitsOnly,
               ],
+              //onSubmitted: (){},
             ),
             SizedBox(
               height: Dimens.NORMAL_PADDING,
             ),
             Text('Participants:'),
             ChipList(
-              chips: peopleItemList,
+              chips: participantList,
             ),
             SizedBox(
               height: Dimens.NORMAL_PADDING,
@@ -132,7 +157,15 @@ class _ExpensePageState extends State<ExpensePage> {
                           color: AppColors.WHITE_TEXT,
                         ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    // _homeBloc.add(CreateExpenseEvent(
+                    //   activityId: activity.id,
+                    //   paidFor: ,
+                    //   participants: ,
+                    //   paidBy: ,
+                    //   amount: ,
+                    // ));
+                  },
                 ),
               ],
             )
