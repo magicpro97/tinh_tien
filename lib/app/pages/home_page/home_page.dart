@@ -102,7 +102,7 @@ class _HomePageState extends State<HomePage> {
           bloc: _homeBloc,
           builder: (coantext, state) {
             return Text(
-              state is ActivityLoadedState ? state.activity.name : "Welcomne",
+              state is ActivityLoadedState ? state.activity.name : "Welcome",
               style: Theme.of(context).textTheme.title,
             );
           },

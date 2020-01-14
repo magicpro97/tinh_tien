@@ -30,7 +30,7 @@ class WelcomeBloc extends Bloc<WelcomeEvent, WelcomeState> {
         } else {
           yield CreateActivityLoading();
           final data = await activityRepository.createActivity(event.name);
-          yield await data.fold((fail) {
+          yield await data.fold((fail) async {
             return CreateActivityFail(fail.message);
           }, (activity) async {
             await sharedPreferences.setString(ACTIVITY_ID, activity.id);
