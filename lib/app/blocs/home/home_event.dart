@@ -27,19 +27,19 @@ class DisplayData extends HomeEvent {
 }
 class CreateExpenseEvent extends HomeEvent {
   final String activityId;
-  final String paidFor;
   final List<Person> participants;
   final List<Person> paidBy;
+  final String paidFor;
   final double amount;
 
   CreateExpenseEvent(
       {@required this.activityId,
-      @required this.paidFor,
-      @required this.participants,
       @required this.paidBy,
+      @required this.participants,
+      @required this.paidFor,
       @required this.amount});
 
   @override
-  List<Object> get props => [activityId, paidFor, participants, paidBy, amount];
+  List<Object> get props => [activityId, paidBy, participants, paidFor, amount];
 }
 

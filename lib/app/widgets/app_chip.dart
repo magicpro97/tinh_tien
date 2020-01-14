@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:tinh_tien/common/colors.dart';
 
-class AppChip extends StatefulWidget {
+class AppChip<T> extends StatefulWidget {
   final String label;
-  final Function(bool) onChanged;
+  final void Function(bool, T) onChanged;
   final Color selectedColor;
   final Color unselectedColor;
+  final T value;
 
   const AppChip({
     Key key,
@@ -13,13 +14,14 @@ class AppChip extends StatefulWidget {
     @required this.onChanged,
     this.selectedColor = AppColors.MAIN_COLOR,
     this.unselectedColor = AppColors.WHITE_TEXT,
+    @required this.value,
   }) : super(key: key);
 
   @override
-  _AppChipState createState() => _AppChipState();
+  _AppChipState<T> createState() => _AppChipState<T>();
 }
 
-class _AppChipState extends State<AppChip> {
+class _AppChipState<T> extends State<AppChip<T>> {
   bool _selected = false;
 
   @override
@@ -37,10 +39,10 @@ class _AppChipState extends State<AppChip> {
               _selected ? widget.selectedColor : widget.unselectedColor,
         ),
         onTap: () {
-          widget.onChanged(_selected);
           setState(() {
             _selected = !_selected;
           });
+          widget.onChanged(_selected, widget.value);
         },
       ),
     );

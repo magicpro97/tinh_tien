@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/data/models/activity/activity_summary.dart';
+import 'package:tinh_tien/app/data/models/expense/expense.dart';
 import 'package:tinh_tien/app/data/models/people/person.dart';
 
 abstract class HomeState extends Equatable {
@@ -36,6 +37,15 @@ class PeopleCreatedState extends HomeState {
 
   @override
   List<Object> get props => [person];
+}
+
+class ExpenseCreatedState extends HomeState {
+  final Expense expense;
+
+  ExpenseCreatedState(this.expense);
+
+  @override
+  List<Object> get props => [expense];
 }
 
 class ErrorState extends HomeState {

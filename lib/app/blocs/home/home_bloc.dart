@@ -5,6 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinh_tien/app/data/repositories/activity_repository.dart';
+import 'package:tinh_tien/app/data/repositories/expense_repository.dart';
 import 'package:tinh_tien/app/data/repositories/people_repository.dart';
 import 'package:tinh_tien/app/network/no_network_connection_exception.dart';
 import 'package:tinh_tien/common/constants.dart';
@@ -16,11 +17,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final SharedPreferences sharedPreferences;
   final PeopleRepository peopleRepository;
   final ActivityRepository activityRepository;
+  final ExpenseRepository expenseRepository;
 
   HomeBloc({
     @required this.peopleRepository,
     @required this.activityRepository,
     @required this.sharedPreferences,
+    @required this.expenseRepository,
   });
 
   @override
@@ -30,7 +33,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Stream<HomeState> mapEventToState(
     HomeEvent event,
   ) async* {
-    log(event.toString());
+    log(event.toString(), name: 'HomeBloc');
     if (event is CreatePeopleEvent) {
       yield LoadingState();
       try {
@@ -71,6 +74,26 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           yield ErrorState(UnknownException().message);
         }
       }
-    }
-  }
+    } else if (event is CreateExpenseEvent) {
+        log('checked', name: 'okela');
+        yield LoadingState();
+        try {
+          final data = await expenseRepository.createExpense(
+              activityId: event.activityId,
+              paidBy: event.paidBy,
+              participants: event.participants,
+              paidFor: event.paidFor,
+              amount: event.amount
+            );
+          yield data.fold((error) => ErrorState(error.message),
+              (expense) => ExpenseCreatedState(expense));
+        } catch (e) {
+          if (e is NoNetworkConnection) {
+            yield ErrorState(e.message);
+          } else {
+            yield ErrorState((e as UnknownException).message);
+          }
+        }
+      }
+  } 
 }

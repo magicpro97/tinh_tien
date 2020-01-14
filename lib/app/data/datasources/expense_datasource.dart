@@ -10,8 +10,9 @@ class ExpenseDatasouce {
       String activityId,
       List<Person> paidBy,
       List<Person> participants,
-      double amount,
-      String paidFor) async {
+      String paidFor,
+      double amount
+      ) async {
     try {
       final response =
           await dio.post('$ACTIVITIES/$activityId/expenses', data: {
