@@ -21,9 +21,13 @@ class ExpensePage extends StatefulWidget {
 
 class _ExpensePageState extends State<ExpensePage> {
   Activity activity;
-  List<AppChip> participantList;
-  List<AppChip> paidByList;
+  List<AppChip<Person>> participantList;
+  List<AppChip<Person>> paidByList;
   HomeBloc _homeBloc;
+  List<Person> checkedPaidBy = [];
+  List<Person> checkedParticipants = [];
+  String paidFor;
+  double amount;
 
   @override
   void didChangeDependencies() {
@@ -31,19 +35,33 @@ class _ExpensePageState extends State<ExpensePage> {
     activity.people.clear();
     activity.people
         .addAll([Person(name: 'tri dep trai'), Person(name: 'tri dep trai 1')]);
-    // paidByList = activity.people
-    //     .map((person) => AppChip(
-    //           label: person.name,
-    //           onChanged: (data) {
 
-    //           },
-    //         ))
-    //     .toList();
-    participantList = activity.people
-        .map((person) => AppChip(
+    paidByList = activity.people
+        .map((person) => AppChip<Person>(
               label: person.name,
-              onChanged: (data) {
-                //if() {}
+              value: person,
+              onChanged: (checked, value) {
+                if (checked && !checkedPaidBy.contains(value)) {
+                  checkedPaidBy.add(value);
+                } else {
+                  checkedPaidBy.remove(value);
+                }
+              },
+            ))
+        .toList();
+        
+    participantList = activity.people
+        .map((person) => AppChip<Person>(
+              label: person.name,
+              value: person,
+              onChanged: (checked, value) {
+                if (checked && !checkedPaidBy.contains(value)) {
+                  log(value.name.toString(), name: 'value');
+                  checkedParticipants.add(value);
+                } else {
+                  log(value.name.toString(), name: 'unchecked');
+                  checkedParticipants.remove(value);
+                }
               },
             ))
         .toList();
@@ -74,7 +92,7 @@ class _ExpensePageState extends State<ExpensePage> {
           children: <Widget>[
             Text('Paid by:'),
             ChipList(
-              chips: participantList,
+              chips: paidByList,
             ),
             SizedBox(
               height: Dimens.NORMAL_PADDING,
@@ -82,6 +100,9 @@ class _ExpensePageState extends State<ExpensePage> {
             Text('Paid for:'),
             TextField(
               decoration: InputDecoration(hintText: 'Description Ex:Beer'),
+              onChanged: (value) {
+                paidFor = value;
+              },
             ),
             SizedBox(
               height: Dimens.NORMAL_PADDING,
@@ -94,7 +115,9 @@ class _ExpensePageState extends State<ExpensePage> {
               inputFormatters: <TextInputFormatter>[
                 WhitelistingTextInputFormatter.digitsOnly,
               ],
-              //onSubmitted: (){},
+              onChanged: (value) {
+                amount = double.parse(value);
+              },
             ),
             SizedBox(
               height: Dimens.NORMAL_PADDING,
@@ -158,13 +181,18 @@ class _ExpensePageState extends State<ExpensePage> {
                         ),
                   ),
                   onPressed: () {
-                    // _homeBloc.add(CreateExpenseEvent(
-                    //   activityId: activity.id,
-                    //   paidFor: ,
-                    //   participants: ,
-                    //   paidBy: ,
-                    //   amount: ,
-                    // ));
+                    log(activity.id, name: 'activity.id');
+                    log(paidFor, name: 'paidFor');
+                    log(checkedParticipants.toString(), name: 'checkedParticipants');
+                    log(checkedPaidBy.toString(), name: 'checkedPaidBy');
+                    log(amount.toString(), name: 'amount');
+                    _homeBloc.add(CreateExpenseEvent(
+                      activityId: activity.id,
+                      participants: checkedParticipants,
+                      paidBy: checkedPaidBy,
+                      amount: amount,
+                      paidFor: paidFor,
+                    ));
                   },
                 ),
               ],
@@ -174,4 +202,6 @@ class _ExpensePageState extends State<ExpensePage> {
       ),
     );
   }
+
+
 }

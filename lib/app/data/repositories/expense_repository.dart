@@ -17,12 +17,12 @@ class ExpenseRepository extends BaseRepository {
     @required DataConnectionChecker dataConnectionChecker,
   }) : super(dataConnectionChecker);
 
-  Future<Either<ExpenseFailure, Expense>> createExpense(
+  Future<Either<ExpenseFailure, Expense>> createExpense({
       String activityId,
       List<Person> paidBy,
       List<Person> participants,
       double amount,
-      String paidFor) async {
+      String paidFor}) async {
     if (await hasNetworkConnection()) {
       final data = await expenseDatasource.createExpense(
           activityId, paidBy, participants, amount, paidFor);
