@@ -8,7 +8,7 @@ class ActivitySummary {
 
   ActivitySummary({this.expenseSummary});
 
-  factory ActivitySummary.fromJson(List<Map<String, dynamic>> json) =>
+  factory ActivitySummary.fromJson(List json) =>
       ActivitySummary(
         expenseSummary:
             json.map((data) => ExpenseSummary.fromJson(data)).toList(),

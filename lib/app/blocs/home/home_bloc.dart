@@ -49,30 +49,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           yield ErrorState((e as UnknownException).message);
         }
       }
-    } else if (event is GetActivitySummary) {
-      yield LoadingState();
-      try {
-        final activityId = sharedPreferences.getString(ACTIVITY_ID);
-        final data = await activityRepository.getSummary(activityId);
-        yield data.fold(
-          (error) => ErrorState(error.message),
-          (summary) => SummaryLoadedState(summary),
-        );
-      } catch (e) {
-        if (e is NoNetworkConnection) {
-          yield ErrorState(e.message);
-        } else {
-          yield ErrorState(UnknownException().message);
-        }
-      }
     } else if (event is GetActivity) {
       yield LoadingState();
       try {
         final activityId = sharedPreferences.getString(ACTIVITY_ID);
-        final data = await activityRepository.getById(activityId);
-        yield data.fold(
+        final activityData = await activityRepository.getById(activityId);
+        final summaryData = await activityRepository.getSummary(activityId);
+        yield activityData.fold(
           (error) => ErrorState(error.message),
-          (activity) => ActivityLoadedState(activity),
+              (activity) =>
+              summaryData.fold(
+                      (error) => ErrorState(error.message),
+                      (summary) =>
+                      ActivityLoadedState(
+                          activity: activity, activitySummary: summary)),
         );
       } catch (e) {
         if (e is NoNetworkConnection) {

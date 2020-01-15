@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinh_tien/app/blocs/home/bloc.dart';
@@ -48,35 +50,47 @@ class _HomePageState extends State<HomePage> {
           ],
         )
       ],
-      body: BlocBuilder(
+      body: BlocListener(
         bloc: _homeBloc,
-        builder: (context, state) {
-          if (state is ActivityLoadedState) {
-            final activity = state.activity;
-            final peopleTab = PeopleTab(
-              activity: activity,
-            );
-            final expenseTab = ExpenseTab(
-              activity: activity,
-            );
-            final balanceTab = BalanceTab(
-              activity: activity,
-            );
-            final outstandingTab = OutstandingTab(
-              activity: activity,
-            );
-            _tabs.clear();
-            _tabs.addAll([
-              peopleTab,
-              expenseTab,
-              balanceTab,
-              outstandingTab,
-            ]);
-            return _tabs[_currentIndex];
+        listener: (_, state) {
+          if (state is ErrorState) {
+            log(state.message);
           }
-
-          return Container();
         },
+        child: BlocBuilder(
+          bloc: _homeBloc,
+          builder: (context, state) {
+            if (state is ActivityLoadedState) {
+              final activity = state.activity;
+              final peopleTab = PeopleTab(
+                activity: activity,
+              );
+              final expenseTab = ExpenseTab(
+                activity: activity,
+              );
+              final balanceTab = BalanceTab(
+                activity: activity,
+              );
+              final outstandingTab = OutstandingTab(
+                activity: activity,
+              );
+              _tabs.clear();
+              _tabs.addAll([
+                peopleTab,
+                expenseTab,
+                balanceTab,
+                outstandingTab,
+              ]);
+              return _tabs[_currentIndex];
+            } else if (state is ErrorState) {
+              return Center(
+                child: Text(state.message),
+              );
+            }
+
+            return Container();
+          },
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -100,7 +114,7 @@ class _HomePageState extends State<HomePage> {
         alignment: Alignment.center,
         child: BlocBuilder<HomeBloc, HomeState>(
           bloc: _homeBloc,
-          builder: (coantext, state) {
+          builder: (context, state) {
             return Text(
               state is ActivityLoadedState ? state.activity.name : "Welcome",
               style: Theme.of(context).textTheme.title,

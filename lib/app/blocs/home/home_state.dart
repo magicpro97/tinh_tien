@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/data/models/activity/activity_summary.dart';
 import 'package:tinh_tien/app/data/models/people/person.dart';
@@ -19,20 +20,13 @@ class LoadingState extends HomeState {
 
 class ActivityLoadedState extends HomeState {
   final Activity activity;
-
-  ActivityLoadedState(this.activity);
-
-  @override
-  List<Activity> get props => [activity];
-}
-
-class SummaryLoadedState extends HomeState {
   final ActivitySummary activitySummary;
 
-  SummaryLoadedState(this.activitySummary);
+  ActivityLoadedState(
+      {@required this.activity, @required this.activitySummary});
 
   @override
-  List<Object> get props => [activitySummary];
+  List<Object> get props => [activity, activitySummary];
 }
 
 class PeopleCreatedState extends HomeState {

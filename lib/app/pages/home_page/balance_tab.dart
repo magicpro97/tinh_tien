@@ -28,7 +28,6 @@ class _BalanceTabState extends State<BalanceTab> {
   void initState() {
     super.initState();
     _homeBloc = BlocProvider.of<HomeBloc>(context);
-    _homeBloc.add(GetActivitySummary());
   }
 
   @override
@@ -53,7 +52,7 @@ class _BalanceTabState extends State<BalanceTab> {
                 baseColor: Colors.grey,
                 highlightColor: Colors.white,
               );
-            } else if (state is SummaryLoadedState) {
+            } else if (state is ActivityLoadedState) {
               final _randomColor = RandomColor();
               final summary = state.activitySummary;
               final expenseSummary = summary.expenseSummary;

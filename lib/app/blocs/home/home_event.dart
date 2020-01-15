@@ -15,12 +15,12 @@ class CreatePeopleEvent extends HomeEvent {
   List<Object> get props => [name];
 }
 
-class GetActivitySummary extends HomeEvent {
+class GetActivity extends HomeEvent {
   @override
   List<Object> get props => [];
 }
 
-class GetActivity extends HomeEvent {
+class DisplayData extends HomeEvent {
   @override
   List<Object> get props => [];
 }
