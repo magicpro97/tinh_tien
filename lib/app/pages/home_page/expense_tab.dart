@@ -68,7 +68,7 @@ class ExpenseTab extends StatelessWidget {
           body: CustomScrollView(
             slivers: [
               SliverAppBar(
-                expandedHeight: 250,
+                expandedHeight: Dimens.EXPANDED_HEIGHT,
                 automaticallyImplyLeading: false,
                 flexibleSpace: _buildExpenseChart(
                     tooltipsOnBar, lineBarsData, showIndexes),

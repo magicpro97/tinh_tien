@@ -75,6 +75,7 @@ class _HomePageState extends State<HomePage> {
               final balanceTab = BalanceTab(
                 name: tabNames[2],
                 activity: activity,
+                activitySummary: state.activitySummary,
               );
               final outstandingTab = OutstandingTab(
                 name: tabNames[3],
