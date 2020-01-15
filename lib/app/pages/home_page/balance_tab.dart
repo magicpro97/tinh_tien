@@ -13,12 +13,19 @@ import 'package:tinh_tien/common/colors.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
 class BalanceTab extends StatefulWidget {
+  final String name;
   final Activity activity;
 
-  const BalanceTab({Key key, @required this.activity}) : super(key: key);
+  const BalanceTab({Key key, @required this.activity, this.name})
+      : super(key: key);
 
   @override
   _BalanceTabState createState() => _BalanceTabState();
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.debug}) {
+    return name;
+  }
 }
 
 class _BalanceTabState extends State<BalanceTab> {

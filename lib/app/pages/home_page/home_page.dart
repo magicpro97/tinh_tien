@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinh_tien/app/blocs/home/bloc.dart';
 import 'package:tinh_tien/app/pages/home_page/outstanding_tab.dart';
 import 'package:tinh_tien/app/widgets/app_scaffold.dart';
+import 'package:tinh_tien/app/widgets/loading_placeholder.dart';
 
 import 'balance_tab.dart';
 import 'expense_tab.dart';
@@ -19,6 +20,7 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   final _tabs = [];
   HomeBloc _homeBloc;
+  List<String> tabNames = const ["People", "Expense", "Balance", "Outstanding"];
 
   void _onTapNavigationItem(int index) {
     setState(() {
@@ -63,15 +65,19 @@ class _HomePageState extends State<HomePage> {
             if (state is ActivityLoadedState) {
               final activity = state.activity;
               final peopleTab = PeopleTab(
+                name: tabNames[0],
                 activity: activity,
               );
               final expenseTab = ExpenseTab(
+                name: tabNames[1],
                 activity: activity,
               );
               final balanceTab = BalanceTab(
+                name: tabNames[2],
                 activity: activity,
               );
               final outstandingTab = OutstandingTab(
+                name: tabNames[3],
                 activity: activity,
               );
               _tabs.clear();
@@ -86,6 +92,10 @@ class _HomePageState extends State<HomePage> {
               return Center(
                 child: Text(state.message),
               );
+            } else if (state is LoadingState) {
+              return LoadingPlaceholder(
+                title: tabNames[_currentIndex].toString(),
+              );
             }
 
             return Container();
@@ -99,7 +109,7 @@ class _HomePageState extends State<HomePage> {
         unselectedItemColor: Colors.black,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-              icon: Icon(Icons.people), title: Text('People')),
+              icon: Icon(Icons.people), title: Text("People")),
           BottomNavigationBarItem(
               icon: Icon(Icons.attach_money), title: Text('Expense')),
           BottomNavigationBarItem(
