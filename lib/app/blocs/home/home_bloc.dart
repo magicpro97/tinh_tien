@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:bloc/bloc.dart';
+import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/data/repositories/activity_repository.dart';
 import 'package:tinh_tien/app/data/repositories/expense_repository.dart';
 import 'package:tinh_tien/app/data/repositories/people_repository.dart';
@@ -11,8 +13,10 @@ import './bloc.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final ExpenseRepository expenseRepository;
   final PeopleRepository peopleRepository;
+  final ActivityRepository activityRepository;
 
   HomeBloc({
+    @required this.activityRepository,
     @required this.peopleRepository,
     @required this.expenseRepository,
   });
@@ -40,26 +44,25 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           yield ErrorState((e as UnknownException).message);
         }
       }
-    }
-    if (event is CreateExpenseEvent) {
-      yield LoadingState();
-      try {
-        final data = await expenseRepository.createExpense(
-            activityId: event.activityId,
-            paidBy: event.paidBy,
-            participants: event.participants,
-            amount: event.amount,
-            paidFor: event.paidFor
-          );
-        yield data.fold((error) => ErrorState(error.message),
-            (expense) => LoadedState(expense));
-      } catch (e) {
-        if (e is NoNetworkConnection) {
-          yield ErrorState(e.message);
-        } else {
-          yield ErrorState((e as UnknownException).message);
+    } else if (event is CreateExpenseEvent) {
+        yield LoadingState();
+        try {
+          final data = await expenseRepository.createExpense(
+              activityId: event.activityId,
+              paidBy: event.paidBy,
+              participants: event.participants,
+              amount: event.amount,
+              paidFor: event.paidFor
+            );
+          yield data.fold((error) => ErrorState(error.message),
+              (expense) => LoadedState(expense));
+        } catch (e) {
+          if (e is NoNetworkConnection) {
+            yield ErrorState(e.message);
+          } else {
+            yield ErrorState((e as UnknownException).message);
+          }
         }
       }
-    }
   }
 }

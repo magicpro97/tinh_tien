@@ -21,13 +21,20 @@ class ExpensePage extends StatefulWidget {
 
 class _ExpensePageState extends State<ExpensePage> {
   Activity activity;
+  HomeBloc _homeBloc;
   List<AppChip<Person>> participantList;
   List<AppChip<Person>> paidByList;
-  HomeBloc _homeBloc;
   List<Person> checkedPaidBy = [];
   List<Person> checkedParticipants = [];
   String paidFor;
   double amount;
+
+  @override
+  void initState() {
+    super.initState();
+    _homeBloc = BlocProvider.of<HomeBloc>(context);
+    log('check', name: 'initState');
+  }
 
   @override
   void didChangeDependencies() {
@@ -56,22 +63,14 @@ class _ExpensePageState extends State<ExpensePage> {
               value: person,
               onChanged: (checked, value) {
                 if (checked && !checkedPaidBy.contains(value)) {
-                  log(value.name.toString(), name: 'value');
                   checkedParticipants.add(value);
                 } else {
-                  log(value.name.toString(), name: 'unchecked');
                   checkedParticipants.remove(value);
                 }
               },
             ))
         .toList();
     super.didChangeDependencies();
-  }
-
-  @override
-  void initState() {
-    _homeBloc = BlocProvider.of<HomeBloc>(context);
-    super.initState();
   }
 
   @override
@@ -181,17 +180,12 @@ class _ExpensePageState extends State<ExpensePage> {
                         ),
                   ),
                   onPressed: () {
-                    log(activity.id, name: 'activity.id');
-                    log(paidFor, name: 'paidFor');
-                    log(checkedParticipants.toString(), name: 'checkedParticipants');
-                    log(checkedPaidBy.toString(), name: 'checkedPaidBy');
-                    log(amount.toString(), name: 'amount');
                     _homeBloc.add(CreateExpenseEvent(
                       activityId: activity.id,
+                      paidFor: paidFor,
                       participants: checkedParticipants,
                       paidBy: checkedPaidBy,
                       amount: amount,
-                      paidFor: paidFor,
                     ));
                   },
                 ),

@@ -25,12 +25,12 @@ class CreateExpenseEvent extends HomeEvent {
 
   CreateExpenseEvent(
       {@required this.activityId,
-      @required this.paidFor,
-      @required this.participants,
       @required this.paidBy,
-      @required this.amount});
+      @required this.participants,
+      @required this.amount,
+      @required this.paidFor,});
 
   @override
-  List<Object> get props => [paidFor, amount];
+  List<Object> get props => [activityId, paidBy, participants, amount, paidFor];
 }
 

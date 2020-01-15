@@ -31,6 +31,7 @@ void init() {
   // bloc
   sl.registerFactory(() => WelcomeBloc(activityRepository: sl()));
   sl.registerFactory(() => HomeBloc(
+        activityRepository: sl(),
         expenseRepository: sl(),
         peopleRepository: sl(),
       ));
