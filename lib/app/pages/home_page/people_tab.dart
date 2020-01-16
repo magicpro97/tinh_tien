@@ -33,9 +33,9 @@ class _PeopleTabState extends State<PeopleTab> {
 
   @override
   void initState() {
-    super.initState();
     _peopleNameController = TextEditingController();
     _homeBloc = BlocProvider.of<HomeBloc>(context);
+    super.initState();
   }
 
   @override

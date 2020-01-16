@@ -13,11 +13,11 @@ class ExpenseRepository extends BaseRepository {
   final ExpenseDatasouce expenseDatasource;
 
   ExpenseRepository({
-    @required this.expenseDatasource,
     DataConnectionChecker dataConnectionChecker,
+    @required this.expenseDatasource,
   }) : super(dataConnectionChecker);
 
-  Future<Either<ExpenseFailure, Expense>> createExpense({
+  Future<Either<ExpenseFailure, Expense>> create({
       String activityId,
       List<Person> paidBy,
       List<Person> participants,

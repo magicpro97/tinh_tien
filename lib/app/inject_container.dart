@@ -40,6 +40,6 @@ Future<void> init() async {
         activityRepository: sl(),
         peopleRepository: sl(),
         sharedPreferences: sl(),
-        expenseRepository: sl(),
+        //expenseRepository: sl(),
       ));
 }

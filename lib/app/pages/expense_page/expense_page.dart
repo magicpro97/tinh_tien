@@ -67,8 +67,8 @@ class _ExpensePageState extends State<ExpensePage> {
 
   @override
   void initState() {
-    _homeBloc = BlocProvider.of<HomeBloc>(context);
     super.initState();
+    _homeBloc = BlocProvider.of<HomeBloc>(context);
   }
 
   @override

@@ -20,8 +20,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final ExpenseRepository expenseRepository;
 
   HomeBloc({
-    @required this.peopleRepository,
     @required this.activityRepository,
+    @required this.peopleRepository,
     @required this.sharedPreferences,
     @required this.expenseRepository,
   });
@@ -75,10 +75,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
       }
     } else if (event is CreateExpenseEvent) {
-        log('checked', name: 'okela');
         yield LoadingState();
         try {
-          final data = await expenseRepository.createExpense(
+          final data = await expenseRepository.create(
               activityId: event.activityId,
               paidBy: event.paidBy,
               participants: event.participants,
