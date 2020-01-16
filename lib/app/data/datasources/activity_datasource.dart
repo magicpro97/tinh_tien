@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/data/models/activity/activity_request.dart';
+import 'package:tinh_tien/app/data/models/activity/activity_shared_expenses.dart';
 import 'package:tinh_tien/app/data/models/activity/activity_summary.dart';
 import 'package:tinh_tien/app/data/models/error/error_response.dart';
 
@@ -30,8 +31,18 @@ class ActivityDatasource {
 
   Future<Either<ErrorResponse, ActivitySummary>> getSummary(String id) async {
     try {
-      final response = await dio.get('$ACTIVITIES/$id$SUMMARY');
+      final response = await dio.get('$ACTIVITIES/$id/$SUMMARY');
       return Right(ActivitySummary.fromJson(response.data as List));
+    } on DioError catch (e) {
+      return Left(ErrorResponse.fromJson(e.response.data));
+    }
+  }
+
+  Future<Either<ErrorResponse, ActivitySharedExpenses>> getSharedExpenses(
+      String id) async {
+    try {
+      final response = await dio.get('$ACTIVITIES/$id/$SHARED_EXPENSES');
+      return Right(ActivitySharedExpenses.fromJson(response.data as List));
     } on DioError catch (e) {
       return Left(ErrorResponse.fromJson(e.response.data));
     }

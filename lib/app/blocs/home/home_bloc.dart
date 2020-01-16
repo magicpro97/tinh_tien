@@ -53,17 +53,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield LoadingState();
       try {
         final activityId = sharedPreferences.getString(ACTIVITY_ID);
-        final activityData = await activityRepository.getById(activityId);
-        final summaryData = await activityRepository.getSummary(activityId);
-        yield activityData.fold(
-          (error) => ErrorState(error.message),
-              (activity) =>
-              summaryData.fold(
-                      (error) => ErrorState(error.message),
-                      (summary) =>
-                      ActivityLoadedState(
-                          activity: activity, activitySummary: summary)),
-        );
+        final data = await Future.wait([
+          activityRepository.getById(activityId),
+          activityRepository.getSummary(activityId),
+          activityRepository.getSharedExpenses(activityId),
+        ]);
+        final error = data.firstWhere((e) => e.isLeft(), orElse: () => null);
+        if (error != null) {
+          yield ErrorState(error.fold((error) => error.message, null));
+        } else {
+          yield ActivityLoadedState(
+              activity: data[0].fold(null, (data) => data),
+              activitySummary: data[1].fold(null, (data) => data),
+              activitySharedExpenses: data[2].fold(null, (data) => data));
+        }
       } catch (e) {
         if (e is NoNetworkConnection) {
           yield ErrorState(e.message);
