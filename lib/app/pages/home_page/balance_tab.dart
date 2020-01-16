@@ -61,7 +61,7 @@ class BalanceTab extends StatelessWidget {
             value: summary.spent,
             color: _randomColor.randomColor(),
           ),
-    );
+    ).toList();
 
     return Container(
       child: CustomScrollView(

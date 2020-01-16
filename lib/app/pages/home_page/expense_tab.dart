@@ -24,8 +24,8 @@ class ExpenseTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showIndexes = activity.expenses.fold<List<int>>(
-        [], (previous, expense) => previous..add(previous.last + 1));
+    final showIndexes = activity?.expenses?.fold<List<int>>(
+        [0], (previous, expense) => previous..add(previous.last ?? 0 + 1));
     final expenseTimelines = activity.expenseADay
         .map((activityExpense) => TimelineModel(
       TimeLineExpenseBodyItem(
@@ -33,7 +33,7 @@ class ExpenseTab extends StatelessWidget {
         expenseItems:
         activityExpense.expenses.map((expense) => ExpenseItem(
           expense: expense,
-        )),
+        )).toList(),
       ),
     ))
         .toList();

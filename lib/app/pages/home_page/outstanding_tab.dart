@@ -64,9 +64,9 @@ class OutstandingTab extends StatelessWidget {
 
   Widget _sharedExpensesItem(BuildContext context, int index) {
     final paidBy =
-        activitySharedExpenses.sharedExpenses[index].paidBy.first.name;
+        activitySharedExpenses.sharedExpenses[index].paidBy?.first?.name ?? '';
     final paidFor =
-        activitySharedExpenses.sharedExpenses[index].paidFor.first.name;
+        activitySharedExpenses.sharedExpenses[index].paidFor?.first?.name ?? '';
     final amount = activitySharedExpenses.sharedExpenses[index].amount;
 
     return ListTile(
