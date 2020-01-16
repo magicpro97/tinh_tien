@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
-import 'package:tinh_tien/app/widgets/action_item.dart';
+import 'package:tinh_tien/app/data/models/activity/activity_shared_expenses.dart';
 import 'package:tinh_tien/app/widgets/app_tabview.dart';
 import 'package:tinh_tien/app/widgets/empty_list.dart';
 import 'package:tinh_tien/common/dimens.dart';
@@ -9,14 +8,19 @@ import 'package:tinh_tien/common/dimens.dart';
 class OutstandingTab extends StatelessWidget {
   final String name;
   final Activity activity;
+  final ActivitySharedExpenses activitySharedExpenses;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.debug}) {
     return name;
   }
 
-  const OutstandingTab({Key key, @required this.activity, this.name})
-      : super(key: key);
+  const OutstandingTab({
+    Key key,
+    @required this.activity,
+    this.name,
+    @required this.activitySharedExpenses,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +41,19 @@ class OutstandingTab extends StatelessWidget {
               Card(
                 elevation: 10.0,
                 child: Padding(
-                  child: Text('Total transaction: '),
+                  child: Text(
+                      'Total transaction: ${activitySharedExpenses
+                          .sharedExpenses?.length ?? 0}'),
                   padding: const EdgeInsets.all(Dimens.NORMAL_PADDING),
                 ),
               ),
               Expanded(
-                child: EmptyList(),
+                child: activitySharedExpenses.sharedExpenses.isEmpty
+                    ? EmptyList()
+                    : ListView.builder(
+                  itemBuilder: _sharedExpensesItem,
+                  itemCount: activitySharedExpenses.sharedExpenses.length,
+                ),
               ),
             ],
           ),
@@ -51,25 +62,26 @@ class OutstandingTab extends StatelessWidget {
     );
   }
 
-  // activity.expenses.isNotEmpty ? ListView.separated(
-  //                    itemBuilder: (_, index) => list[index],
-  //                    separatorBuilder: (_, __) => SizedBox(
-  //                          height: Dimens.XSMALL_PADDING,
-  //                        ),
-  //                    itemCount: list.length) :
+  Widget _sharedExpensesItem(BuildContext context, int index) {
+    final paidBy =
+        activitySharedExpenses.sharedExpenses[index].paidBy.first.name;
+    final paidFor =
+        activitySharedExpenses.sharedExpenses[index].paidFor.first.name;
+    final amount = activitySharedExpenses.sharedExpenses[index].amount;
 
-  Widget _peopleItem(BuildContext context, int index) {
-    final SlidableController slidableController = SlidableController();
-    return Slidable(
-      key: Key('$index'),
-      controller: slidableController,
-      dismissal: defaultDismissal(
-          context, 'People will be delete', 'People is deleted.'),
-      child: ListTile(
-        title: Text('1'),
-      ),
-      actionPane: SlidableDrawerActionPane(),
-      secondaryActions: defaultActionItems,
-    );
+    return ListTile(
+        title: RichText(
+            text: TextSpan(
+              style: DefaultTextStyle
+                  .of(context)
+                  .style,
+              children: [
+                TextSpan(text: paidBy, style: TextStyle(color: Colors.blue)),
+                TextSpan(text: ' paid for '),
+                TextSpan(text: paidFor, style: TextStyle(color: Colors.red)),
+                TextSpan(
+                    text: ' $amount', style: TextStyle(color: Colors.green)),
+              ],
+            )));
   }
 }
