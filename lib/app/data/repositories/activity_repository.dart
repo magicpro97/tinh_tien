@@ -4,6 +4,7 @@ import 'package:meta/meta.dart';
 import 'package:tinh_tien/app/data/datasources/activity_datasource.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/data/models/activity/activity_request.dart';
+import 'package:tinh_tien/app/data/models/activity/activity_summary.dart';
 import 'package:tinh_tien/app/data/repositories/base_repository.dart';
 import 'package:tinh_tien/app/network/no_network_connection_exception.dart';
 import 'package:tinh_tien/core/errors/failures/activity_failure.dart';
@@ -20,8 +21,34 @@ class ActivityRepository extends BaseRepository {
     if (await hasNetworkConnection()) {
       final data =
           await activityDatasource.createActivity(ActivityRequest(name));
-      return data.fold((error) => Left(ActivityFailure(error.message)),
-          (activity) => Right(activity));
+      return data.fold(
+        (error) => Left(ActivityFailure(error.message)),
+        (activity) => Right(activity),
+      );
+    } else {
+      throw NoNetworkConnection();
+    }
+  }
+
+  Future<Either<ActivityFailure, ActivitySummary>> getSummary(String id) async {
+    if (await hasNetworkConnection()) {
+      final data = await activityDatasource.getSummary(id);
+      return data.fold(
+        (error) => Left(ActivityFailure(error.message)),
+        (summary) => Right(summary),
+      );
+    } else {
+      throw NoNetworkConnection();
+    }
+  }
+
+  Future<Either<ActivityFailure, Activity>> getById(String id) async {
+    if (await hasNetworkConnection()) {
+      final data = await activityDatasource.get(id);
+      return data.fold(
+        (error) => Left(ActivityFailure(error.message)),
+        (activity) => Right(activity),
+      );
     } else {
       throw NoNetworkConnection();
     }

@@ -12,12 +12,19 @@ import 'package:tinh_tien/app/widgets/empty_list.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
 class PeopleTab extends StatefulWidget {
+  final String name;
   final Activity activity;
 
-  const PeopleTab({Key key, @required this.activity}) : super(key: key);
+  const PeopleTab({Key key, @required this.activity, @required this.name})
+      : super(key: key);
 
   @override
   _PeopleTabState createState() => _PeopleTabState();
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.debug}) {
+    return name;
+  }
 }
 
 class _PeopleTabState extends State<PeopleTab> {
@@ -51,9 +58,9 @@ class _PeopleTabState extends State<PeopleTab> {
           margin: const EdgeInsets.symmetric(horizontal: Dimens.NORMAL_PADDING),
           child: BlocListener<HomeBloc, HomeState>(
             listener: (_, state) {
-              if (state is LoadedState) {
+              if (state is PeopleCreatedState) {
                 setState(() {
-                  widget.activity.people.add(state.object as Person);
+                  widget.activity.people.add(state.person);
                 });
               }
             },

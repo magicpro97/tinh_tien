@@ -1,4 +1,8 @@
 import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
+import 'package:tinh_tien/app/data/models/activity/activity.dart';
+import 'package:tinh_tien/app/data/models/activity/activity_summary.dart';
+import 'package:tinh_tien/app/data/models/people/person.dart';
 
 abstract class HomeState extends Equatable {
   const HomeState();
@@ -14,13 +18,24 @@ class LoadingState extends HomeState {
   List<Object> get props => [];
 }
 
-class LoadedState extends HomeState {
-  final Object object;
+class ActivityLoadedState extends HomeState {
+  final Activity activity;
+  final ActivitySummary activitySummary;
 
-  LoadedState(this.object);
+  ActivityLoadedState(
+      {@required this.activity, @required this.activitySummary});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [activity, activitySummary];
+}
+
+class PeopleCreatedState extends HomeState {
+  final Person person;
+
+  PeopleCreatedState(this.person);
+
+  @override
+  List<Object> get props => [person];
 }
 
 class ErrorState extends HomeState {

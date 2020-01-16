@@ -7,9 +7,16 @@ import 'package:tinh_tien/app/widgets/empty_list.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
 class OutstandingTab extends StatelessWidget {
+  final String name;
   final Activity activity;
 
-  const OutstandingTab({Key key, @required this.activity}) : super(key: key);
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.debug}) {
+    return name;
+  }
+
+  const OutstandingTab({Key key, @required this.activity, this.name})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

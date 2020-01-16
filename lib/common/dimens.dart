@@ -5,4 +5,5 @@ class Dimens {
   static const LARGE_PADDING = NORMAL_PADDING * 2;
 
   static const ZERO = 0.0;
+  static const EXPANDED_HEIGHT = 240.0;
 }

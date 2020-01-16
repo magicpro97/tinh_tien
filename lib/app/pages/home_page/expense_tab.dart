@@ -11,9 +11,16 @@ import 'package:tinh_tien/app/widgets/timeline_expense_body_item.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
 class ExpenseTab extends StatelessWidget {
+  final String name;
   final Activity activity;
 
-  const ExpenseTab({Key key, @required this.activity}) : super(key: key);
+  const ExpenseTab({Key key, @required this.activity, this.name})
+      : super(key: key);
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.debug}) {
+    return name;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +28,14 @@ class ExpenseTab extends StatelessWidget {
         [], (previous, expense) => previous..add(previous.last + 1));
     final expenseTimelines = activity.expenseADay
         .map((activityExpense) => TimelineModel(
-              TimeLineExpenseBodyItem(
-                title: activityExpense.createdAt.toIso8601String(),
-                expenseItems:
-                    activityExpense.expenses.map((expense) => ExpenseItem(
-                          expense: expense,
-                        )),
-              ),
-            ))
+      TimeLineExpenseBodyItem(
+        title: activityExpense.createdAt.toIso8601String(),
+        expenseItems:
+        activityExpense.expenses.map((expense) => ExpenseItem(
+          expense: expense,
+        )),
+      ),
+    ))
         .toList();
     final lineBarsData = [
       LineChartBarData(
@@ -61,7 +68,7 @@ class ExpenseTab extends StatelessWidget {
           body: CustomScrollView(
             slivers: [
               SliverAppBar(
-                expandedHeight: 250,
+                expandedHeight: Dimens.EXPANDED_HEIGHT,
                 automaticallyImplyLeading: false,
                 flexibleSpace: _buildExpenseChart(
                     tooltipsOnBar, lineBarsData, showIndexes),

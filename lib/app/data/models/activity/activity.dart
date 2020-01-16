@@ -63,6 +63,12 @@ class Activity extends Base {
     previous = max(previous, expense.total);
     return previous;
   });
+
+  double get totalExpense =>
+      expenses.fold(0, (previous, element) => totalExpense + element.amount);
+
+  double get averageExpense =>
+      people.length > 0 ? totalExpense / people.length : 0;
 }
 
 class ActivityExpenseInDay {

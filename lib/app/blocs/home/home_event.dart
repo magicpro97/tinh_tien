@@ -9,8 +9,18 @@ class CreatePeopleEvent extends HomeEvent {
   final String activityId;
   final String name;
 
-  CreatePeopleEvent({@required this.name,@required this.activityId});
+  CreatePeopleEvent({@required this.name, @required this.activityId});
 
   @override
   List<Object> get props => [name];
+}
+
+class GetActivity extends HomeEvent {
+  @override
+  List<Object> get props => [];
+}
+
+class DisplayData extends HomeEvent {
+  @override
+  List<Object> get props => [];
 }
