@@ -10,24 +10,24 @@ class InitialWelcomeState extends WelcomeState {
   List<Object> get props => [];
 }
 
-class CreateActivityFail extends WelcomeState {
+class ErrorState extends WelcomeState {
   final String message;
 
-  CreateActivityFail(this.message);
+  ErrorState(this.message);
 
   @override
   List<Object> get props => [message];
 }
 
-class CreateActivityLoading extends WelcomeState {
+class ActivityLoading extends WelcomeState {
   @override
   List<Object> get props => [];
 }
 
-class CreateActivitySuccess extends WelcomeState {
+class ActivityLoaded extends WelcomeState {
   final Activity activity;
 
-  CreateActivitySuccess(this.activity);
+  ActivityLoaded(this.activity);
 
   @override
   List<Object> get props => [activity];
