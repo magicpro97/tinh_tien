@@ -8,21 +8,19 @@ part of 'activity_shared_expenses.dart';
 
 SharedExpenses _$SharedExpensesFromJson(Map<String, dynamic> json) {
   return SharedExpenses(
-    paidBy: (json['paidBy'] as List)
-        ?.map((e) =>
-            e == null ? null : Person.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
-    paidFor: (json['paidFor'] as List)
-        ?.map((e) =>
-            e == null ? null : Person.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+    paidBy: json['paid_by'] == null
+        ? null
+        : Person.fromJson(json['paid_by'] as Map<String, dynamic>),
+    paidFor: json['paid_for'] == null
+        ? null
+        : Person.fromJson(json['paid_for'] as Map<String, dynamic>),
     amount: (json['amount'] as num)?.toDouble(),
   );
 }
 
 Map<String, dynamic> _$SharedExpensesToJson(SharedExpenses instance) =>
     <String, dynamic>{
-      'paidBy': instance.paidBy,
-      'paidFor': instance.paidFor,
+      'paid_by': instance.paidBy,
+      'paid_for': instance.paidFor,
       'amount': instance.amount,
     };

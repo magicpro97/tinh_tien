@@ -16,9 +16,11 @@ class ActivitySharedExpenses {
 
 @JsonSerializable()
 class SharedExpenses {
-  final List<Person> paidBy;
+  @JsonKey(name: "paid_by")
+  final Person paidBy;
 
-  final List<Person> paidFor;
+  @JsonKey(name: "paid_for")
+  final Person paidFor;
 
   final double amount;
 

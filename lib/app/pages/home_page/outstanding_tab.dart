@@ -42,18 +42,21 @@ class OutstandingTab extends StatelessWidget {
                 elevation: 10.0,
                 child: Padding(
                   child: Text(
-                      'Total transaction: ${activitySharedExpenses
-                          .sharedExpenses?.length ?? 0}'),
+                      'Total transaction: ${activitySharedExpenses.sharedExpenses?.length ?? 0}'),
                   padding: const EdgeInsets.all(Dimens.NORMAL_PADDING),
                 ),
               ),
               Expanded(
                 child: activitySharedExpenses.sharedExpenses.isEmpty
                     ? EmptyList()
-                    : ListView.builder(
-                  itemBuilder: _sharedExpensesItem,
-                  itemCount: activitySharedExpenses.sharedExpenses.length,
-                ),
+                    : Card(
+                        elevation: 10.0,
+                        child: ListView.builder(
+                          itemBuilder: _sharedExpensesItem,
+                          itemCount:
+                              activitySharedExpenses.sharedExpenses.length,
+                        ),
+                      ),
               ),
             ],
           ),
@@ -63,25 +66,21 @@ class OutstandingTab extends StatelessWidget {
   }
 
   Widget _sharedExpensesItem(BuildContext context, int index) {
-    final paidBy =
-        activitySharedExpenses.sharedExpenses[index].paidBy?.first?.name ?? '';
-    final paidFor =
-        activitySharedExpenses.sharedExpenses[index].paidFor?.first?.name ?? '';
+    final paidBy = activitySharedExpenses.sharedExpenses[index].paidBy.name;
+    final paidFor = activitySharedExpenses.sharedExpenses[index].paidFor.name;
     final amount = activitySharedExpenses.sharedExpenses[index].amount;
 
     return ListTile(
         title: RichText(
             text: TextSpan(
-              style: DefaultTextStyle
-                  .of(context)
-                  .style,
-              children: [
-                TextSpan(text: paidBy, style: TextStyle(color: Colors.blue)),
-                TextSpan(text: ' paid for '),
-                TextSpan(text: paidFor, style: TextStyle(color: Colors.red)),
-                TextSpan(
-                    text: ' $amount', style: TextStyle(color: Colors.green)),
-              ],
-            )));
+      style: DefaultTextStyle.of(context).style,
+      children: [
+        TextSpan(text: paidBy, style: TextStyle(color: Colors.blue)),
+        TextSpan(text: ' gives '),
+        TextSpan(text: ' $amount', style: TextStyle(color: Colors.green)),
+        TextSpan(text: ' to '),
+        TextSpan(text: paidFor, style: TextStyle(color: Colors.red)),
+      ],
+    )));
   }
 }

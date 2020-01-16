@@ -13,10 +13,11 @@ class BalanceTab extends StatelessWidget {
   final Activity activity;
   final ActivitySummary activitySummary;
 
-  const BalanceTab({Key key,
-    @required this.activity,
-    @required this.name,
-    @required this.activitySummary})
+  const BalanceTab(
+      {Key key,
+      @required this.activity,
+      @required this.name,
+      @required this.activitySummary})
       : super(key: key);
 
   @override
@@ -31,37 +32,49 @@ class BalanceTab extends StatelessWidget {
     final expenseSummary = summary.expenseSummary;
     final expenseSummaryItems = expenseSummary
         .map(
-          (summary) =>
-          ListTile(
+          (summary) => ListTile(
             title: Text(summary.name),
             subtitle: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text('Spent: ${summary.spent}'),
-                Text('Paid: ${summary.paid}'),
+                Row(
+                  children: <Widget>[
+                    Icon(
+                      Icons.arrow_drop_down,
+                      color: Colors.red,
+                    ),
+                    Text('${summary.spent}'),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Icon(
+                      Icons.arrow_drop_up,
+                      color: Colors.green,
+                    ),
+                    Text('${summary.paid}'),
+                  ],
+                ),
               ],
             ),
             trailing: Text(
               '${summary.amount}',
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .body1
-                  .apply(
-                color: summary.amount < 0 ? Colors.red : Colors.green,
-              ),
+              style: Theme.of(context).textTheme.body1.apply(
+                    color: summary.amount < 0 ? Colors.red : Colors.green,
+                  ),
             ),
           ),
-    )
+        )
         .toList();
-    final pieCharDataList = expenseSummary.map(
-          (summary) =>
-          PieChartSectionData(
+    final pieCharDataList = expenseSummary
+        .map(
+          (summary) => PieChartSectionData(
             radius: 90.0,
             value: summary.spent,
             color: _randomColor.randomColor(),
+            showTitle: true,
           ),
-    ).toList();
+        )
+        .toList();
 
     return Container(
       child: CustomScrollView(
@@ -77,16 +90,16 @@ class BalanceTab extends StatelessWidget {
               ),
               child: expenseSummary.isNotEmpty
                   ? Card(
-                elevation: 10.0,
-                child: PieChart(
-                  PieChartData(
-                    sections: pieCharDataList,
-                    centerSpaceRadius: 0.0,
-                    sectionsSpace: 10.0,
-                    borderData: FlBorderData(show: false),
-                  ),
-                ),
-              )
+                      elevation: 10.0,
+                      child: PieChart(
+                        PieChartData(
+                          sections: pieCharDataList,
+                          centerSpaceRadius: 0.0,
+                          sectionsSpace: 10.0,
+                          borderData: FlBorderData(show: false),
+                        ),
+                      ),
+                    )
                   : EmptyList(),
             ),
           ),
@@ -104,32 +117,24 @@ class BalanceTab extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     'Total: ${activity.totalExpense}',
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .subtitle
-                        .apply(
-                      color: AppColors.WHITE_TEXT,
-                    ),
+                    style: Theme.of(context).textTheme.subtitle.apply(
+                          color: AppColors.WHITE_TEXT,
+                        ),
                   ),
                   Text('Average: ${activity.averageExpense}',
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .subtitle
-                          .apply(
-                        color: AppColors.WHITE_TEXT,
-                      )),
+                      style: Theme.of(context).textTheme.subtitle.apply(
+                            color: AppColors.WHITE_TEXT,
+                          )),
                 ],
               )
             ],
           ),
           summary.expenseSummary.isNotEmpty
               ? SliverList(
-            delegate: SliverChildBuilderDelegate(
-                    (_, index) => expenseSummaryItems[index],
-                childCount: summary.expenseSummary.length),
-          )
+                  delegate: SliverChildBuilderDelegate(
+                      (_, index) => expenseSummaryItems[index],
+                      childCount: summary.expenseSummary.length),
+                )
               : SliverFillRemaining(child: EmptyList()),
         ],
       ),

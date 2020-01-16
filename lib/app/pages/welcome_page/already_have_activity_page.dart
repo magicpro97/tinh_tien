@@ -36,93 +36,91 @@ class _AlreadyHaveActivityPageState extends State<AlreadyHaveActivityPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: QrCamera(
-          qrCodeCallback: (code) {
-            _welcomeBloc.add(GetActivityEvent(code));
-          },
-          child: SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(Dimens.NORMAL_PADDING),
-              child: BlocListener<WelcomeBloc, WelcomeState>(
-                bloc: _welcomeBloc,
-                listener: (_, state) {
-                  if (state is ActivityLoaded) {
-                    Navigator.pushReplacementNamed(context, HOME_PAGE);
-                  }
-                },
-                child: BlocBuilder<WelcomeBloc, WelcomeState>(
-                  bloc: _welcomeBloc,
-                  builder: (_, state) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          height: kToolbarHeight,
-                          child: Row(
+      qrCodeCallback: (code) {
+        _welcomeBloc.add(GetActivityEvent(code));
+      },
+      child: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(Dimens.NORMAL_PADDING),
+          child: BlocListener<WelcomeBloc, WelcomeState>(
+            bloc: _welcomeBloc,
+            listener: (_, state) {
+              if (state is ActivityLoaded) {
+                Navigator.pushReplacementNamed(context, HOME_PAGE);
+              }
+            },
+            child: BlocBuilder<WelcomeBloc, WelcomeState>(
+              bloc: _welcomeBloc,
+              builder: (_, state) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      height: kToolbarHeight,
+                      child: Row(
+                        children: <Widget>[
+                          FlatButton.icon(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                            ),
+                            label: Container(),
+                          ),
+                          Text(
+                            'Scan your QR code',
+                            style: Theme.of(context)
+                                .textTheme
+                                .title
+                                .apply(color: AppColors.WHITE_TEXT),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Placeholder(
+                      fallbackWidth: 300,
+                      fallbackHeight: 300,
+                    ),
+                    SizedBox(
+                      height: Dimens.NORMAL_PADDING,
+                    ),
+                    TextField(
+                      controller: _idController,
+                      decoration: InputDecoration(
+                          fillColor: AppColors.MAIN_COLOR,
+                          border: OutlineInputBorder(),
+                          hintText: 'Type your activity id',
+                          hintStyle: TextStyle(
+                            color: AppColors.WHITE_TEXT,
+                          )),
+                      onSubmitted: (value) {
+                        _welcomeBloc.add(GetActivityEvent(value));
+                      },
+                    ),
+                    if (state is ErrorState) Center(child: Text(state.message)),
+                    state is ActivityLoading
+                        ? CircularProgressIndicator()
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              FlatButton.icon(
+                              AppButton(
                                 onPressed: () {
-                                  Navigator.pop(context);
+                                  _welcomeBloc.add(
+                                      GetActivityEvent(_idController.text));
                                 },
-                                icon: Icon(
-                                  Icons.arrow_back,
-                                  color: Colors.white,
-                                ),
-                                label: Container(),
-                              ),
-                              Text(
-                                'Scan your QR code',
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .title
-                                    .apply(color: AppColors.WHITE_TEXT),
+                                text: 'Enter',
                               ),
                             ],
-                          ),
-                        ),
-                        Placeholder(
-                          fallbackWidth: 300,
-                          fallbackHeight: 300,
-                        ),
-                        SizedBox(
-                          height: Dimens.NORMAL_PADDING,
-                        ),
-                        TextField(
-                          controller: _idController,
-                          decoration: InputDecoration(
-                              fillColor: AppColors.MAIN_COLOR,
-                              border: OutlineInputBorder(),
-                              hintText: 'Type your activity id',
-                              hintStyle: TextStyle(
-                                color: AppColors.WHITE_TEXT,
-                              )),
-                          onSubmitted: (value) {
-                            _welcomeBloc.add(GetActivityEvent(value));
-                          },
-                        ),
-                        if (state is ErrorState) Center(child: Text(
-                            state.message)),
-                        state is ActivityLoading
-                            ? CircularProgressIndicator()
-                            : Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            AppButton(
-                              onPressed: () {
-                                _welcomeBloc.add(
-                                    GetActivityEvent(_idController.text));
-                              },
-                              text: 'Enter',
-                            ),
-                          ],
-                        )
-                      ],
-                    );
-                  },
-                ),
-              ),
+                          )
+                  ],
+                );
+              },
             ),
           ),
-        ));
+        ),
+      ),
+    ));
   }
 }
