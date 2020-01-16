@@ -68,7 +68,6 @@ class BalanceTab extends StatelessWidget {
         slivers: <Widget>[
           SliverAppBar(
             expandedHeight: Dimens.EXPANDED_HEIGHT,
-            automaticallyImplyLeading: false,
             flexibleSpace: Container(
               padding: const EdgeInsets.fromLTRB(
                 Dimens.NORMAL_PADDING,
@@ -97,6 +96,7 @@ class BalanceTab extends StatelessWidget {
             floating: true,
             snap: true,
             pinned: true,
+            automaticallyImplyLeading: false,
             actions: <Widget>[
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,

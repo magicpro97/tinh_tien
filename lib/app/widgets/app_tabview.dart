@@ -19,6 +19,7 @@ class AppTabView extends StatelessWidget {
          title != null ? AppBar(
           title: Text(title),
           centerTitle: false,
+          automaticallyImplyLeading: false,
          ) : Container(),
           body,
         ],

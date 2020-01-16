@@ -26,4 +26,6 @@ class SharedExpenses {
 
   factory SharedExpenses.fromJson(Map<String, dynamic> json) =>
       _$SharedExpensesFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SharedExpensesToJson(this);
 }
