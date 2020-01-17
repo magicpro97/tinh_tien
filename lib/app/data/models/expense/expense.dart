@@ -23,6 +23,8 @@ class Expense extends Base {
   @JsonKey(defaultValue: [], name: 'paid_by')
   final List<Person> paidBy;
 
+  final DateTime date;
+
   Expense({
     this.id,
     this.createdAt,
@@ -30,6 +32,7 @@ class Expense extends Base {
     this.amount,
     this.people,
     this.paidBy,
+    this.date,
   }) : super(id, createdAt, updatedAt);
 
   factory Expense.fromJson(Map<String, dynamic> json) =>

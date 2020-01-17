@@ -27,6 +27,7 @@ Expense _$ExpenseFromJson(Map<String, dynamic> json) {
                 e == null ? null : Person.fromJson(e as Map<String, dynamic>))
             ?.toList() ??
         [],
+    date: json['date'] == null ? null : DateTime.parse(json['date'] as String),
   );
 }
 
@@ -37,4 +38,5 @@ Map<String, dynamic> _$ExpenseToJson(Expense instance) => <String, dynamic>{
       'amount': instance.amount,
       'people': instance.people,
       'paid_by': instance.paidBy,
+  'date': instance.date?.toIso8601String(),
     };
