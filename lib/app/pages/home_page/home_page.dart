@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    log(context.toString(), name: 'beforeBloc');
     _homeBloc = BlocProvider.of<HomeBloc>(context);
     _homeBloc.add(GetActivity());
   }

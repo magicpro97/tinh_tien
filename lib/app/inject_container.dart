@@ -3,10 +3,12 @@ import 'package:get_it/get_it.dart';
 import 'package:tinh_tien/app/blocs/welcome/bloc.dart';
 import 'package:tinh_tien/app/data/datasources/activity_datasource.dart';
 import 'package:tinh_tien/app/data/repositories/activity_repository.dart';
+import 'package:tinh_tien/app/data/repositories/expense_repository.dart';
 import 'package:tinh_tien/app/data/repositories/people_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'blocs/home/home_bloc.dart';
+import 'data/datasources/expense_datasource.dart';
 import 'data/datasources/people_datasouce.dart';
 
 final sl = GetIt.instance;
@@ -20,6 +22,7 @@ Future<void> init() async {
   // data source
   sl.registerLazySingleton(() => ActivityDatasource());
   sl.registerLazySingleton(() => PeopleDatasouce());
+  sl.registerLazySingleton(() => ExpenseDatasouce());
 
   // repo
   sl.registerLazySingleton(() => ActivityRepository(
@@ -29,6 +32,10 @@ Future<void> init() async {
   sl.registerLazySingleton(() => PeopleRepository(
         dataConnectionChecker: sl(),
         peopleDatasouce: sl(),
+      ));
+  sl.registerLazySingleton(() => ExpenseRepository(
+        dataConnectionChecker: sl(),
+        expenseDatasource: sl(),
       ));
 
   // bloc
@@ -40,6 +47,6 @@ Future<void> init() async {
         activityRepository: sl(),
         peopleRepository: sl(),
         sharedPreferences: sl(),
-        //expenseRepository: sl(),
+        expenseRepository: sl(),
       ));
 }

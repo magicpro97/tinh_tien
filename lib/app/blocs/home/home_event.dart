@@ -27,8 +27,8 @@ class DisplayData extends HomeEvent {
 }
 class CreateExpenseEvent extends HomeEvent {
   final String activityId;
-  final List<Person> participants;
   final List<Person> paidBy;
+  final List<Person> participants;
   final String paidFor;
   final double amount;
 
