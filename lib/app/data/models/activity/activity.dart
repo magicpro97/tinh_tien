@@ -65,7 +65,7 @@ class Activity extends Base {
   });
 
   double get totalExpense =>
-      expenses.fold(0, (previous, element) => totalExpense + element.amount);
+      expenses.fold(0, (previous, element) => previous + element.amount);
 
   double get averageExpense =>
       people.length > 0 ? totalExpense / people.length : 0;

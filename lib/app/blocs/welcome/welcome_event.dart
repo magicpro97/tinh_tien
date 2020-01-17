@@ -12,3 +12,12 @@ class CreateActivityEvent extends WelcomeEvent {
   @override
   List<Object> get props => [name];
 }
+
+class GetActivityEvent extends WelcomeEvent {
+  final String id;
+
+  GetActivityEvent(this.id);
+
+  @override
+  List<Object> get props => [id];
+}

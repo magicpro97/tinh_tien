@@ -18,6 +18,7 @@ ExpenseSummary _$ExpenseSummaryFromJson(Map<String, dynamic> json) {
     spent: (json['spent'] as num)?.toDouble(),
     paid: (json['paid'] as num)?.toDouble(),
     amount: (json['amount'] as num)?.toDouble(),
+    name: json['name'] as String,
   );
 }
 
@@ -26,6 +27,7 @@ Map<String, dynamic> _$ExpenseSummaryToJson(ExpenseSummary instance) =>
       '_id': instance.id,
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),
+      'name': instance.name,
       'spent': instance.spent,
       'paid': instance.paid,
       'amount': instance.amount,
