@@ -82,7 +82,7 @@ class _WelcomePageState extends State<WelcomePage>
           child: BlocListener(
             bloc: _welcomeBloc,
             listener: (_, state) {
-              if (state is CreateActivitySuccess) {
+              if (state is ActivityLoaded) {
                 Navigator.pushReplacementNamed(context, HOME_PAGE,
                     arguments: state.activity);
               }
@@ -132,7 +132,7 @@ class _WelcomePageState extends State<WelcomePage>
                         border: OutlineInputBorder(),
                         hintText: "Your activity's name",
                         errorText:
-                            state is CreateActivityFail ? state.message : null,
+                        state is ErrorState ? state.message : null,
                       ),
                       onSubmitted: (value) {
                         submitActivity(state, value);
@@ -143,13 +143,13 @@ class _WelcomePageState extends State<WelcomePage>
                   SizedBox(
                     height: Dimens.LARGE_PADDING,
                   ),
-                  state is CreateActivityLoading
+                  state is ActivityLoading
                       ? CircularProgressIndicator()
                       : Container(),
                   AnimatedOpacity(
                     child: MaterialButton(
                       onPressed: () {
-                        if (!(state is CreateActivityLoading)) {
+                        if (!(state is ActivityLoading)) {
                           submitActivity(state, _activityNameController.text);
                         }
                       },
@@ -167,7 +167,7 @@ class _WelcomePageState extends State<WelcomePage>
                   AnimatedOpacity(
                     child: FlatButton(
                       onPressed: () {
-                        if (!(state is CreateActivityLoading)) {
+                        if (!(state is ActivityLoading)) {
                           Navigator.pushNamed(
                               context, ALREADY_HAVE_ACTIVITY_PAGE);
                         }
@@ -190,7 +190,7 @@ class _WelcomePageState extends State<WelcomePage>
   }
 
   void submitActivity(WelcomeState state, String value) {
-    if (!(state is CreateActivityLoading)) {
+    if (!(state is ActivityLoading)) {
       _welcomeBloc.add(CreateActivityEvent(value));
     }
   }

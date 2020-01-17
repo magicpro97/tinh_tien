@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:timeline_list/timeline.dart';
 import 'package:timeline_list/timeline_model.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/route.dart';
+import 'package:tinh_tien/app/utils.dart';
 import 'package:tinh_tien/app/widgets/app_tabview.dart';
 import 'package:tinh_tien/app/widgets/empty_list.dart';
 import 'package:tinh_tien/app/widgets/expense_item.dart';
@@ -24,43 +27,18 @@ class ExpenseTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showIndexes = activity.expenses.fold<List<int>>(
-        [], (previous, expense) => previous..add(previous.last + 1));
     final expenseTimelines = activity.expenseADay
         .map((activityExpense) => TimelineModel(
-      TimeLineExpenseBodyItem(
-        title: activityExpense.createdAt.toIso8601String(),
-        expenseItems:
-        activityExpense.expenses.map((expense) => ExpenseItem(
-          expense: expense,
-        )),
-      ),
-    ))
+              TimeLineExpenseBodyItem(
+                title: DateUtils.toDate(activityExpense.createdAt),
+                expenseItems: activityExpense.expenses
+                    .map((expense) => ExpenseItem(
+                          expense: expense,
+                        ))
+                    .toList(),
+              ),
+            ))
         .toList();
-    final lineBarsData = [
-      LineChartBarData(
-        showingIndicators: showIndexes,
-        isCurved: true,
-        spots: [
-          FlSpot(0, 0),
-          ...activity.expenseADay
-              .asMap()
-              .entries
-              .map((entry) => FlSpot(entry.key.toDouble(), entry.value.total)),
-        ],
-        barWidth: 4.0,
-        belowBarData: BarAreaData(
-          show: true,
-          colors: [Colors.teal],
-        ),
-        dotData: FlDotData(
-          show: false,
-        ),
-        colors: [Colors.white],
-        preventCurveOverShooting: true,
-      ),
-    ];
-    final LineChartBarData tooltipsOnBar = lineBarsData[0];
 
     return AppTabView(
       body: Expanded(
@@ -70,8 +48,7 @@ class ExpenseTab extends StatelessWidget {
               SliverAppBar(
                 expandedHeight: Dimens.EXPANDED_HEIGHT,
                 automaticallyImplyLeading: false,
-                flexibleSpace: _buildExpenseChart(
-                    tooltipsOnBar, lineBarsData, showIndexes),
+                flexibleSpace: _buildExpenseChart(context),
               ),
               SliverAppBar(
                 title: Text('Expenses'),
@@ -83,11 +60,11 @@ class ExpenseTab extends StatelessWidget {
                 hasScrollBody: false,
                 child: activity.expenses.isNotEmpty
                     ? Timeline(
-                  children: expenseTimelines,
-                  position: TimelinePosition.Left,
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                )
+                        children: expenseTimelines,
+                        position: TimelinePosition.Left,
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                      )
                     : EmptyList(),
               ),
             ],
@@ -103,8 +80,43 @@ class ExpenseTab extends StatelessWidget {
     );
   }
 
-  Widget _buildExpenseChart(LineChartBarData tooltipsOnBar,
-      List<LineChartBarData> lineBarsData, List<int> showIndexes) {
+  Widget _buildExpenseChart(BuildContext context) {
+    final totals =
+        activity.expenseADay.map((expense) => expense.total).toList();
+    final showIndexes =
+        activity.expenseADay.fold<List<int>>([], (previous, expense) {
+      if (previous.isNotEmpty) {
+        previous.add(previous.last + 1);
+      } else {
+        previous.add(0);
+      }
+      return previous;
+    });
+
+    final lineBarsData = [
+      LineChartBarData(
+        showingIndicators: showIndexes,
+        isCurved: true,
+        spots: activity.expenseADay
+            .asMap()
+            .entries
+            .map((entry) => FlSpot(entry.key.toDouble(), entry.value.total))
+            .toList(),
+        barWidth: 4.0,
+        belowBarData: BarAreaData(
+          show: true,
+          colors: [Colors.teal],
+        ),
+        dotData: FlDotData(
+          show: true,
+          dotColor: Colors.orange,
+          checkToShowDot: (dot) => totals.last == dot.y,
+        ),
+        colors: [Colors.white],
+        preventCurveOverShooting: true,
+      ),
+    ];
+    final LineChartBarData tooltipsOnBar = lineBarsData[0];
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(
@@ -115,15 +127,16 @@ class ExpenseTab extends StatelessWidget {
       ),
       child: activity.expenseADay.isNotEmpty
           ? Card(
-        elevation: 10.0,
-        child: _buildChart(showIndexes, tooltipsOnBar, lineBarsData),
-      )
+              elevation: 10.0,
+              child: _buildChart(
+                  context, showIndexes, tooltipsOnBar, lineBarsData),
+            )
           : EmptyList(),
     );
   }
 
-  Widget _buildChart(List<int> showIndexes, LineChartBarData tooltipsOnBar,
-      List<LineChartBarData> lineBarsData) {
+  Widget _buildChart(BuildContext context, List<int> showIndexes,
+      LineChartBarData tooltipsOnBar, List<LineChartBarData> lineBarsData) {
     return LineChart(LineChartData(
         showingTooltipIndicators: showIndexes.map((index) {
           return MapEntry(
@@ -151,7 +164,7 @@ class ExpenseTab extends StatelessWidget {
         lineBarsData: lineBarsData,
         minX: 0,
         minY: 0,
-        maxY: activity.maxExpenseADay,
+        maxY: activity.maxExpenseADay * 1.5,
         maxX: activity.expenseADay.length.toDouble(),
         gridData: const FlGridData(show: false),
         borderData: FlBorderData(border: Border()),
@@ -160,12 +173,14 @@ class ExpenseTab extends StatelessWidget {
             showTitles: false,
           ),
           bottomTitles: SideTitles(
-            showTitles: true,
-            getTitles: (value) => activity.expenseADay
-                .firstWhere((expense) => expense.total == value)
-                .createdAt
-                .toIso8601String(),
-          ),
+              showTitles: true,
+              getTitles: (value) {
+                if (value < activity.expenseADay.length) {
+                  return DateUtils.toDate2(
+                      activity.expenseADay[value.toInt()].createdAt);
+                }
+                return '';
+              }),
         ),
         axisTitleData: FlAxisTitleData(
           leftTitle: const AxisTitle(showTitle: true, titleText: 'Money'),

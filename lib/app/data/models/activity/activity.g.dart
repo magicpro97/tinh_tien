@@ -18,20 +18,20 @@ Activity _$ActivityFromJson(Map<String, dynamic> json) {
     name: json['name'] as String,
     people: (json['people'] as List)
         ?.map((e) =>
-    e == null ? null : Person.fromJson(e as Map<String, dynamic>))
+            e == null ? null : Person.fromJson(e as Map<String, dynamic>))
         ?.toList(),
     expenses: (json['expenses'] as List)
         ?.map((e) =>
-    e == null ? null : Expense.fromJson(e as Map<String, dynamic>))
+            e == null ? null : Expense.fromJson(e as Map<String, dynamic>))
         ?.toList(),
   );
 }
 
 Map<String, dynamic> _$ActivityToJson(Activity instance) => <String, dynamic>{
-  '_id': instance.id,
-  'created_at': instance.createdAt?.toIso8601String(),
-  'updated_at': instance.updatedAt?.toIso8601String(),
+      '_id': instance.id,
+      'created_at': instance.createdAt?.toIso8601String(),
+      'updated_at': instance.updatedAt?.toIso8601String(),
       'name': instance.name,
-  'people': instance.people,
-  'expenses': instance.expenses,
+      'people': instance.people,
+      'expenses': instance.expenses,
     };

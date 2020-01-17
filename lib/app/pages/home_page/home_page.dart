@@ -81,6 +81,7 @@ class _HomePageState extends State<HomePage> {
               final outstandingTab = OutstandingTab(
                 name: tabNames[3],
                 activity: activity,
+                activitySharedExpenses: state.activitySharedExpenses,
               );
               _tabs.clear();
               _tabs.addAll([

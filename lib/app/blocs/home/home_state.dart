@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
+import 'package:tinh_tien/app/data/models/activity/activity_shared_expenses.dart';
 import 'package:tinh_tien/app/data/models/activity/activity_summary.dart';
 import 'package:tinh_tien/app/data/models/expense/expense.dart';
 import 'package:tinh_tien/app/data/models/people/person.dart';
@@ -22,12 +23,16 @@ class LoadingState extends HomeState {
 class ActivityLoadedState extends HomeState {
   final Activity activity;
   final ActivitySummary activitySummary;
+  final ActivitySharedExpenses activitySharedExpenses;
 
-  ActivityLoadedState(
-      {@required this.activity, @required this.activitySummary});
+  ActivityLoadedState({
+    @required this.activity,
+    @required this.activitySummary,
+    @required this.activitySharedExpenses,
+  });
 
   @override
-  List<Object> get props => [activity, activitySummary];
+  List<Object> get props => [activity, activitySummary, activitySharedExpenses];
 }
 
 class PeopleCreatedState extends HomeState {
