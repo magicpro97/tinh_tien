@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'package:tinh_tien/app/widgets/app_scaffold.dart';
 import 'package:tinh_tien/app/widgets/chip_list.dart';
 import 'package:tinh_tien/common/colors.dart';
 import 'package:tinh_tien/common/dimens.dart';
+import 'package:tinh_tien/core/vadidator/validator.dart';
 
 class ExpensePage extends StatefulWidget {
   @override
@@ -27,6 +29,10 @@ class _ExpensePageState extends State<ExpensePage> {
   TextEditingController _paidFor;
   TextEditingController _amount;
   FocusNode _amountFocus;
+  StreamController<String> _paidForValidator;
+  StreamController<String> _amountValidator;
+  StreamController<int> _paidByForValidator;
+  StreamController<int> _participantValidator;
 
   @override
   void initState() {
@@ -37,11 +43,23 @@ class _ExpensePageState extends State<ExpensePage> {
     _paidFor = TextEditingController();
     _amount = TextEditingController();
     _amountFocus = FocusNode();
+    _paidForValidator = StreamController();
+    _paidForValidator.stream.transform(notEmptyString);
+    _amountValidator = StreamController();
+    _amountValidator.stream.transform(notEmptyString);
+    _paidByForValidator = StreamController();
+    _paidByForValidator.stream.transform(notEmptyList);
+    _participantValidator = StreamController();
+    _participantValidator.stream.transform(notEmptyList);
     super.initState();
   }
 
   @override
   void dispose() {
+    _paidForValidator.close();
+    _amountValidator.close();
+    _paidByForValidator.close();
+    _participantValidator.close();
     _paidFor.dispose();
     _amount.dispose();
     _amountFocus.dispose();
@@ -54,6 +72,7 @@ class _ExpensePageState extends State<ExpensePage> {
     } else {
       _selectedPaidBys.remove(person);
     }
+    _paidByForValidator.add(_selectedPaidBys.length);
   }
 
   void _onParticipantSelected(selected, person) {
@@ -62,6 +81,7 @@ class _ExpensePageState extends State<ExpensePage> {
     } else {
       _selectedParticipants.remove(person);
     }
+    _participantValidator.add(_selectedParticipants.length);
   }
 
   @override
@@ -95,55 +115,83 @@ class _ExpensePageState extends State<ExpensePage> {
                                 onChanged: _onPaidBySelected))
                             .toList(),
                       ),
-                      subtitle: Text(
-                          _selectedParticipants.isNotEmpty ? '' : 'Required'),
+                      subtitle: StreamBuilder<int>(
+                        stream: _paidByForValidator.stream,
+                        builder: (context, snapshot) {
+                          return Text(snapshot.hasError
+                              ? snapshot.error.toString()
+                              : '');
+                        },
+                      ),
                     ),
                   SizedBox(
                     height: Dimens.NORMAL_PADDING,
                   ),
                   Text('Paid for:'),
-                  TextField(
-                    textInputAction: TextInputAction.go,
-                    controller: _paidFor,
-                    decoration: InputDecoration(
-                      hintText: 'Description Ex:Beer',
-                      errorText: _paidFor.text.length > 0 ? null : "Required",
-                    ),
-                    onSubmitted: (value) {
-                      _amountFocus.requestFocus();
+                  StreamBuilder(
+                    stream: _paidForValidator.stream,
+                    builder: (context, snapshot) {
+                      return TextField(
+                        textInputAction: TextInputAction.go,
+                        controller: _paidFor,
+                        decoration: InputDecoration(
+                          hintText: 'Description Ex:Beer',
+                          errorText: snapshot.hasError ? snapshot.error : null,
+                        ),
+                        onSubmitted: (value) {
+                          _amountFocus.requestFocus();
+                        },
+                        onChanged: (value) => _paidForValidator.add(value),
+                      );
                     },
                   ),
                   SizedBox(
                     height: Dimens.NORMAL_PADDING,
                   ),
                   Text('Amount of money'),
-                  TextField(
-                    focusNode: _amountFocus,
-                    textInputAction: TextInputAction.go,
-                    controller: _amount,
-                    decoration: InputDecoration(
-                      hintText: 'Amount Ex:10000',
-                      errorText: _amount.text.length > 0 ? null : "Required",
-                    ),
-                    keyboardType: TextInputType.numberWithOptions(
-                        signed: true, decimal: false),
-                    inputFormatters: <TextInputFormatter>[
-                      WhitelistingTextInputFormatter.digitsOnly,
-                    ],
+                  StreamBuilder<String>(
+                    stream: _amountValidator.stream,
+                    builder: (context, snapshot) {
+                      return TextField(
+                        focusNode: _amountFocus,
+                        textInputAction: TextInputAction.go,
+                        controller: _amount,
+                        decoration: InputDecoration(
+                          hintText: 'Amount Ex:10000',
+                          errorText: snapshot.hasError ? snapshot.error : null,
+                        ),
+                        keyboardType: TextInputType.numberWithOptions(
+                            signed: true, decimal: false),
+                        inputFormatters: <TextInputFormatter>[
+                          WhitelistingTextInputFormatter.digitsOnly,
+                        ],
+                        onChanged: (value) => _amountValidator.add(value),
+                      );
+                    },
                   ),
                   SizedBox(
                     height: Dimens.NORMAL_PADDING,
                   ),
                   Text('Participants:'),
                   if (state is ActivityLoadedState)
-                    ChipList(
-                      chips: state.activity.people
-                          .map((person) =>
-                          AppChip<Person>(
-                              value: person,
-                              label: person.name,
-                              onChanged: _onParticipantSelected))
-                          .toList(),
+                    ListTile(
+                      title: ChipList(
+                        chips: state.activity.people
+                            .map((person) =>
+                            AppChip<Person>(
+                                value: person,
+                                label: person.name,
+                                onChanged: _onParticipantSelected))
+                            .toList(),
+                      ),
+                      subtitle: StreamBuilder<int>(
+                        stream: _participantValidator.stream,
+                        builder: (context, snapshot) {
+                          return Text(snapshot.hasError
+                              ? snapshot.error.toString()
+                              : '');
+                        },
+                      ),
                     ),
                   SizedBox(
                     height: Dimens.NORMAL_PADDING,
