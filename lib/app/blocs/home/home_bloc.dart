@@ -78,10 +78,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       try {
         final activityId = sharedPreferences.getString(ACTIVITY_ID);
         final data = await activityRepository.createExpense(
-            activityId: activityId, expense: event.expense);
+            activityId: activityId, expenseRequest: event.expense);
         yield data.fold(
-              (error) => ErrorState(error.message),
-              (expense) => ExpenseCreatedState(),
+          (error) => ErrorState(error.message),
+          (data) => ExpenseCreatedState(),
         );
       } catch (e) {
         if (e is NoNetworkConnection) {

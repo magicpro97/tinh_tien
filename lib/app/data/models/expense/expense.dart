@@ -25,6 +25,9 @@ class Expense extends Base {
 
   final DateTime date;
 
+  @JsonKey(name: 'paid_for')
+  final String paidFor;
+
   Expense({
     this.id,
     this.createdAt,
@@ -32,6 +35,7 @@ class Expense extends Base {
     this.amount,
     this.people,
     this.paidBy,
+    this.paidFor,
     this.date,
   }) : super(id, createdAt, updatedAt);
 

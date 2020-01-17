@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:tinh_tien/app/blocs/home/bloc.dart';
-import 'package:tinh_tien/app/data/models/expense/expense.dart';
+import 'package:tinh_tien/app/data/models/expense/expense_request.dart';
 import 'package:tinh_tien/app/data/models/people/person.dart';
 import 'package:tinh_tien/app/utils.dart';
 import 'package:tinh_tien/app/widgets/app_chip.dart';
@@ -43,14 +43,10 @@ class _ExpensePageState extends State<ExpensePage> {
     _paidFor = TextEditingController();
     _amount = TextEditingController();
     _amountFocus = FocusNode();
-    _paidForValidator = StreamController();
-    _paidForValidator.stream.transform(notEmptyString);
-    _amountValidator = StreamController();
-    _amountValidator.stream.transform(notEmptyString);
-    _paidByForValidator = StreamController();
-    _paidByForValidator.stream.transform(notEmptyList);
-    _participantValidator = StreamController();
-    _participantValidator.stream.transform(notEmptyList);
+    _paidForValidator = StreamController.broadcast();
+    _amountValidator = StreamController.broadcast();
+    _paidByForValidator = StreamController.broadcast();
+    _participantValidator = StreamController.broadcast();
     super.initState();
   }
 
@@ -88,10 +84,10 @@ class _ExpensePageState extends State<ExpensePage> {
   Widget build(BuildContext context) {
     return BlocListener(
       bloc: _homeBloc,
-      listener: (_, state) {
+      listener: (context, state) {
         if (state is ExpenseCreatedState) {
           _homeBloc.add(GetActivity());
-          //Navigator.pop(context);
+          Navigator.pop(context);
         }
       },
       child: BlocBuilder<HomeBloc, HomeState>(
@@ -104,23 +100,25 @@ class _ExpensePageState extends State<ExpensePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text('Paid by:'),
-                  if (state is ActivityLoadedState)
                     ListTile(
                       title: ChipList(
-                        chips: state.activity.people
-                            .map((person) =>
-                            AppChip<Person>(
+                        chips: state is ActivityLoadedState ? state.activity.people
+                            .map((person) => AppChip<Person>(
                                 value: person,
                                 label: person.name,
                                 onChanged: _onPaidBySelected))
-                            .toList(),
+                            .toList() : [],
                       ),
-                      subtitle: StreamBuilder<int>(
-                        stream: _paidByForValidator.stream,
+                      subtitle: StreamBuilder<String>(
+                        stream:
+                            _paidByForValidator.stream.transform(notEmptyList),
                         builder: (context, snapshot) {
-                          return Text(snapshot.hasError
-                              ? snapshot.error.toString()
-                              : '');
+                          return Text(
+                            snapshot.hasError ? snapshot.error.toString() : '',
+                            style: Theme.of(context).textTheme.subtitle.apply(
+                                  color: Colors.red,
+                                ),
+                          );
                         },
                       ),
                     ),
@@ -129,7 +127,7 @@ class _ExpensePageState extends State<ExpensePage> {
                   ),
                   Text('Paid for:'),
                   StreamBuilder(
-                    stream: _paidForValidator.stream,
+                    stream: _paidForValidator.stream.transform(notEmptyString),
                     builder: (context, snapshot) {
                       return TextField(
                         textInputAction: TextInputAction.go,
@@ -150,7 +148,7 @@ class _ExpensePageState extends State<ExpensePage> {
                   ),
                   Text('Amount of money'),
                   StreamBuilder<String>(
-                    stream: _amountValidator.stream,
+                    stream: _amountValidator.stream.transform(notEmptyString),
                     builder: (context, snapshot) {
                       return TextField(
                         focusNode: _amountFocus,
@@ -176,16 +174,16 @@ class _ExpensePageState extends State<ExpensePage> {
                   if (state is ActivityLoadedState)
                     ListTile(
                       title: ChipList(
-                        chips: state.activity.people
-                            .map((person) =>
-                            AppChip<Person>(
+                        chips: state is ActivityLoadedState ? state.activity.people
+                            .map((person) => AppChip<Person>(
                                 value: person,
                                 label: person.name,
                                 onChanged: _onParticipantSelected))
-                            .toList(),
+                            .toList() : [],
                       ),
-                      subtitle: StreamBuilder<int>(
-                        stream: _participantValidator.stream,
+                      subtitle: StreamBuilder<String>(
+                        stream: _participantValidator.stream
+                            .transform(notEmptyList),
                         builder: (context, snapshot) {
                           return Text(snapshot.hasError
                               ? snapshot.error.toString()
@@ -202,10 +200,10 @@ class _ExpensePageState extends State<ExpensePage> {
                         DatePicker.showDateTimePicker(context,
                             minTime: state.activity.createdAt,
                             onConfirm: (dateTime) {
-                              setState(() {
-                                _selectedTime = dateTime;
-                              });
-                            });
+                          setState(() {
+                            _selectedTime = dateTime;
+                          });
+                        });
                       },
                       child: Container(
                         width: double.infinity,
@@ -234,10 +232,7 @@ class _ExpensePageState extends State<ExpensePage> {
                       FlatButton(
                         child: Text(
                           'Back',
-                          style: Theme
-                              .of(context)
-                              .textTheme
-                              .button,
+                          style: Theme.of(context).textTheme.button,
                         ),
                         onPressed: () {
                           Navigator.pop(context);
@@ -248,19 +243,16 @@ class _ExpensePageState extends State<ExpensePage> {
                         color: AppColors.MAIN_COLOR,
                         child: Text(
                           'Add',
-                          style: Theme
-                              .of(context)
-                              .textTheme
-                              .button
-                              .apply(
-                            color: AppColors.WHITE_TEXT,
-                          ),
+                          style: Theme.of(context).textTheme.button.apply(
+                                color: AppColors.WHITE_TEXT,
+                              ),
                         ),
                         onPressed: () {
-                          final expense = Expense(
+                          final expense = ExpenseRequest(
                             amount: double.parse(_amount.text),
                             people: _selectedParticipants,
                             paidBy: _selectedPaidBys,
+                            paidFor: _paidFor.text,
                             date: _selectedTime,
                           );
                           log(expense.toJson().toString());

@@ -1,21 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'expense.dart';
+part of 'expense_request.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Expense _$ExpenseFromJson(Map<String, dynamic> json) {
+ExpenseRequest _$ExpenseRequestFromJson(Map<String, dynamic> json) {
   $checkKeys(json, requiredKeys: const ['amount']);
-  return Expense(
-    id: json['_id'] as String,
-    createdAt: json['created_at'] == null
-        ? null
-        : DateTime.parse(json['created_at'] as String),
-    updatedAt: json['updated_at'] == null
-        ? null
-        : DateTime.parse(json['updated_at'] as String),
+  return ExpenseRequest(
     amount: (json['amount'] as num)?.toDouble(),
     people: (json['people'] as List)
             ?.map((e) =>
@@ -27,15 +20,13 @@ Expense _$ExpenseFromJson(Map<String, dynamic> json) {
                 e == null ? null : Person.fromJson(e as Map<String, dynamic>))
             ?.toList() ??
         [],
-    paidFor: json['paid_for'] as String,
     date: json['date'] == null ? null : DateTime.parse(json['date'] as String),
+    paidFor: json['paid_for'] as String,
   );
 }
 
-Map<String, dynamic> _$ExpenseToJson(Expense instance) => <String, dynamic>{
-      '_id': instance.id,
-      'created_at': instance.createdAt?.toIso8601String(),
-      'updated_at': instance.updatedAt?.toIso8601String(),
+Map<String, dynamic> _$ExpenseRequestToJson(ExpenseRequest instance) =>
+    <String, dynamic>{
       'amount': instance.amount,
       'people': instance.people,
       'paid_by': instance.paidBy,

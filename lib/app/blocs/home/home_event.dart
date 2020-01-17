@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:tinh_tien/app/data/models/expense/expense.dart';
+import 'package:tinh_tien/app/data/models/expense/expense_request.dart';
 
 abstract class HomeEvent extends Equatable {
   const HomeEvent();
@@ -27,7 +27,7 @@ class DisplayData extends HomeEvent {
 }
 
 class CreateExpense extends HomeEvent {
-  final Expense expense;
+  final ExpenseRequest expense;
 
   CreateExpense(this.expense);
 
