@@ -42,7 +42,7 @@ class BalanceTab extends StatelessWidget {
                       Icons.arrow_drop_down,
                       color: Colors.red,
                     ),
-                    Text('${summary.spent}'),
+                    Text('${summary.spent.toStringAsFixed(2)}'),
                   ],
                 ),
                 Row(
@@ -51,13 +51,13 @@ class BalanceTab extends StatelessWidget {
                       Icons.arrow_drop_up,
                       color: Colors.green,
                     ),
-                    Text('${summary.paid}'),
+                    Text('${summary.paid.toStringAsFixed(2)}'),
                   ],
                 ),
               ],
             ),
             trailing: Text(
-              '${summary.amount}',
+              '${summary.amount.toStringAsFixed(2)}',
               style: Theme.of(context).textTheme.body1.apply(
                     color: summary.amount < 0 ? Colors.red : Colors.green,
                   ),
@@ -117,12 +117,12 @@ class BalanceTab extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   Text(
-                    'Total: ${activity.totalExpense}',
+                    'Total: ${activity.totalExpense.toStringAsFixed(2)}',
                     style: Theme.of(context).textTheme.subtitle.apply(
                           color: AppColors.WHITE_TEXT,
                         ),
                   ),
-                  Text('Average: ${activity.averageExpense}',
+                  Text('Average: ${activity.averageExpense.toStringAsFixed(2)}',
                       style: Theme.of(context).textTheme.subtitle.apply(
                             color: AppColors.WHITE_TEXT,
                           )),
