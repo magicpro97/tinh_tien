@@ -77,7 +77,7 @@ class OutstandingTab extends StatelessWidget {
       children: [
         TextSpan(text: paidBy, style: TextStyle(color: Colors.blue)),
         TextSpan(text: ' gives '),
-        TextSpan(text: ' $amount', style: TextStyle(color: Colors.green)),
+        TextSpan(text: ' ${amount.toStringAsFixed(2)}', style: TextStyle(color: Colors.green)),
         TextSpan(text: ' to '),
         TextSpan(text: paidFor, style: TextStyle(color: Colors.red)),
       ],
