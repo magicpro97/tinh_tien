@@ -43,6 +43,11 @@ class PeopleCreatedState extends HomeState {
   List<Object> get props => [person];
 }
 
+class ExpenseCreatedState extends HomeState {
+  @override
+  List<Object> get props => [];
+}
+
 class ErrorState extends HomeState {
   final String message;
 

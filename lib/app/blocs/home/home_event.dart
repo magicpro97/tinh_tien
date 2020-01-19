@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:tinh_tien/app/data/models/expense/expense_request.dart';
 
 abstract class HomeEvent extends Equatable {
   const HomeEvent();
@@ -21,6 +22,15 @@ class GetActivity extends HomeEvent {
 }
 
 class DisplayData extends HomeEvent {
+  @override
+  List<Object> get props => [];
+}
+
+class CreateExpense extends HomeEvent {
+  final ExpenseRequest expense;
+
+  CreateExpense(this.expense);
+
   @override
   List<Object> get props => [];
 }

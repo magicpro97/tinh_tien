@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:tinh_tien/common/colors.dart';
 
-class AppChip extends StatefulWidget {
+class AppChip<T> extends StatefulWidget {
   final String label;
-  final Function(bool) onChanged;
+  final Function(bool, T) onChanged;
   final Color selectedColor;
   final Color unselectedColor;
+  final T value;
 
   const AppChip({
     Key key,
     @required this.label,
     @required this.onChanged,
     this.selectedColor = AppColors.MAIN_COLOR,
-    this.unselectedColor = AppColors.WHITE_TEXT,
+    this.unselectedColor = AppColors.WHITE_TEXT, this.value,
   }) : super(key: key);
 
   @override
@@ -37,10 +38,10 @@ class _AppChipState extends State<AppChip> {
               _selected ? widget.selectedColor : widget.unselectedColor,
         ),
         onTap: () {
-          widget.onChanged(_selected);
           setState(() {
             _selected = !_selected;
           });
+          widget.onChanged(_selected, widget.value);
         },
       ),
     );

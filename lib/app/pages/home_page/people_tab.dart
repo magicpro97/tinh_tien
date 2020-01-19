@@ -41,7 +41,6 @@ class _PeopleTabState extends State<PeopleTab> {
   @override
   void dispose() {
     _peopleNameController.dispose();
-    _homeBloc.close();
     super.dispose();
   }
 
