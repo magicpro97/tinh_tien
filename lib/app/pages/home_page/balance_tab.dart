@@ -72,6 +72,7 @@ class BalanceTab extends StatelessWidget {
             value: summary.spent,
             color: _randomColor.randomColor(),
             showTitle: true,
+            title: summary.name,
           ),
         )
         .toList();
