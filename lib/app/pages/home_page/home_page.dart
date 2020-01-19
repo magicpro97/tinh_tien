@@ -51,8 +51,10 @@ class _HomePageState extends State<HomePage> {
         listener: (_, state) {
           if (state is ErrorState) {
             log(state.message);
+          } else if (state is PeopleCreatedState) {
+            _homeBloc.add(GetActivity());
           }
-        },
+        }, 
         child: BlocBuilder(
           bloc: _homeBloc,
           builder: (context, state) {
@@ -84,10 +86,6 @@ class _HomePageState extends State<HomePage> {
                 outstandingTab,
               ]);
               return _tabs[_currentIndex];
-            } else if (state is ErrorState) {
-              return Center(
-                child: Text(state.message),
-              );
             } else if (state is LoadingState) {
               return LoadingPlaceholder(
                 title: tabNames[_currentIndex].toString(),

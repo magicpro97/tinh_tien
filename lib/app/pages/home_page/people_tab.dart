@@ -55,72 +55,61 @@ class _PeopleTabState extends State<PeopleTab> {
       body: Expanded(
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: Dimens.NORMAL_PADDING),
-          child: BlocListener<HomeBloc, HomeState>(
-            listener: (_, state) {
-              if (state is PeopleCreatedState) {
-                setState(() {
-                  widget.activity.people.add(state.person);
-                });
-              }
-            },
-            child: BlocBuilder<HomeBloc, HomeState>(
-              builder: (_, state) => Column(
-                children: <Widget>[
-                  Card(
-                    elevation: 10.0,
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(left: Dimens.NORMAL_PADDING),
-                      child: TextField(
-                        controller: _peopleNameController,
-                        minLines: 1,
-                        decoration: InputDecoration(
-                          hintText: 'Enter name...',
-                          errorText: state is ErrorState ? state.message : null,
-                          suffixIcon: IconButton(
-                              icon: Icon(Icons.add),
-                              onPressed: () {
-                                _homeBloc.add(CreatePeopleEvent(
-                                  name: _peopleNameController.text,
-                                  activityId: widget.activity.id,
-                                ));
-                              }),
-                          border: InputBorder.none,
-                        ),
-                        onSubmitted: (value) {
-                          _homeBloc.add(CreatePeopleEvent(
-                            name: value,
-                            activityId: widget.activity.id,
-                          ));
-                        },
+          child: BlocBuilder<HomeBloc, HomeState>(
+            builder: (_, state) => Column(
+              children: <Widget>[
+                Card(
+                  elevation: 10.0,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: Dimens.NORMAL_PADDING),
+                    child: TextField(
+                      controller: _peopleNameController,
+                      minLines: 1,
+                      decoration: InputDecoration(
+                        hintText: 'Enter name...',
+                        errorText: state is ErrorState ? state.message : null,
+                        suffixIcon: IconButton(
+                            icon: Icon(Icons.add),
+                            onPressed: () {
+                              _homeBloc.add(CreatePeopleEvent(
+                                name: _peopleNameController.text,
+                                activityId: widget.activity.id,
+                              ));
+                            }),
+                        border: InputBorder.none,
                       ),
+                      onSubmitted: (value) {
+                        _homeBloc.add(CreatePeopleEvent(
+                          name: value,
+                          activityId: widget.activity.id,
+                        ));
+                      },
                     ),
                   ),
-                  Expanded(
-                    child: widget.activity.people.isNotEmpty
-                        ? Card(
-                      elevation: 10.0,
-                      child: ListView.separated(
-                          itemBuilder: (_, index) => people[index],
-                          separatorBuilder: (_, __) =>
-                              SizedBox(
-                                height: Dimens.XSMALL_PADDING,
-                              ),
-                          itemCount: people.length),
-                    )
-                        : EmptyList(),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(Dimens.SMALL_PADDING),
-                    child: AppButton(
-                        text: 'Share',
-                        onPressed: () {
-                          Navigator.pushNamed(context, SHARE_PAGE,
-                              arguments: widget.activity);
-                        }),
-                  ),
-                ],
-              ),
+                ),
+                Expanded(
+                  child: widget.activity.people.isNotEmpty
+                      ? Card(
+                          elevation: 10.0,
+                          child: ListView.separated(
+                              itemBuilder: (_, index) => people[index],
+                              separatorBuilder: (_, __) => SizedBox(
+                                    height: Dimens.XSMALL_PADDING,
+                                  ),
+                              itemCount: people.length),
+                        )
+                      : EmptyList(),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(Dimens.SMALL_PADDING),
+                  child: AppButton(
+                      text: 'Share',
+                      onPressed: () {
+                        Navigator.pushNamed(context, SHARE_PAGE,
+                            arguments: widget.activity);
+                      }),
+                ),
+              ],
             ),
           ),
         ),
