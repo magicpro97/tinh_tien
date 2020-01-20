@@ -48,6 +48,15 @@ class ExpenseCreatedState extends HomeState {
   List<Object> get props => [];
 }
 
+class DeleteActivityState extends HomeState {
+  final Activity activity;
+
+  DeleteActivityState(this.activity);
+
+  @override
+  List<Object> get props => [activity];
+}
+
 class ErrorState extends HomeState {
   final String message;
 

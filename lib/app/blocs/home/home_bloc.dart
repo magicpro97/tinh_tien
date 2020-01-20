@@ -90,6 +90,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           yield ErrorState(UnknownException().message);
         }
       }
+    } else if (event is DeleteActivityEvent) {
+      try {
+        final activityId = event.activityId;
+        final data =
+            await activityRepository.deleteActivity(activityId: activityId);
+        yield data.fold((error) => ErrorState(error.message),
+            (activity) => DeleteActivityState(activity));
+      } catch (e) {
+        if (e is NoNetworkConnection) {
+          yield ErrorState(e.message);
+        } else {
+          yield ErrorState(UnknownException().message);
+        }
+      }
     }
   }
 }

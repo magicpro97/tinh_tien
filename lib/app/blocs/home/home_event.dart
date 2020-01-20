@@ -34,3 +34,12 @@ class CreateExpense extends HomeEvent {
   @override
   List<Object> get props => [];
 }
+
+class DeleteActivityEvent extends HomeEvent {
+  final String activityId;
+
+  DeleteActivityEvent(this.activityId);
+
+  @override
+  List<Object> get props => [];
+}

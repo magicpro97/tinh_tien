@@ -62,4 +62,14 @@ class ActivityDatasource {
       return Left(ErrorResponse.fromJson(e.response.data));
     }
   }
+
+  Future<Either<ErrorResponse, Activity>> deleteActivity(
+      {String activityId}) async {
+    try {
+      final response = await dio.delete('$ACTIVITIES/$activityId');
+      return Right(Activity.fromJson(response.data));
+    } on DioError catch (e) {
+      return Left(ErrorResponse.fromJson(e.response.data));
+    }
+  }
 }
