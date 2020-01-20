@@ -2,14 +2,11 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:random_color/random_color.dart';
 import 'package:tinh_tien/app/blocs/home/bloc.dart';
 import 'package:tinh_tien/app/blocs/home/home_bloc.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/route.dart';
 import 'package:tinh_tien/app/widgets/app_tabview.dart';
-import 'package:tinh_tien/common/colors.dart';
-import 'package:tinh_tien/common/dimens.dart';
 
 class MoreTab extends StatefulWidget {
   final String name;
@@ -62,14 +59,14 @@ class _MoreTabState extends State<MoreTab> {
                     builder: (context) => AlertDialog(
                           title: Text("Confirm"),
                           content: Text(
-                              'You are about to delete activity "${widget.activity.name}". Are you sure want to continue?'),
+                              'You are about to delete activity "${widget.activity.name}". \nAre you sure want to continue?'),
                           actions: <Widget>[
                             FlatButton(
-                              child: Text('Cancel',  style: Theme.of(context).textTheme.button),
+                              child: Text('Cancel',  style: Theme.of(context).textTheme.button.apply(color: Colors.red)),
                               onPressed: Navigator.of(context).pop,
                             ),
                             FlatButton(
-                              child: Text('OK', style: Theme.of(context).textTheme.button,),
+                              child: Text('OK', style: Theme.of(context).textTheme.button.apply(color: Colors.blue),),
                               onPressed: () {
                                 _homeBloc.add(DeleteActivityEvent(activityId));
                                 Navigator.pushNamed(context, WElCOME_PAGE);

@@ -7,6 +7,7 @@ import 'package:tinh_tien/app/pages/home_page/more_tab.dart';
 import 'package:tinh_tien/app/pages/home_page/outstanding_tab.dart';
 import 'package:tinh_tien/app/widgets/app_scaffold.dart';
 import 'package:tinh_tien/app/widgets/loading_placeholder.dart';
+import 'package:tinh_tien/common/constants.dart';
 
 import 'balance_tab.dart';
 import 'expense_tab.dart';
@@ -22,6 +23,7 @@ class _HomePageState extends State<HomePage> {
   final _tabs = [];
   HomeBloc _homeBloc;
   List<String> tabNames = const ["People", "Expense", "Balance", "Outstanding", "More"];
+  List<String> hintNames = const [PEOPLE_HINT, EXPENSES_HINT, BALANCE_HINT, OUTSTANDING_HINT];
 
   void _onTapNavigationItem(int index) {
     setState(() {
@@ -43,7 +45,9 @@ class _HomePageState extends State<HomePage> {
       appBarAction: <Widget>[
         Row(
           children: <Widget>[
-            IconButton(icon: Icon(Icons.info), onPressed: () {}),
+            IconButton(icon: Icon(Icons.info), onPressed: () {
+              if ()
+            }),
           ],
         )
       ],
