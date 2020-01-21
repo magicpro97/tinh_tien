@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinh_tien/app/data/repositories/activity_repository.dart';
@@ -16,12 +17,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final SharedPreferences sharedPreferences;
   final PeopleRepository peopleRepository;
   final ActivityRepository activityRepository;
+  final DataConnectionChecker connectionChecker;
 
   HomeBloc({
     @required this.peopleRepository,
     @required this.activityRepository,
     @required this.sharedPreferences,
+    @required this.connectionChecker,
   });
+
+  Stream<DataConnectionStatus> get connectionStatus => connectionChecker.onStatusChange;
 
   @override
   HomeState get initialState => InitialHomeState();
@@ -30,7 +35,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Stream<HomeState> mapEventToState(
     HomeEvent event,
   ) async* {
-    log(event.toString());
+    log(event.toString(), name: "HomeBloc");
     if (event is CreatePeopleEvent) {
       yield LoadingState();
       try {

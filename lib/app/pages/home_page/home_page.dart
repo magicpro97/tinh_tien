@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinh_tien/app/blocs/home/bloc.dart';
@@ -54,7 +55,7 @@ class _HomePageState extends State<HomePage> {
           } else if (state is PeopleCreatedState) {
             _homeBloc.add(GetActivity());
           }
-        }, 
+        },
         child: BlocBuilder(
           bloc: _homeBloc,
           builder: (context, state) {
@@ -88,7 +89,7 @@ class _HomePageState extends State<HomePage> {
               return _tabs[_currentIndex];
             } else if (state is LoadingState) {
               return LoadingPlaceholder(
-                title: tabNames[_currentIndex].toString(),
+                title: tabNames[_currentIndex],
               );
             }
 
@@ -112,19 +113,44 @@ class _HomePageState extends State<HomePage> {
               icon: Icon(Icons.assignment), title: Text('Outstanding')),
         ],
       ),
-      bottom: Container(
-        width: double.infinity,
-        color: Colors.white,
-        alignment: Alignment.center,
-        child: BlocBuilder<HomeBloc, HomeState>(
-          bloc: _homeBloc,
-          builder: (context, state) {
-            return Text(
-              state is ActivityLoadedState ? state.activity.name : "Welcome",
-              style: Theme.of(context).textTheme.title,
-            );
-          },
-        ),
+      bottom: StreamBuilder(
+        stream: _homeBloc.connectionStatus,
+        builder: (_, snapshot) {
+          return Container(
+            width: double.infinity,
+            color: snapshot.data == DataConnectionStatus.disconnected
+                ? Colors.red
+                : Colors.white,
+            child: BlocBuilder<HomeBloc, HomeState>(
+              bloc: _homeBloc,
+              builder: (context, state) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      state is ActivityLoadedState
+                          ? state.activity.name
+                          : "Welcome",
+                      style: Theme.of(context).textTheme.title.apply(
+                          color:
+                              snapshot.data == DataConnectionStatus.disconnected
+                                  ? Colors.white
+                                  : Colors.black),
+                    ),
+                    if (snapshot.data == DataConnectionStatus.disconnected)
+                      Text(
+                        " - No network connection",
+                        style: Theme.of(context)
+                            .textTheme
+                            .title
+                            .apply(color: Colors.white),
+                      ),
+                  ],
+                );
+              },
+            ),
+          );
+        },
       ),
     );
   }

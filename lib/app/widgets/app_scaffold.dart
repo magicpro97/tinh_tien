@@ -28,7 +28,7 @@ class AppScaffold extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Tinh tien'),
-        actions: appBarAction,
+        actions: appBarAction ?? [],
         bottom: PreferredSize(
           child: bottom ?? Container(),
           preferredSize: Size.fromHeight(bottom == null ? 0 : 24.0),
