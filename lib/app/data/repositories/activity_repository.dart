@@ -62,8 +62,8 @@ class ActivityRepository extends BaseRepository {
     if (await hasNetworkConnection()) {
       final data = await activityDatasource.getSharedExpenses(id);
       return data.fold(
-            (error) => Left(ActivityFailure(error.message)),
-            (sharedExpense) => Right(sharedExpense),
+        (error) => Left(ActivityFailure(error.message)),
+        (sharedExpense) => Right(sharedExpense),
       );
     } else {
       throw NoNetworkConnection();
@@ -76,8 +76,22 @@ class ActivityRepository extends BaseRepository {
       final data = await activityDatasource.createExpense(
           activityId: activityId, expenseRequest: expenseRequest);
       return data.fold(
-            (error) => Left(ActivityFailure(error.message)),
-            (data) => Right(data),
+        (error) => Left(ActivityFailure(error.message)),
+        (data) => Right(data),
+      );
+    } else {
+      throw NoNetworkConnection();
+    }
+  }
+
+  Future<Either<ActivityFailure, Activity>> deleteActivity(
+      {String activityId}) async {
+    if (await hasNetworkConnection()) {
+      final data =
+          await activityDatasource.deleteActivity(activityId: activityId);
+      return data.fold(
+        (error) => Left(ActivityFailure(error.message)),
+        (data) => Right(data),
       );
     } else {
       throw NoNetworkConnection();

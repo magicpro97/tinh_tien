@@ -46,7 +46,7 @@ class _AlreadyHaveActivityPageState extends State<AlreadyHaveActivityPage> {
             bloc: _welcomeBloc,
             listener: (_, state) {
               if (state is ActivityLoaded) {
-                Navigator.pushReplacementNamed(context, HOME_PAGE);
+                Navigator.pushNamedAndRemoveUntil(context, HOME_PAGE, (routes)=>false);
               }
             },
             child: BlocBuilder<WelcomeBloc, WelcomeState>(

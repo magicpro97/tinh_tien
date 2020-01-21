@@ -35,10 +35,10 @@ class ExpenseTab extends StatelessWidget {
                     .map((expense) => ExpenseItem(
                           expense: expense,
                         ))
-                    .toList(),
+                    .toList().reversed.toList(),
               ),
             ))
-        .toList();
+        .toList().reversed.toList();
 
     return AppTabView(
       body: Expanded(

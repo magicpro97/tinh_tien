@@ -29,7 +29,7 @@ class BalanceTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final _randomColor = RandomColor();
     final summary = activitySummary;
-    final expenseSummary = summary.expenseSummary;
+    final expenseSummary = summary.filteredExpenseSummary;
     final expenseSummaryItems = expenseSummary
         .map(
           (summary) => ListTile(
@@ -68,11 +68,12 @@ class BalanceTab extends StatelessWidget {
     final pieCharDataList = expenseSummary
         .map(
           (summary) => PieChartSectionData(
-            radius: 90.0,
+            radius: 100.0,
             value: summary.spent,
             color: _randomColor.randomColor(),
             showTitle: true,
             title: summary.name,
+            titleStyle: Theme.of(context).textTheme.title.copyWith(fontSize: 14)
           ),
         )
         .toList();
@@ -96,7 +97,7 @@ class BalanceTab extends StatelessWidget {
                         PieChartData(
                           sections: pieCharDataList,
                           centerSpaceRadius: 0.0,
-                          sectionsSpace: 10.0,
+                          sectionsSpace: 1.0,
                           borderData: FlBorderData(show: false),
                         ),
                       ),
@@ -130,11 +131,11 @@ class BalanceTab extends StatelessWidget {
               )
             ],
           ),
-          summary.expenseSummary.isNotEmpty
+          summary.filteredExpenseSummary.isNotEmpty
               ? SliverList(
                   delegate: SliverChildBuilderDelegate(
                       (_, index) => expenseSummaryItems[index],
-                      childCount: summary.expenseSummary.length),
+                      childCount: summary.filteredExpenseSummary.length),
                 )
               : SliverFillRemaining(child: EmptyList()),
         ],

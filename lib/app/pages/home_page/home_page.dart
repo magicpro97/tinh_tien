@@ -1,12 +1,15 @@
 import 'dart:developer';
 
 import 'package:data_connection_checker/data_connection_checker.dart';
+import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinh_tien/app/blocs/home/bloc.dart';
+import 'package:tinh_tien/app/pages/home_page/more_tab.dart';
 import 'package:tinh_tien/app/pages/home_page/outstanding_tab.dart';
 import 'package:tinh_tien/app/widgets/app_scaffold.dart';
 import 'package:tinh_tien/app/widgets/loading_placeholder.dart';
+import 'package:tinh_tien/common/constants.dart';
 
 import 'balance_tab.dart';
 import 'expense_tab.dart';
@@ -21,7 +24,8 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   final _tabs = [];
   HomeBloc _homeBloc;
-  List<String> tabNames = const ["People", "Expense", "Balance", "Outstanding"];
+  List<String> tabNames = const ["People", "Expense", "Balance", "Outstanding", "More"];
+  List<String> hintNames = const [PEOPLE_HINT, EXPENSES_HINT, BALANCE_HINT, OUTSTANDING_HINT];
 
   void _onTapNavigationItem(int index) {
     setState(() {
@@ -41,11 +45,31 @@ class _HomePageState extends State<HomePage> {
     return AppScaffold(
       margin: const EdgeInsets.all(0.0),
       appBarAction: <Widget>[
-        Row(
-          children: <Widget>[
-            IconButton(icon: Icon(Icons.info), onPressed: () {}),
-          ],
-        )
+
+      IconButton(icon: Icon(Icons.info), onPressed: () {
+          showFlash(
+            context: context,
+            duration: const Duration(seconds: 5),
+            builder: (_, controller) {
+              return Flash.dialog(
+                controller: controller,
+                alignment: const Alignment(0, -0.9),
+                margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+                enableDrag: false,
+                backgroundColor: Colors.black87,
+                child: DefaultTextStyle(
+                  style: const TextStyle(fontSize: 16.0, color: Colors.white),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    child: Text(hintNames[_currentIndex].toString(), style: TextStyle(fontSize: 14),),
+                  ),
+                ),
+              );
+            },
+          );
+        }),
       ],
       body: BlocListener(
         bloc: _homeBloc,
@@ -79,12 +103,17 @@ class _HomePageState extends State<HomePage> {
                 activity: activity,
                 activitySharedExpenses: state.activitySharedExpenses,
               );
+              final moreTab = MoreTab(
+                name: tabNames[4],
+                activity: activity,
+              );
               _tabs.clear();
               _tabs.addAll([
                 peopleTab,
                 expenseTab,
                 balanceTab,
                 outstandingTab,
+                moreTab
               ]);
               return _tabs[_currentIndex];
             } else if (state is LoadingState) {
@@ -102,6 +131,7 @@ class _HomePageState extends State<HomePage> {
         onTap: _onTapNavigationItem,
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.black,
+        type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
               icon: Icon(Icons.people), title: Text("People")),
@@ -111,6 +141,8 @@ class _HomePageState extends State<HomePage> {
               icon: Icon(Icons.account_balance), title: Text('Balance')),
           BottomNavigationBarItem(
               icon: Icon(Icons.assignment), title: Text('Outstanding')),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.more_horiz), title: Text('More')),
         ],
       ),
       bottom: StreamBuilder(
