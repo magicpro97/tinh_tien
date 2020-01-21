@@ -95,8 +95,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         final activityId = event.activityId;
         final data =
             await activityRepository.deleteActivity(activityId: activityId);
-        yield data.fold((error) => ErrorState(error.message),
-            (activity) => DeleteActivityState(activity));
+        yield await data.fold((error) async {
+          return ErrorState(error.message);
+        }, (activity) async {
+              await sharedPreferences.setString(ACTIVITY_ID, ""); 
+              return DeleteActivityState(activity);
+            });
       } catch (e) {
         if (e is NoNetworkConnection) {
           yield ErrorState(e.message);

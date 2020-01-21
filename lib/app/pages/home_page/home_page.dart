@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
       IconButton(icon: Icon(Icons.info), onPressed: () {
           showFlash(
             context: context,
-            duration: const Duration(seconds: 3),
+            duration: const Duration(seconds: 5),
             builder: (_, controller) {
               return Flash.dialog(
                 controller: controller,
