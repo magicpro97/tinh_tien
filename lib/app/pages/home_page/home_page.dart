@@ -7,8 +7,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinh_tien/app/blocs/home/bloc.dart';
 import 'package:tinh_tien/app/pages/home_page/more_tab.dart';
 import 'package:tinh_tien/app/pages/home_page/outstanding_tab.dart';
+import 'package:tinh_tien/app/route.dart';
 import 'package:tinh_tien/app/widgets/app_scaffold.dart';
 import 'package:tinh_tien/app/widgets/loading_placeholder.dart';
+import 'package:tinh_tien/common/colors.dart';
 import 'package:tinh_tien/common/constants.dart';
 
 import 'balance_tab.dart';
@@ -24,8 +26,19 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   final _tabs = [];
   HomeBloc _homeBloc;
-  List<String> tabNames = const ["People", "Expense", "Balance", "Outstanding", "More"];
-  List<String> hintNames = const [PEOPLE_HINT, EXPENSES_HINT, BALANCE_HINT, OUTSTANDING_HINT];
+  List<String> tabNames = const [
+    "People",
+    "Expense",
+    "Balance",
+    "Outstanding",
+    "More"
+  ];
+  List<String> hintNames = const [
+    PEOPLE_HINT,
+    EXPENSES_HINT,
+    BALANCE_HINT,
+    OUTSTANDING_HINT
+  ];
 
   void _onTapNavigationItem(int index) {
     setState(() {
@@ -37,6 +50,47 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _homeBloc = BlocProvider.of<HomeBloc>(context);
+    _homeBloc.connectionStatus.listen((status) {
+      if (status == DataConnectionStatus.disconnected) {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content: Text('No network connection'),
+                title: Row(
+                  children: <Widget>[
+                    Icon(
+                      Icons.error,
+                      color: Colors.red,
+                    ),
+                    Text(
+                      'Error',
+                      style: Theme.of(context)
+                          .textTheme
+                          .body1
+                          .apply(color: Colors.red),
+                    ),
+                  ],
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text(
+                      'OK',
+                      style: Theme.of(context)
+                          .textTheme
+                          .button
+                          .apply(color: AppColors.MAIN_COLOR),
+                    ),
+                    onPressed: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, WElCOME_PAGE, (route) => false);
+                    },
+                  )
+                ],
+              );
+            });
+      }
+    });
     _homeBloc.add(GetActivity());
   }
 
@@ -45,31 +99,37 @@ class _HomePageState extends State<HomePage> {
     return AppScaffold(
       margin: const EdgeInsets.all(0.0),
       appBarAction: <Widget>[
-
-      IconButton(icon: Icon(Icons.info), onPressed: () {
-          showFlash(
-            context: context,
-            duration: const Duration(seconds: 5),
-            builder: (_, controller) {
-              return Flash.dialog(
-                controller: controller,
-                alignment: const Alignment(0, -0.9),
-                margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-                enableDrag: false,
-                backgroundColor: Colors.black87,
-                child: DefaultTextStyle(
-                  style: const TextStyle(fontSize: 16.0, color: Colors.white),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                    child: Text(hintNames[_currentIndex].toString(), style: TextStyle(fontSize: 14),),
-                  ),
-                ),
+        IconButton(
+            icon: Icon(Icons.info),
+            onPressed: () {
+              showFlash(
+                context: context,
+                duration: const Duration(seconds: 5),
+                builder: (_, controller) {
+                  return Flash.dialog(
+                    controller: controller,
+                    alignment: const Alignment(0, -0.9),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 8.0),
+                    borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+                    enableDrag: false,
+                    backgroundColor: Colors.black87,
+                    child: DefaultTextStyle(
+                      style:
+                          const TextStyle(fontSize: 16.0, color: Colors.white),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 8.0),
+                        child: Text(
+                          hintNames[_currentIndex].toString(),
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ),
+                    ),
+                  );
+                },
               );
-            },
-          );
-        }),
+            }),
       ],
       body: BlocListener(
         bloc: _homeBloc,
@@ -108,13 +168,8 @@ class _HomePageState extends State<HomePage> {
                 activity: activity,
               );
               _tabs.clear();
-              _tabs.addAll([
-                peopleTab,
-                expenseTab,
-                balanceTab,
-                outstandingTab,
-                moreTab
-              ]);
+              _tabs.addAll(
+                  [peopleTab, expenseTab, balanceTab, outstandingTab, moreTab]);
               return _tabs[_currentIndex];
             } else if (state is LoadingState) {
               return LoadingPlaceholder(

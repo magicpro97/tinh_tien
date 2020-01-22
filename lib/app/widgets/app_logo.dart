@@ -15,11 +15,9 @@ class AppLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FadeInImage.memoryNetwork(
-      image:
-          'https://www.filevine.com/wp-content/uploads/2018/02/expense-tracking.png',
-      placeholder: kTransparentImage,
-      fit: fit,
+    return Image.asset(
+      'assets/images/logo.png',
+      fit: BoxFit.cover,
       height: height,
       width: width,
     );
