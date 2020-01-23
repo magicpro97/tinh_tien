@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:json_annotation/json_annotation.dart';
 import 'package:tinh_tien/app/data/models/base.dart';
 
@@ -10,18 +8,18 @@ class ActivitySummary {
 
   ActivitySummary({this.expenseSummary});
 
-  factory ActivitySummary.fromJson(List json) =>
-      ActivitySummary(
+  factory ActivitySummary.fromJson(List json) => ActivitySummary(
         expenseSummary:
             json.map((data) => ExpenseSummary.fromJson(data)).toList(),
       );
 
-  List<ExpenseSummary> get filteredExpenseSummary => expenseSummary.fold([], (previous, expense) {
-    if (expense.spent != 0) {
-      previous.add(expense);
-    }
-    return previous;
-  });
+  List<ExpenseSummary> get filteredExpenseSummary =>
+      expenseSummary.fold([], (previous, expense) {
+        if (expense.spent != 0) {
+          previous.add(expense);
+        }
+        return previous;
+      });
 }
 
 @JsonSerializable()

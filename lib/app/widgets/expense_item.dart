@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:tinh_tien/app/data/models/expense/expense.dart';
@@ -49,12 +51,15 @@ class ExpenseItem extends StatelessWidget {
         ),
       ),
       actionPane: SlidableDrawerActionPane(),
-      secondaryActions: defaultActionItems,
+      secondaryActions: defaultActionItems(() {
+        log(expense.id);
+      }, () {
+        log(expense.id);
+      }),
       dismissal: defaultDismissal(
-        context,
-        'Expense will be deteled',
-        'Expense is deleted',
-      ),
+          context, 'Expense will be deteled', 'Expense is deleted', () {
+        log(expense.id);
+      }),
     );
   }
 }

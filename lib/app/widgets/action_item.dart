@@ -4,54 +4,78 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 class ActionItem extends StatelessWidget {
   final Color backgroundColor;
   final Icon icon;
-  final Text text;
+  final Function onPressed;
 
   const ActionItem(
       {Key key,
       this.backgroundColor = Colors.white,
       @required this.icon,
-      @required this.text})
+      this.onPressed})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: backgroundColor,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          icon,
-          text,
-        ],
+      child: MaterialButton(
+        onPressed: onPressed,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            icon,
+          ],
+        ),
       ),
     );
   }
 }
 
-final defaultActionItems = [
-  ActionItem(
-    icon: Icon(
-      Icons.edit,
-      color: Colors.white,
-    ),
-    text: Text(
-      'Edit',
-      style: TextStyle(color: Colors.white),
-    ),
-    backgroundColor: Colors.indigo,
-  ),
-  ActionItem(
-    icon: Icon(
-      Icons.remove,
-      color: Colors.white,
-    ),
-    text: Text(
-      'Remove',
-      style: TextStyle(color: Colors.white),
-    ),
-    backgroundColor: Colors.red,
-  ),
-];
+class EditActionItem extends StatelessWidget {
+  final Function onPressed;
+
+  const EditActionItem({Key key, this.onPressed}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ActionItem(
+      onPressed: onPressed,
+      icon: Icon(
+        Icons.edit,
+        color: Colors.white,
+      ),
+      backgroundColor: Colors.indigo,
+    );
+  }
+}
+
+class DeleteActionItem extends StatelessWidget {
+  final Function onPressed;
+
+  const DeleteActionItem({Key key, this.onPressed}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ActionItem(
+      onPressed: onPressed,
+      icon: Icon(
+        Icons.delete,
+        color: Colors.white,
+      ),
+      backgroundColor: Colors.red,
+    );
+  }
+}
+
+List<Widget> defaultActionItems(
+        Function editPressed, Function deletePressed) =>
+    [
+      EditActionItem(
+        onPressed: editPressed,
+      ),
+      DeleteActionItem(
+        onPressed: deletePressed,
+      ),
+    ];
 
 void defaultOnDismissed(BuildContext context, String message) {
   Scaffold.of(context).showSnackBar(SnackBar(
@@ -81,11 +105,15 @@ Future<T> defaultOnWillDismiss<T>(BuildContext context, String message) {
 }
 
 SlidableDismissal defaultDismissal(BuildContext context,
-    String onWillDismissMessage, String onDismissedMessage) {
+    String onWillDismissMessage, String onDismissedMessage, Function removeCallback) {
   return SlidableDismissal(
     child: SlidableDrawerDismissal(),
-    onWillDismiss: (actionType) {
-      return defaultOnWillDismiss<bool>(context, onWillDismissMessage);
+    onWillDismiss: (actionType) async {
+      final result = await defaultOnWillDismiss<bool>(context, onWillDismissMessage);
+      if (result) {
+        removeCallback();
+      }
+      return result;
     },
     onDismissed: (actionType) {
       defaultOnDismissed(context, onDismissedMessage);

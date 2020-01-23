@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -124,12 +126,18 @@ class _PeopleTabState extends State<PeopleTab> {
       key: Key(person.id),
       controller: slidableController,
       dismissal: defaultDismissal(
-          context, 'People will be delete', 'People is deleted.'),
+          context, 'People will be delete', 'People is deleted.', () {
+            log(person.id);
+          }),
       child: ListTile(
         title: Text(person.name),
       ),
       actionPane: SlidableDrawerActionPane(),
-      secondaryActions: defaultActionItems,
+      secondaryActions: defaultActionItems(() {
+        log(person.id);
+      }, () {
+        log(person.id);
+      }),
     );
   }
 }
