@@ -53,7 +53,6 @@ class _MoreTabState extends State<MoreTab> {
                 style: TextStyle(fontSize: 20),
               ),
               onTap: () {
-                log(activityId, name: 'MoreTab');
                 showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
@@ -69,7 +68,7 @@ class _MoreTabState extends State<MoreTab> {
                               child: Text('OK', style: Theme.of(context).textTheme.button.apply(color: Colors.blue),),
                               onPressed: () {
                                 _homeBloc.add(DeleteActivityEvent(activityId));
-                                Navigator.pushNamed(context, WElCOME_PAGE);
+                                Navigator.pushNamedAndRemoveUntil(context, WElCOME_PAGE, (route) => false);
                               },
                             )
                           ],

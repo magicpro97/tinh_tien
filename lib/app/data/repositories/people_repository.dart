@@ -16,7 +16,29 @@ class PeopleRepository extends BaseRepository {
   Future<Either<PeopleFailure, Person>> create(
       {String activityId, String name}) async {
     if (await hasNetworkConnection()) {
-      final data = await peopleDatasouce.createPeople(activityId, name);
+      final data = await peopleDatasouce.createPerson(activityId, name);
+      return data.fold((error) => Left(PeopleFailure(error.message)),
+          (person) => Right(person));
+    } else {
+      throw NoNetworkConnection();
+    }
+  }
+
+  Future<Either<PeopleFailure, Person>> update(
+      {String activityId, String personId, String name}) async {
+    if (await hasNetworkConnection()) {
+      final data = await peopleDatasouce.editPerson(activityId, personId, name);
+      return data.fold((error) => Left(PeopleFailure(error.message)),
+          (person) => Right(person));
+    } else {
+      throw NoNetworkConnection();
+    }
+  }
+
+  Future<Either<PeopleFailure, Person>> delete(
+      {String activityId, String personId}) async {
+    if (await hasNetworkConnection()) {
+      final data = await peopleDatasouce.deletePerson(activityId, personId);
       return data.fold((error) => Left(PeopleFailure(error.message)),
           (person) => Right(person));
     } else {

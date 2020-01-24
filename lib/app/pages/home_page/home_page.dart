@@ -136,7 +136,7 @@ class _HomePageState extends State<HomePage> {
         listener: (_, state) {
           if (state is ErrorState) {
             log(state.message);
-          } else if (state is PeopleCreatedState) {
+          } else if (state is PeopleCreatedState || state is DeletedPeopleState || state is EditedPeopleState) {
             _homeBloc.add(GetActivity());
           }
         },

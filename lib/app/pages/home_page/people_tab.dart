@@ -126,17 +126,57 @@ class _PeopleTabState extends State<PeopleTab> {
       key: Key(person.id),
       controller: slidableController,
       dismissal: defaultDismissal(
-          context, 'People will be delete', 'People is deleted.', () {
-            log(person.id);
-          }),
+          context, 'People will be delete', 'People is deleted.'),
       child: ListTile(
         title: Text(person.name),
       ),
       actionPane: SlidableDrawerActionPane(),
       secondaryActions: defaultActionItems(() {
-        log(person.id);
+        _peopleNameController.text = person.name;
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text("Confirm"),
+                content: TextField(
+                  controller: _peopleNameController,
+                  minLines: 1,
+                  decoration: InputDecoration(
+                    hintText: 'Enter name...',
+                    suffixIcon: IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () {
+                          _homeBloc.add(EditPeopleEvent(
+                            name: _peopleNameController.text,
+                            activityId: widget.activity.id,
+                            personId: person.id
+                          ));
+                          Navigator.pop(context);
+                        }),
+                    border: InputBorder.none,
+                  ),
+                  onSubmitted: (value) {
+                    _homeBloc.add(EditPeopleEvent(
+                      name: _peopleNameController.text,
+                      activityId: widget.activity.id,
+                      personId: person.id
+                    ));
+                    Navigator.pop(context);
+                  },
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('Cancel',
+                        style: Theme.of(context)
+                            .textTheme
+                            .button
+                            .apply(color: Colors.red)),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ));
       }, () {
-        log(person.id);
+        _homeBloc.add(DeletePeopleEvent(activityId: widget.activity.id, personId: person.id));
+        log('checked', name: 'DeletePeople');
       }),
     );
   }

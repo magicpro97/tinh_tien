@@ -105,15 +105,11 @@ Future<T> defaultOnWillDismiss<T>(BuildContext context, String message) {
 }
 
 SlidableDismissal defaultDismissal(BuildContext context,
-    String onWillDismissMessage, String onDismissedMessage, Function removeCallback) {
+    String onWillDismissMessage, String onDismissedMessage) {
   return SlidableDismissal(
     child: SlidableDrawerDismissal(),
-    onWillDismiss: (actionType) async {
-      final result = await defaultOnWillDismiss<bool>(context, onWillDismissMessage);
-      if (result) {
-        removeCallback();
-      }
-      return result;
+    onWillDismiss: (actionType) {
+      return defaultOnWillDismiss<bool>(context, onWillDismissMessage);
     },
     onDismissed: (actionType) {
       defaultOnDismissed(context, onDismissedMessage);

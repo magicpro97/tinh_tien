@@ -57,9 +57,7 @@ class ExpenseItem extends StatelessWidget {
         log(expense.id);
       }),
       dismissal: defaultDismissal(
-          context, 'Expense will be deteled', 'Expense is deleted', () {
-        log(expense.id);
-      }),
+          context, 'Expense will be deteled', 'Expense is deleted'),
     );
   }
 }

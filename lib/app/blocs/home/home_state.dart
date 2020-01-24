@@ -57,6 +57,24 @@ class DeleteActivityState extends HomeState {
   List<Object> get props => [activity];
 }
 
+class DeletedPeopleState extends HomeState {
+  final Person people;
+
+  DeletedPeopleState(this.people);
+
+  @override
+  List<Object> get props => [people];
+}
+
+class EditedPeopleState extends HomeState {
+  final Person people;
+
+  EditedPeopleState(this.people);
+
+  @override
+  List<Object> get props => [people];
+}
+
 class ErrorState extends HomeState {
   final String message;
 

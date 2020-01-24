@@ -43,3 +43,24 @@ class DeleteActivityEvent extends HomeEvent {
   @override
   List<Object> get props => [];
 }
+
+class DeletePeopleEvent extends HomeEvent {
+  final String personId;
+  final String activityId;
+
+  DeletePeopleEvent({this.personId, this.activityId});
+
+  @override
+  List<Object> get props => [];
+}
+
+class EditPeopleEvent extends HomeEvent {
+  final String personId;
+  final String activityId;
+  final String name;
+
+  EditPeopleEvent({this.activityId, this.personId, this.name});
+
+  @override
+  List<Object> get props => [name];
+}

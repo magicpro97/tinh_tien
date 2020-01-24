@@ -113,6 +113,33 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           yield ErrorState(UnknownException().message);
         }
       }
+    } else if (event is EditPeopleEvent) {
+      try {
+        final peopleId = event.personId;
+        final activityId = event.activityId;
+        final name = event.name;
+        final data = await peopleRepository.update(activityId: activityId, personId: peopleId, name: name);
+        yield await data.fold((error) => ErrorState(error.message), (people)=>EditedPeopleState(people));
+      } catch (e) {
+        if (e is NoNetworkConnection) {
+          yield ErrorState(e.message);
+        } else {
+          yield ErrorState(UnknownException().message);
+        }
+      }
+    } else if (event is DeletePeopleEvent) {
+      try {
+        final personId = event.personId;
+        final activityId = event.activityId;
+        final data = await peopleRepository.delete(activityId: activityId, personId: personId);
+        yield await data.fold((error) => ErrorState(error.message), (people)=>DeletedPeopleState(people));
+      } catch (e) {
+        if (e is NoNetworkConnection) {
+          yield ErrorState(e.message);
+        } else {
+          yield ErrorState(UnknownException().message);
+        }
+      }
     }
   }
 }
