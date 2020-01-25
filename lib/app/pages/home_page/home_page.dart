@@ -1,10 +1,8 @@
-import 'dart:developer';
-
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tinh_tien/app/blocs/home/bloc.dart';
+import 'package:tinh_tien/app/blocs/activity/bloc.dart';
 import 'package:tinh_tien/app/pages/home_page/more_tab.dart';
 import 'package:tinh_tien/app/pages/home_page/outstanding_tab.dart';
 import 'package:tinh_tien/app/route.dart';
@@ -13,6 +11,7 @@ import 'package:tinh_tien/app/widgets/loading_placeholder.dart';
 import 'package:tinh_tien/common/colors.dart';
 import 'package:tinh_tien/common/constants.dart';
 
+import '../../inject_container.dart';
 import 'balance_tab.dart';
 import 'expense_tab.dart';
 import 'people_tab.dart';
@@ -23,9 +22,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  ActivityBloc _activityBloc;
+  DataConnectionChecker _dataConnectionChecker;
   int _currentIndex = 0;
   final _tabs = [];
-  HomeBloc _homeBloc;
   List<String> tabNames = const [
     "People",
     "Expense",
@@ -49,8 +49,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _homeBloc = BlocProvider.of<HomeBloc>(context);
-    _homeBloc.connectionStatus.listen((status) {
+    _activityBloc = BlocProvider.of<ActivityBloc>(context);
+    _activityBloc.add(GetActivityEvent());
+    _dataConnectionChecker = sl<DataConnectionChecker>();
+    _dataConnectionChecker.onStatusChange.listen((status) {
       if (status == DataConnectionStatus.disconnected) {
         showDialog(
             context: context,
@@ -91,7 +93,6 @@ class _HomePageState extends State<HomePage> {
             });
       }
     });
-    _homeBloc.add(GetActivity());
   }
 
   @override
@@ -131,55 +132,50 @@ class _HomePageState extends State<HomePage> {
               );
             }),
       ],
-      body: BlocListener(
-        bloc: _homeBloc,
-        listener: (_, state) {
-          if (state is ErrorState) {
-            log(state.message);
-          } else if (state is PeopleCreatedState) {
-            _homeBloc.add(GetActivity());
+      body: BlocBuilder<ActivityBloc, ActivityState>(
+        bloc: _activityBloc,
+        builder: (context, state) {
+          if (state is ActivityLoadedState) {
+            final activity = state.activity;
+            final peopleTab = PeopleTab(
+              name: tabNames[0],
+              activity: activity,
+            );
+            final expenseTab = ExpenseTab(
+              name: tabNames[1],
+              activity: activity,
+            );
+            final balanceTab = BalanceTab(
+              name: tabNames[2],
+              activity: activity,
+              activitySummary: state.activitySummary,
+            );
+            final outstandingTab = OutstandingTab(
+              name: tabNames[3],
+              activity: activity,
+              activitySharedExpenses: state.activitySharedExpenses,
+            );
+            final moreTab = MoreTab(
+              name: tabNames[4],
+              activity: activity,
+            );
+            _tabs.clear();
+            _tabs.addAll([
+              peopleTab,
+              expenseTab,
+              balanceTab,
+              outstandingTab,
+              moreTab,
+            ]);
+            return _tabs[_currentIndex];
+          } else if (state is ActivityLoadingState) {
+            return LoadingPlaceholder(
+              title: tabNames[_currentIndex],
+            );
           }
-        },
-        child: BlocBuilder(
-          bloc: _homeBloc,
-          builder: (context, state) {
-            if (state is ActivityLoadedState) {
-              final activity = state.activity;
-              final peopleTab = PeopleTab(
-                name: tabNames[0],
-                activity: activity,
-              );
-              final expenseTab = ExpenseTab(
-                name: tabNames[1],
-                activity: activity,
-              );
-              final balanceTab = BalanceTab(
-                name: tabNames[2],
-                activity: activity,
-                activitySummary: state.activitySummary,
-              );
-              final outstandingTab = OutstandingTab(
-                name: tabNames[3],
-                activity: activity,
-                activitySharedExpenses: state.activitySharedExpenses,
-              );
-              final moreTab = MoreTab(
-                name: tabNames[4],
-                activity: activity,
-              );
-              _tabs.clear();
-              _tabs.addAll(
-                  [peopleTab, expenseTab, balanceTab, outstandingTab, moreTab]);
-              return _tabs[_currentIndex];
-            } else if (state is LoadingState) {
-              return LoadingPlaceholder(
-                title: tabNames[_currentIndex],
-              );
-            }
 
-            return Container();
-          },
-        ),
+          return Container();
+        },
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -201,15 +197,15 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       bottom: StreamBuilder(
-        stream: _homeBloc.connectionStatus,
+        stream: _dataConnectionChecker.onStatusChange,
         builder: (_, snapshot) {
           return Container(
             width: double.infinity,
             color: snapshot.data == DataConnectionStatus.disconnected
                 ? Colors.red
                 : Colors.white,
-            child: BlocBuilder<HomeBloc, HomeState>(
-              bloc: _homeBloc,
+            child: BlocBuilder<ActivityBloc, ActivityState>(
+              bloc: _activityBloc,
               builder: (context, state) {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.center,

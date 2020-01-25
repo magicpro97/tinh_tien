@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tinh_tien/app/blocs/welcome/bloc.dart';
+import 'package:tinh_tien/app/blocs/activity/bloc.dart';
 import 'package:tinh_tien/app/route.dart';
 import 'package:tinh_tien/app/widgets/app_logo.dart';
 import 'package:tinh_tien/common/colors.dart';
@@ -13,7 +13,7 @@ class WelcomePage extends StatefulWidget {
 
 class _WelcomePageState extends State<WelcomePage>
     with TickerProviderStateMixin {
-  WelcomeBloc _welcomeBloc;
+  ActivityBloc _activityBloc;
   TextEditingController _activityNameController;
   double _logoSize = 300;
   double _sloganFontSize = 0;
@@ -27,7 +27,7 @@ class _WelcomePageState extends State<WelcomePage>
   @override
   void initState() {
     super.initState();
-    _welcomeBloc = BlocProvider.of<WelcomeBloc>(context);
+    _activityBloc = BlocProvider.of<ActivityBloc>(context);
     _activityNameController = TextEditingController();
     _scaleController =
         AnimationController(vsync: this, duration: Duration(seconds: 1));
@@ -80,15 +80,15 @@ class _WelcomePageState extends State<WelcomePage>
           padding:
               const EdgeInsets.symmetric(horizontal: Dimens.NORMAL_PADDING),
           child: BlocListener(
-            bloc: _welcomeBloc,
+            bloc: _activityBloc,
             listener: (_, state) {
-              if (state is ActivityLoaded) {
+              if (state is CreatedActivityState) {
                 Navigator.pushReplacementNamed(context, HOME_PAGE,
                     arguments: state.activity);
               }
             },
-            child: BlocBuilder<WelcomeBloc, WelcomeState>(
-              bloc: _welcomeBloc,
+            child: BlocBuilder<ActivityBloc, ActivityState>(
+              bloc: _activityBloc,
               builder: (context, state) => Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
@@ -132,7 +132,7 @@ class _WelcomePageState extends State<WelcomePage>
                         border: OutlineInputBorder(),
                         hintText: "Your activity's name",
                         errorText:
-                        state is ErrorState ? state.message : null,
+                            state is ActivityErrorState ? state.message : null,
                       ),
                       onSubmitted: (value) {
                         submitActivity(state, value);
@@ -143,13 +143,13 @@ class _WelcomePageState extends State<WelcomePage>
                   SizedBox(
                     height: Dimens.LARGE_PADDING,
                   ),
-                  state is ActivityLoading
+                  state is ActivityLoadingState
                       ? CircularProgressIndicator()
                       : Container(),
                   AnimatedOpacity(
                     child: MaterialButton(
                       onPressed: () {
-                        if (!(state is ActivityLoading)) {
+                        if (!(state is ActivityLoadingState)) {
                           submitActivity(state, _activityNameController.text);
                         }
                       },
@@ -167,7 +167,7 @@ class _WelcomePageState extends State<WelcomePage>
                   AnimatedOpacity(
                     child: FlatButton(
                       onPressed: () {
-                        if (!(state is ActivityLoading)) {
+                        if (!(state is ActivityLoadingState)) {
                           Navigator.pushNamed(
                               context, ALREADY_HAVE_ACTIVITY_PAGE);
                         }
@@ -189,9 +189,9 @@ class _WelcomePageState extends State<WelcomePage>
     );
   }
 
-  void submitActivity(WelcomeState state, String value) {
-    if (!(state is ActivityLoading)) {
-      _welcomeBloc.add(CreateActivityEvent(value));
+  void submitActivity(ActivityState state, String value) {
+    if (!(state is ActivityLoadingState)) {
+      _activityBloc.add(CreateActivityEvent(value));
     }
   }
 }

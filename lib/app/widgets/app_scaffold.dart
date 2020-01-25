@@ -13,7 +13,7 @@ class AppScaffold extends StatelessWidget {
     Key key,
     @required this.body,
     this.bottomNavigationBar,
-    @required this.appBarAction,
+    this.appBarAction,
     this.bottom,
     this.margin = const EdgeInsets.fromLTRB(
       Dimens.NORMAL_PADDING,

@@ -35,10 +35,14 @@ class ExpenseTab extends StatelessWidget {
                     .map((expense) => ExpenseItem(
                           expense: expense,
                         ))
-                    .toList().reversed.toList(),
+                    .toList()
+                    .reversed
+                    .toList(),
               ),
             ))
-        .toList().reversed.toList();
+        .toList()
+        .reversed
+        .toList();
 
     return AppTabView(
       body: Expanded(
@@ -70,9 +74,12 @@ class ExpenseTab extends StatelessWidget {
             ],
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              Navigator.pushNamed(context, EXPENSE_PAGE);
-            },
+            onPressed: activity.people.length > 1
+                ? () {
+                    Navigator.pushNamed(context, EXPENSE_PAGE,
+                        arguments: activity);
+                  }
+                : null,
             child: Icon(Icons.add),
           ),
         ),

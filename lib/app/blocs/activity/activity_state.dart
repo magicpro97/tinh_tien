@@ -1,25 +1,24 @@
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/data/models/activity/activity_shared_expenses.dart';
 import 'package:tinh_tien/app/data/models/activity/activity_summary.dart';
-import 'package:tinh_tien/app/data/models/people/person.dart';
+import 'package:meta/meta.dart';
 
-abstract class HomeState extends Equatable {
-  const HomeState();
+abstract class ActivityState extends Equatable {
+  const ActivityState();
 }
 
-class InitialHomeState extends HomeState {
+class InitialActivityState extends ActivityState {
   @override
   List<Object> get props => [];
 }
 
-class LoadingState extends HomeState {
+class ActivityLoadingState extends ActivityState {
   @override
   List<Object> get props => [];
 }
 
-class ActivityLoadedState extends HomeState {
+class ActivityLoadedState extends ActivityState {
   final Activity activity;
   final ActivitySummary activitySummary;
   final ActivitySharedExpenses activitySharedExpenses;
@@ -34,33 +33,28 @@ class ActivityLoadedState extends HomeState {
   List<Object> get props => [activity, activitySummary, activitySharedExpenses];
 }
 
-class PeopleCreatedState extends HomeState {
-  final Person person;
-
-  PeopleCreatedState(this.person);
-
-  @override
-  List<Object> get props => [person];
-}
-
-class ExpenseCreatedState extends HomeState {
-  @override
-  List<Object> get props => [];
-}
-
-class DeleteActivityState extends HomeState {
+class DeletedActivityState extends ActivityState {
   final Activity activity;
 
-  DeleteActivityState(this.activity);
+  DeletedActivityState(this.activity);
 
   @override
   List<Object> get props => [activity];
 }
 
-class ErrorState extends HomeState {
+class CreatedActivityState extends ActivityState {
+  final Activity activity;
+
+  CreatedActivityState(this.activity);
+
+  @override
+  List<Object> get props => [activity];
+}
+
+class ActivityErrorState extends ActivityState {
   final String message;
 
-  ErrorState(this.message);
+  ActivityErrorState(this.message);
 
   @override
   List<Object> get props => [message];

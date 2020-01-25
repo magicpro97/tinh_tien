@@ -2,8 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tinh_tien/app/blocs/home/bloc.dart';
-import 'package:tinh_tien/app/blocs/home/home_bloc.dart';
+import 'package:tinh_tien/app/blocs/activity/bloc.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/route.dart';
 import 'package:tinh_tien/app/widgets/app_tabview.dart';
@@ -25,12 +24,12 @@ class MoreTab extends StatefulWidget {
 }
 
 class _MoreTabState extends State<MoreTab> {
-  HomeBloc _homeBloc;
+  ActivityBloc _activityBloc;
 
   @override
   void initState() {
     super.initState();
-    _homeBloc = BlocProvider.of<HomeBloc>(context);
+    _activityBloc = BlocProvider.of<ActivityBloc>(context);
   }
 
   @override
@@ -68,8 +67,8 @@ class _MoreTabState extends State<MoreTab> {
                             FlatButton(
                               child: Text('OK', style: Theme.of(context).textTheme.button.apply(color: Colors.blue),),
                               onPressed: () {
-                                _homeBloc.add(DeleteActivityEvent(activityId));
-                                Navigator.pushNamed(context, WElCOME_PAGE);
+                                _activityBloc.add(DeleteActivityEvent(activityId));
+                                Navigator.pushNamedAndRemoveUntil(context, WElCOME_PAGE, (route) => false);
                               },
                             )
                           ],

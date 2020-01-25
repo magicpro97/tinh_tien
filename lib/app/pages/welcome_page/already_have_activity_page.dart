@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qr_mobile_vision/qr_camera.dart';
-import 'package:tinh_tien/app/blocs/welcome/bloc.dart';
+import 'package:tinh_tien/app/blocs/activity/bloc.dart';
 import 'package:tinh_tien/app/route.dart';
 import 'package:tinh_tien/app/widgets/app_button.dart';
 import 'package:tinh_tien/common/colors.dart';
@@ -15,12 +15,12 @@ class AlreadyHaveActivityPage extends StatefulWidget {
 }
 
 class _AlreadyHaveActivityPageState extends State<AlreadyHaveActivityPage> {
-  WelcomeBloc _welcomeBloc;
+  ActivityBloc _welcomeBloc;
   TextEditingController _idController;
 
   @override
   void initState() {
-    _welcomeBloc = BlocProvider.of<WelcomeBloc>(context);
+    _welcomeBloc = BlocProvider.of<ActivityBloc>(context);
     _idController = TextEditingController();
     super.initState();
   }
@@ -37,19 +37,20 @@ class _AlreadyHaveActivityPageState extends State<AlreadyHaveActivityPage> {
     return Scaffold(
         body: QrCamera(
       qrCodeCallback: (code) {
-        _welcomeBloc.add(GetActivityEvent(code));
+        _welcomeBloc.add(GetActivityEvent(activityId: code));
       },
       child: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(Dimens.NORMAL_PADDING),
-          child: BlocListener<WelcomeBloc, WelcomeState>(
+          child: BlocListener<ActivityBloc, ActivityState>(
             bloc: _welcomeBloc,
             listener: (_, state) {
-              if (state is ActivityLoaded) {
-                Navigator.pushNamedAndRemoveUntil(context, HOME_PAGE, (routes)=>false);
+              if (state is ActivityLoadedState) {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, HOME_PAGE, (routes) => false);
               }
             },
-            child: BlocBuilder<WelcomeBloc, WelcomeState>(
+            child: BlocBuilder<ActivityBloc, ActivityState>(
               bloc: _welcomeBloc,
               builder: (_, state) {
                 return Column(
@@ -96,11 +97,11 @@ class _AlreadyHaveActivityPageState extends State<AlreadyHaveActivityPage> {
                             color: AppColors.WHITE_TEXT,
                           )),
                       onSubmitted: (value) {
-                        _welcomeBloc.add(GetActivityEvent(value));
+                        _welcomeBloc.add(GetActivityEvent(activityId: value));
                       },
                     ),
-                    if (state is ErrorState) Center(child: Text(state.message)),
-                    state is ActivityLoading
+                    if (state is ActivityErrorState) Center(child: Text(state.message)),
+                    state is ActivityLoadingState
                         ? CircularProgressIndicator()
                         : Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -108,7 +109,7 @@ class _AlreadyHaveActivityPageState extends State<AlreadyHaveActivityPage> {
                               AppButton(
                                 onPressed: () {
                                   _welcomeBloc.add(
-                                      GetActivityEvent(_idController.text));
+                                      GetActivityEvent(activityId: _idController.text));
                                 },
                                 text: 'Enter',
                               ),

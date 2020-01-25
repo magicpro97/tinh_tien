@@ -9,7 +9,7 @@ class ExpenseDatasource {
   Future<Either<ErrorResponse, NoData>> createExpense(
       {String activityId, ExpenseRequest expenseRequest}) async {
     try {
-      dio.post(
+      await dio.post(
         '$ACTIVITIES/$activityId/$EXPENSES',
         data: expenseRequest.toJson(),
       );

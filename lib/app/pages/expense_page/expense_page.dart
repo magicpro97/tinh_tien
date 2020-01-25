@@ -1,11 +1,12 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:tinh_tien/app/blocs/home/bloc.dart';
+import 'package:tinh_tien/app/blocs/activity/bloc.dart';
+import 'package:tinh_tien/app/blocs/expense/bloc.dart';
+import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/data/models/expense/expense_request.dart';
 import 'package:tinh_tien/app/data/models/people/person.dart';
 import 'package:tinh_tien/app/utils.dart';
@@ -16,13 +17,16 @@ import 'package:tinh_tien/common/colors.dart';
 import 'package:tinh_tien/common/dimens.dart';
 import 'package:tinh_tien/core/vadidator/validator.dart';
 
+import '../../inject_container.dart';
+
 class ExpensePage extends StatefulWidget {
   @override
   _ExpensePageState createState() => _ExpensePageState();
 }
 
 class _ExpensePageState extends State<ExpensePage> {
-  HomeBloc _homeBloc;
+  ActivityBloc _activityBloc;
+  ExpenseBloc _expenseBloc;
   List<Person> _selectedPaidBys;
   List<Person> _selectedParticipants;
   DateTime _selectedTime;
@@ -33,10 +37,12 @@ class _ExpensePageState extends State<ExpensePage> {
   StreamController<String> _amountValidator;
   StreamController<int> _paidByForValidator;
   StreamController<int> _participantValidator;
+  Activity _activity;
 
   @override
   void initState() {
-    _homeBloc = BlocProvider.of<HomeBloc>(context);
+    _activityBloc = BlocProvider.of<ActivityBloc>(context);
+    _expenseBloc = sl<ExpenseBloc>();
     _selectedPaidBys = [];
     _selectedParticipants = [];
     _selectedTime = DateTime.now();
@@ -59,7 +65,14 @@ class _ExpensePageState extends State<ExpensePage> {
     _paidFor.dispose();
     _amount.dispose();
     _amountFocus.dispose();
+    _expenseBloc.close();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    _activity = ModalRoute.of(context).settings.arguments;
+    super.didChangeDependencies();
   }
 
   void _onPaidBySelected(selected, person) {
@@ -82,46 +95,46 @@ class _ExpensePageState extends State<ExpensePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener(
-      bloc: _homeBloc,
+    return BlocListener<ExpenseBloc, ExpenseState>(
+      bloc: _expenseBloc,
       listener: (context, state) {
         if (state is ExpenseCreatedState) {
-          _homeBloc.add(GetActivity());
+          _activityBloc.add(GetActivityEvent());
           Navigator.pop(context);
         }
       },
-      child: BlocBuilder<HomeBloc, HomeState>(
-        bloc: _homeBloc,
+      child: BlocBuilder<ExpenseBloc, ExpenseState>(
+        bloc: _expenseBloc,
         builder: (context, state) {
           return AppScaffold(
-            appBarAction: <Widget>[],
             body: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text('Paid by:'),
-                    ListTile(
-                      title: ChipList(
-                        chips: state is ActivityLoadedState ? state.activity.people
-                            .map((person) => AppChip<Person>(
-                                value: person,
-                                label: person.name,
-                                onChanged: _onPaidBySelected))
-                            .toList() : [],
-                      ),
-                      subtitle: StreamBuilder<String>(
-                        stream:
-                            _paidByForValidator.stream.transform(notEmptyList),
-                        builder: (context, snapshot) {
-                          return Text(
-                            snapshot.hasError ? snapshot.error.toString() : '',
-                            style: Theme.of(context).textTheme.subtitle.apply(
-                                  color: Colors.red,
-                                ),
-                          );
-                        },
-                      ),
+                  ListTile(
+                    title: ChipList(
+                      chips: _activity.people
+                              .map((person) => AppChip<Person>(
+                                  value: person,
+                                  label: person.name,
+                                  onChanged: _onPaidBySelected))
+                              .toList() ??
+                          [],
                     ),
+                    subtitle: StreamBuilder<String>(
+                      stream:
+                          _paidByForValidator.stream.transform(notEmptyList),
+                      builder: (context, snapshot) {
+                        return Text(
+                          snapshot.hasError ? snapshot.error.toString() : '',
+                          style: Theme.of(context).textTheme.subtitle.apply(
+                                color: Colors.red,
+                              ),
+                        );
+                      },
+                    ),
+                  ),
                   SizedBox(
                     height: Dimens.NORMAL_PADDING,
                   ),
@@ -171,58 +184,55 @@ class _ExpensePageState extends State<ExpensePage> {
                     height: Dimens.NORMAL_PADDING,
                   ),
                   Text('Participants:'),
-                  if (state is ActivityLoadedState)
-                    ListTile(
-                      title: ChipList(
-                        chips: state is ActivityLoadedState ? state.activity.people
-                            .map((person) => AppChip<Person>(
-                                value: person,
-                                label: person.name,
-                                onChanged: _onParticipantSelected))
-                            .toList() : [],
-                      ),
-                      subtitle: StreamBuilder<String>(
-                        stream: _participantValidator.stream
-                            .transform(notEmptyList),
-                        builder: (context, snapshot) {
-                          return Text(snapshot.hasError
-                              ? snapshot.error.toString()
-                              : '');
-                        },
-                      ),
+                  ListTile(
+                    title: ChipList(
+                      chips: _activity.people
+                              .map((person) => AppChip<Person>(
+                                  value: person,
+                                  label: person.name,
+                                  onChanged: _onParticipantSelected))
+                              .toList() ??
+                          [],
                     ),
+                    subtitle: StreamBuilder<String>(
+                      stream:
+                          _participantValidator.stream.transform(notEmptyList),
+                      builder: (context, snapshot) {
+                        return Text(
+                            snapshot.hasError ? snapshot.error.toString() : '');
+                      },
+                    ),
+                  ),
                   SizedBox(
                     height: Dimens.NORMAL_PADDING,
                   ),
-                  if (state is ActivityLoadedState)
-                    GestureDetector(
-                      onTap: () {
-                        DatePicker.showDateTimePicker(context,
-                            minTime: state.activity.createdAt,
-                            onConfirm: (dateTime) {
-                          setState(() {
-                            _selectedTime = dateTime;
-                          });
+                  GestureDetector(
+                    onTap: () {
+                      DatePicker.showDateTimePicker(context,
+                          minTime: _activity.createdAt, onConfirm: (dateTime) {
+                        setState(() {
+                          _selectedTime = dateTime;
                         });
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        color: Colors.grey[200],
-                        padding: const EdgeInsets.all(Dimens.NORMAL_PADDING),
-                        child: Row(children: <Widget>[
-                          Icon(
-                            Icons.date_range,
-                            color: AppColors.MAIN_COLOR,
-                          ),
-                          SizedBox(
-                            width: Dimens.NORMAL_PADDING,
-                          ),
-                          Text(
-                            DateUtils.toDateTime(_selectedTime),
-                          )
-                        ]),
-                      ),
+                      });
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      color: Colors.grey[200],
+                      padding: const EdgeInsets.all(Dimens.NORMAL_PADDING),
+                      child: Row(children: <Widget>[
+                        Icon(
+                          Icons.date_range,
+                          color: AppColors.MAIN_COLOR,
+                        ),
+                        SizedBox(
+                          width: Dimens.NORMAL_PADDING,
+                        ),
+                        Text(
+                          DateUtils.toDateTime(_selectedTime),
+                        )
+                      ]),
                     ),
+                  ),
                   SizedBox(
                     height: Dimens.LARGE_PADDING,
                   ),
@@ -255,12 +265,13 @@ class _ExpensePageState extends State<ExpensePage> {
                             paidFor: _paidFor.text,
                             date: _selectedTime,
                           );
-                          log(expense.toJson().toString());
+
                           if (_paidFor.text.length > 0 &&
                               _amount.text.length > 0 &&
                               _selectedPaidBys.isNotEmpty &&
                               _selectedParticipants.isNotEmpty) {
-                            _homeBloc.add(CreateExpense(expense));
+                            _expenseBloc.add(CreateExpense(
+                                activityId: _activity.id, expense: expense));
                           }
                         },
                       ),
