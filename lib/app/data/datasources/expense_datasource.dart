@@ -6,7 +6,7 @@ import 'package:tinh_tien/app/network/client.dart';
 import 'package:dio/dio.dart';
 
 class ExpenseDatasource {
-  Future<Either<ErrorResponse, NoData>> createExpense(
+  Future<Either<ErrorResponse, NoData>> create(
       {String activityId, ExpenseRequest expenseRequest}) async {
     try {
       await dio.post(

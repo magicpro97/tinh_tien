@@ -16,7 +16,7 @@ class PeopleRepository extends BaseRepository {
   Future<Either<PeopleFailure, Person>> create(
       {String activityId, String name}) async {
     if (await hasNetworkConnection()) {
-      final data = await peopleDatasouce.createPeople(activityId, name);
+      final data = await peopleDatasouce.create(activityId, name);
       return data.fold((error) => Left(PeopleFailure(error.message)),
           (person) => Right(person));
     } else {

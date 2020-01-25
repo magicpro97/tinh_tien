@@ -5,7 +5,7 @@ import 'package:tinh_tien/app/data/models/people/person.dart';
 import 'package:tinh_tien/app/network/client.dart';
 
 class PeopleDatasouce {
-  Future<Either<ErrorResponse, Person>> createPeople(
+  Future<Either<ErrorResponse, Person>> create(
       String activityId, String name) async {
     try {
       final response = await dio.post(

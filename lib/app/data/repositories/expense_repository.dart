@@ -19,7 +19,7 @@ class ExpenseRepository extends BaseRepository {
   Future<Either<ActivityFailure, NoData>> create(
       {String activityId, ExpenseRequest expenseRequest}) async {
     if (await hasNetworkConnection()) {
-      final data = await expenseDatasource.createExpense(
+      final data = await expenseDatasource.create(
           activityId: activityId, expenseRequest: expenseRequest);
       return data.fold(
         (error) => Left(ActivityFailure(error.message)),

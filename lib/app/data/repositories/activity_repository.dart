@@ -21,7 +21,7 @@ class ActivityRepository extends BaseRepository {
   Future<Either<ActivityFailure, Activity>> createActivity(String name) async {
     if (await hasNetworkConnection()) {
       final data =
-          await activityDatasource.createActivity(ActivityRequest(name));
+          await activityDatasource.create(ActivityRequest(name));
       return data.fold(
         (error) => Left(ActivityFailure(error.message)),
         (activity) => Right(activity),
@@ -72,7 +72,7 @@ class ActivityRepository extends BaseRepository {
       {String activityId}) async {
     if (await hasNetworkConnection()) {
       final data =
-          await activityDatasource.deleteActivity(activityId: activityId);
+          await activityDatasource.delete(activityId: activityId);
       return data.fold(
         (error) => Left(ActivityFailure(error.message)),
         (data) => Right(data),

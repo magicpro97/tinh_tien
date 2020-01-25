@@ -9,7 +9,7 @@ import 'package:tinh_tien/app/data/models/error/error_response.dart';
 import '../../network/client.dart';
 
 class ActivityDatasource {
-  Future<Either<ErrorResponse, Activity>> createActivity(
+  Future<Either<ErrorResponse, Activity>> create(
       ActivityRequest activityRequest) async {
     try {
       final response =
@@ -48,7 +48,7 @@ class ActivityDatasource {
     }
   }
 
-  Future<Either<ErrorResponse, Activity>> deleteActivity(
+  Future<Either<ErrorResponse, Activity>> delete(
       {String activityId}) async {
     try {
       final response = await dio.delete('$ACTIVITIES/$activityId');
