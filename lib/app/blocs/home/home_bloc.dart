@@ -6,6 +6,7 @@ import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinh_tien/app/data/repositories/activity_repository.dart';
+import 'package:tinh_tien/app/data/repositories/expense_repository.dart';
 import 'package:tinh_tien/app/data/repositories/people_repository.dart';
 import 'package:tinh_tien/app/network/no_network_connection_exception.dart';
 import 'package:tinh_tien/common/constants.dart';
@@ -18,15 +19,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final PeopleRepository peopleRepository;
   final ActivityRepository activityRepository;
   final DataConnectionChecker connectionChecker;
+  final ExpenseRepository expenseRepository;
 
   HomeBloc({
     @required this.peopleRepository,
     @required this.activityRepository,
     @required this.sharedPreferences,
     @required this.connectionChecker,
+    @required this.expenseRepository,
   });
 
-  Stream<DataConnectionStatus> get connectionStatus => connectionChecker.onStatusChange;
+  Stream<DataConnectionStatus> get connectionStatus =>
+      connectionChecker.onStatusChange;
 
   @override
   HomeState get initialState => InitialHomeState();
@@ -82,7 +86,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     } else if (event is CreateExpense) {
       try {
         final activityId = sharedPreferences.getString(ACTIVITY_ID);
-        final data = await activityRepository.createExpense(
+        final data = await expenseRepository.create(
             activityId: activityId, expenseRequest: event.expense);
         yield data.fold(
           (error) => ErrorState(error.message),
@@ -103,9 +107,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         yield await data.fold((error) async {
           return ErrorState(error.message);
         }, (activity) async {
-              await sharedPreferences.setString(ACTIVITY_ID, ""); 
-              return DeleteActivityState(activity);
-            });
+          await sharedPreferences.setString(ACTIVITY_ID, "");
+          return DeleteActivityState(activity);
+        });
       } catch (e) {
         if (e is NoNetworkConnection) {
           yield ErrorState(e.message);

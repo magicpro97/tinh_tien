@@ -50,19 +50,6 @@ class ActivityDatasource {
     }
   }
 
-  Future<Either<ErrorResponse, NoData>> createExpense(
-      {String activityId, ExpenseRequest expenseRequest}) async {
-    try {
-      dio.post(
-        '$ACTIVITIES/$activityId/$EXPENSES',
-        data: expenseRequest.toJson(),
-      );
-      return Right(NoData());
-    } on DioError catch (e) {
-      return Left(ErrorResponse.fromJson(e.response.data));
-    }
-  }
-
   Future<Either<ErrorResponse, Activity>> deleteActivity(
       {String activityId}) async {
     try {

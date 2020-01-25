@@ -70,20 +70,6 @@ class ActivityRepository extends BaseRepository {
     }
   }
 
-  Future<Either<ActivityFailure, NoData>> createExpense(
-      {String activityId, ExpenseRequest expenseRequest}) async {
-    if (await hasNetworkConnection()) {
-      final data = await activityDatasource.createExpense(
-          activityId: activityId, expenseRequest: expenseRequest);
-      return data.fold(
-        (error) => Left(ActivityFailure(error.message)),
-        (data) => Right(data),
-      );
-    } else {
-      throw NoNetworkConnection();
-    }
-  }
-
   Future<Either<ActivityFailure, Activity>> deleteActivity(
       {String activityId}) async {
     if (await hasNetworkConnection()) {
