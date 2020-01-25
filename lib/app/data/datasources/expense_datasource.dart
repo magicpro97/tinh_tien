@@ -18,4 +18,32 @@ class ExpenseDatasource {
       return Left(ErrorResponse.fromJson(e.response.data));
     }
   }
+
+  Future<Either<ErrorResponse, NoData>> update({
+    String activityId,
+    ExpenseRequest expenseRequest,
+    String expenseId,
+  }) async {
+    try {
+      await dio.put(
+        '$ACTIVITIES/$activityId/$EXPENSES/$expenseId',
+        data: expenseRequest.toJson(),
+      );
+      return Right(NoData());
+    } on DioError catch (e) {
+      return Left(ErrorResponse.fromJson(e.response.data));
+    }
+  }
+
+  Future<Either<ErrorResponse, NoData>> delete(
+      {String activityId, String expenseId}) async {
+    try {
+      await dio.delete(
+        '$ACTIVITIES/$activityId/$EXPENSES/$expenseId',
+      );
+      return Right(NoData());
+    } on DioError catch (e) {
+      return Left(ErrorResponse.fromJson(e.response.data));
+    }
+  }
 }
