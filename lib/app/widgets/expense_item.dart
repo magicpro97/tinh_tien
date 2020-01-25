@@ -39,16 +39,16 @@ class ExpenseItem extends StatelessWidget {
           ),
         ),
         subtitle: Text('at ${DateUtils.toTime(expense.createdAt)}'),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Icon(
-              Icons.lens,
-              size: 16.0,
-            ),
-            Text('pending'),
-          ],
-        ),
+        // trailing: Column(
+        //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+        //   children: <Widget>[
+        //     Icon(
+        //       Icons.lens,
+        //       size: 16.0,
+        //     ),
+        //     Text('pending'),
+        //   ],
+        // ),
       ),
       actionPane: SlidableDrawerActionPane(),
       secondaryActions: defaultActionItems(() {
