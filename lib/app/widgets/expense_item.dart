@@ -15,7 +15,11 @@ class ExpenseItem extends StatelessWidget {
   final Activity activity;
   final Expense expense;
 
-  const ExpenseItem({Key key, @required this.expense, @required this.activity,}) : super(key: key);
+  const ExpenseItem({
+    Key key,
+    @required this.expense,
+    @required this.activity,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +64,8 @@ class ExpenseItem extends StatelessWidget {
       ),
       actionPane: const SlidableDrawerActionPane(),
       secondaryActions: defaultActionItems(() {
-        Navigator.pushNamed(context, EXPENSE_PAGE, arguments: ExpenseArgument(activity, expense));
+        Navigator.pushNamed(context, EXPENSE_PAGE,
+            arguments: ExpenseArgument(activity, expense));
       }, () {
         log(expense.id);
       }),

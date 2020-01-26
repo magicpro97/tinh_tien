@@ -84,7 +84,7 @@ class _ExpensePageState extends State<ExpensePage> {
       _expense.paidBy.forEach((person) => _selectedPaidBys.add(person));
       _expense.people.forEach((person) => _selectedParticipants.add(person));
       _paidFor.text = _expense.paidFor;
-      _amount.text = _expense.amount.toString();
+      _amount.text = _expense.amount.toInt().toString();
       _selectedTime = _expense.date;
     }
     super.didChangeDependencies();
