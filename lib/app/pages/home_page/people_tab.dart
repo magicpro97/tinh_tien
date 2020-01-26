@@ -95,7 +95,9 @@ class _PeopleTabState extends State<PeopleTab> {
           child: BlocListener<PeopleBloc, PeopleState>(
             bloc: _peopleBloc,
             listener: (context, state) {
-              if (state is PeopleCreatedState || state is PeopleEditedState) {
+              if (state is PeopleCreatedState ||
+                  state is PeopleEditedState ||
+                  state is PeopleDeletedState) {
                 _activityBloc.add(GetActivityEvent());
               }
             },
@@ -196,8 +198,8 @@ class _PeopleTabState extends State<PeopleTab> {
                     Icons.delete_forever,
                     color: AppColors.DANGER_COLOR,
                   ),
-                  onPressed: () {
-                    showDialog(
+                  onPressed: () async {
+                    final result = await showDialog(
                       builder: (_) {
                         return AlertDialog(
                           title: Row(
@@ -244,13 +246,13 @@ class _PeopleTabState extends State<PeopleTab> {
                                     .apply(color: AppColors.DANGER_COLOR),
                               ),
                               onPressed: () {
-                                Navigator.pop(context);
+                                Navigator.pop(context, false);
                               },
                             ),
                             FlatButton(
                               child: Text('YES'),
                               onPressed: () {
-                                Navigator.pop(context);
+                                Navigator.pop(context, true);
                               },
                             ),
                           ],
@@ -258,6 +260,12 @@ class _PeopleTabState extends State<PeopleTab> {
                       },
                       context: context,
                     );
+                    if (result) {
+                      _peopleBloc.add(DeletePeopleEvent(
+                        activityId: widget.activity.id,
+                        personId: person.id,
+                      ));
+                    }
                   },
                 ),
               ],
