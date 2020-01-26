@@ -1,17 +1,14 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:tinh_tien/app/blocs/activity/bloc.dart';
 import 'package:tinh_tien/app/blocs/people/bloc.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/data/models/people/person.dart';
 import 'package:tinh_tien/app/route.dart';
-import 'package:tinh_tien/app/widgets/action_item.dart';
-import 'package:tinh_tien/app/widgets/app_button.dart';
 import 'package:tinh_tien/app/widgets/app_tabview.dart';
+import 'package:tinh_tien/app/widgets/app_textfield.dart';
 import 'package:tinh_tien/app/widgets/empty_list.dart';
+import 'package:tinh_tien/common/colors.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
 import '../../inject_container.dart';
@@ -36,10 +33,21 @@ class _PeopleTabState extends State<PeopleTab> {
   TextEditingController _peopleNameController;
   ActivityBloc _activityBloc;
   PeopleBloc _peopleBloc;
+  FocusNode _peopleNameFocus;
+  bool editPeopleNameMode = false;
+  Person editingPerson;
 
   @override
   void initState() {
     super.initState();
+    _peopleNameFocus = FocusNode();
+    _peopleNameFocus.addListener(() {
+      if (!_peopleNameFocus.hasFocus) {
+        setState(() {
+          editPeopleNameMode = false;
+        });
+      }
+    });
     _peopleNameController = TextEditingController();
     _activityBloc = BlocProvider.of<ActivityBloc>(context);
     _peopleBloc = sl<PeopleBloc>();
@@ -49,6 +57,7 @@ class _PeopleTabState extends State<PeopleTab> {
   void dispose() {
     _peopleNameController.dispose();
     _peopleBloc.close();
+    _peopleNameFocus.dispose();
     super.dispose();
   }
 
@@ -60,6 +69,26 @@ class _PeopleTabState extends State<PeopleTab> {
 
     return AppTabView(
       title: 'People',
+      actions: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(Dimens.SMALL_PADDING),
+          child: OutlineButton(
+            child: Text(
+              'Share',
+              style: Theme.of(context).textTheme.button.apply(
+                    color: AppColors.WHITE_TEXT,
+                  ),
+            ),
+            borderSide: const BorderSide(
+              color: AppColors.WHITE_TEXT,
+            ),
+            onPressed: () {
+              Navigator.pushNamed(context, SHARE_PAGE,
+                  arguments: widget.activity);
+            },
+          ),
+        )
+      ],
       body: Expanded(
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: Dimens.NORMAL_PADDING),
@@ -77,30 +106,24 @@ class _PeopleTabState extends State<PeopleTab> {
                   Card(
                     elevation: 10.0,
                     child: Padding(
-                      padding:
-                          const EdgeInsets.only(left: Dimens.NORMAL_PADDING),
-                      child: TextField(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: Dimens.NORMAL_PADDING),
+                      child: AppTextField(
+                        editMode: editPeopleNameMode,
+                        addLabelText: "Add a person",
+                        editLabelText: "Edit person's name",
+                        hintText: "Enter a name...",
+                        helpText: "Ex: John",
                         controller: _peopleNameController,
-                        minLines: 1,
-                        decoration: InputDecoration(
-                          hintText: 'Enter name...',
-                          errorText:
-                              state is PeopleErrorState ? state.message : null,
-                          suffixIcon: IconButton(
-                              icon: Icon(Icons.add),
-                              onPressed: () {
-                                _peopleBloc.add(CreatePeopleEvent(
-                                  name: _peopleNameController.text,
-                                  activityId: widget.activity.id,
-                                ));
-                              }),
-                          border: InputBorder.none,
-                        ),
-                        onSubmitted: (value) {
-                          _peopleBloc.add(CreatePeopleEvent(
-                            name: value,
-                            activityId: widget.activity.id,
-                          ));
+                        focusNode: _peopleNameFocus,
+                        onDone: () {
+                          if (editPeopleNameMode) {
+                          } else {
+                            _peopleBloc.add(CreatePeopleEvent(
+                              activityId: widget.activity.id,
+                              name: _peopleNameController.text,
+                            ));
+                          }
                         },
                       ),
                     ),
@@ -118,15 +141,6 @@ class _PeopleTabState extends State<PeopleTab> {
                           )
                         : EmptyList(),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(Dimens.SMALL_PADDING),
-                    child: AppButton(
-                        text: 'Share',
-                        onPressed: () {
-                          Navigator.pushNamed(context, SHARE_PAGE,
-                              arguments: widget.activity);
-                        }),
-                  ),
                 ],
               ),
             ),
@@ -137,24 +151,113 @@ class _PeopleTabState extends State<PeopleTab> {
   }
 
   Widget _peopleItem(BuildContext context, Person person) {
-    final SlidableController slidableController = SlidableController();
-
-    return Slidable(
-      key: Key(person.id),
-      controller: slidableController,
-      dismissal: defaultDismissal(
-          context, 'People will be delete', 'People is deleted.', () {
-        log(person.id);
-      }),
-      child: ListTile(
-        title: Text(person.name),
-      ),
-      actionPane: SlidableDrawerActionPane(),
-      secondaryActions: defaultActionItems(() {
-        log(person.id);
-      }, () {
-        log(person.id);
-      }),
+    return ListTile(
+      title: Text(person.name),
+      trailing: editPeopleNameMode && editingPerson.id == person.id
+          ? OutlineButton(
+              child: Text(
+                'Cancel',
+                style: Theme.of(context).textTheme.button.apply(
+                      color: Colors.red,
+                    ),
+              ),
+              onPressed: () {
+                setState(() {
+                  _peopleNameController.clear();
+                  editPeopleNameMode = false;
+                });
+              },
+              borderSide: BorderSide(
+                color: Colors.red,
+              ),
+            )
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(
+                    Icons.edit,
+                    color: AppColors.MAIN_COLOR,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _peopleNameController.text = person.name;
+                      editingPerson = person;
+                      editPeopleNameMode = true;
+                    });
+                  },
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.delete_forever,
+                    color: AppColors.DANGER_COLOR,
+                  ),
+                  onPressed: () {
+                    showDialog(
+                      builder: (_) {
+                        return AlertDialog(
+                          title: Row(
+                            children: <Widget>[
+                              Icon(
+                                Icons.warning,
+                                color: AppColors.WARNING_COLOR,
+                              ),
+                              Text(
+                                'Warning',
+                                style: Theme.of(context).textTheme.title.apply(
+                                      color: AppColors.WARNING_COLOR,
+                                    ),
+                              ),
+                            ],
+                          ),
+                          content: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                    text: 'Do you want delete ',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .subtitle
+                                        .apply(
+                                          color: Colors.black,
+                                        )),
+                                TextSpan(
+                                    text: '${person.name}?',
+                                    style:
+                                        Theme.of(context).textTheme.title.apply(
+                                              color: AppColors.MAIN_COLOR,
+                                            )),
+                              ],
+                            ),
+                          ),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text(
+                                'NO',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .button
+                                    .apply(color: AppColors.DANGER_COLOR),
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                            FlatButton(
+                              child: Text('YES'),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                      context: context,
+                    );
+                  },
+                ),
+              ],
+            ),
     );
   }
 }
