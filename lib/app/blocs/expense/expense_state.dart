@@ -19,6 +19,10 @@ class ExpenseEditedState extends ExpenseState {
   List<Object> get props => [];
 }
 
+class ExpenseDeletedState extends ExpenseState {
+  @override
+  List<Object> get props => [];
+}
 
 class ExpenseErrorState extends ExpenseState {
   final String message;

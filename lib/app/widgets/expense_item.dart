@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
@@ -14,11 +12,13 @@ import 'action_item.dart';
 class ExpenseItem extends StatelessWidget {
   final Activity activity;
   final Expense expense;
+  final Function onDeleted;
 
   const ExpenseItem({
     Key key,
     @required this.expense,
     @required this.activity,
+    @required this.onDeleted,
   }) : super(key: key);
 
   @override
@@ -66,13 +66,13 @@ class ExpenseItem extends StatelessWidget {
       secondaryActions: defaultActionItems(() {
         Navigator.pushNamed(context, EXPENSE_PAGE,
             arguments: ExpenseArgument(activity, expense));
-      }, () {
-        log(expense.id);
-      }),
+      }, onDeleted),
       dismissal: defaultDismissal(
-          context, 'Expense will be deteled', 'Expense is deleted', () {
-        log(expense.id);
-      }),
+        context,
+        'Expense will be deteled',
+        'Expense is deleted',
+        onDeleted,
+      ),
     );
   }
 }

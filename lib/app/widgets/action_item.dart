@@ -66,8 +66,7 @@ class DeleteActionItem extends StatelessWidget {
   }
 }
 
-List<Widget> defaultActionItems(
-        Function editPressed, Function deletePressed) =>
+List<Widget> defaultActionItems(Function editPressed, Function deletePressed) =>
     [
       EditActionItem(
         onPressed: editPressed,
@@ -104,18 +103,17 @@ Future<T> defaultOnWillDismiss<T>(BuildContext context, String message) {
       });
 }
 
-SlidableDismissal defaultDismissal(BuildContext context,
-    String onWillDismissMessage, String onDismissedMessage, Function removeCallback) {
+SlidableDismissal defaultDismissal(
+  BuildContext context,
+  String onWillDismissMessage,
+  String onDismissedMessage,
+  Function onDismissed,
+) {
   return SlidableDismissal(
     child: SlidableDrawerDismissal(),
-    onWillDismiss: (actionType) async {
-      final result = await defaultOnWillDismiss<bool>(context, onWillDismissMessage);
-      if (result) {
-        removeCallback();
-      }
-      return result;
-    },
+    onWillDismiss: (actionType) => defaultOnWillDismiss<bool>(context, onWillDismissMessage),
     onDismissed: (actionType) {
+      onDismissed();
       defaultOnDismissed(context, onDismissedMessage);
     },
   );

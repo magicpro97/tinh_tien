@@ -55,6 +55,23 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
           yield ExpenseErrorState(UnknownException().message);
         }
       }
+    } else if (event is DeleteExpense) {
+      try {
+        final data = await expenseRepository.delete(
+          activityId: event.activityId,
+          expenseId: event.expenseId,
+        );
+        yield data.fold(
+          (error) => ExpenseErrorState(error.message),
+          (data) => ExpenseDeletedState(),
+        );
+      } catch (e) {
+        if (e is NoNetworkConnection) {
+          yield ExpenseErrorState(e.message);
+        } else {
+          yield ExpenseErrorState(UnknownException().message);
+        }
+      }
     }
   }
 }

@@ -2,8 +2,11 @@ import 'dart:developer';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timeline_list/timeline.dart';
 import 'package:timeline_list/timeline_model.dart';
+import 'package:tinh_tien/app/blocs/activity/bloc.dart';
+import 'package:tinh_tien/app/blocs/expense/bloc.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/route.dart';
 import 'package:tinh_tien/app/utils.dart';
@@ -13,7 +16,9 @@ import 'package:tinh_tien/app/widgets/expense_item.dart';
 import 'package:tinh_tien/app/widgets/timeline_expense_body_item.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
-class ExpenseTab extends StatelessWidget {
+import '../../inject_container.dart';
+
+class ExpenseTab extends StatefulWidget {
   final String name;
   final Activity activity;
 
@@ -21,20 +26,42 @@ class ExpenseTab extends StatelessWidget {
       : super(key: key);
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.debug}) {
-    return name;
+  _ExpenseTabState createState() => _ExpenseTabState();
+}
+
+class _ExpenseTabState extends State<ExpenseTab> {
+  ActivityBloc _activityBloc;
+  ExpenseBloc _expenseBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _activityBloc = BlocProvider.of<ActivityBloc>(context);
+    _expenseBloc = sl<ExpenseBloc>();
+  }
+
+  @override
+  void dispose() {
+    _expenseBloc.close();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final expenseTimelines = activity.expenseADay
+    final expenseTimelines = widget.activity.expenseADay
         .map((activityExpense) => TimelineModel(
               TimeLineExpenseBodyItem(
                 title: DateUtils.toDate(activityExpense.date),
                 expenseItems: activityExpense.expenses
                     .map((expense) => ExpenseItem(
-                          activity: activity,
+                          activity: widget.activity,
                           expense: expense,
+                          onDeleted: () {
+                            _expenseBloc.add(DeleteExpense(
+                              activityId: widget.activity.id,
+                              expenseId: expense.id,
+                            ));
+                          },
                         ))
                     .toList()
                     .reversed
@@ -45,54 +72,62 @@ class ExpenseTab extends StatelessWidget {
         .reversed
         .toList();
 
-    return AppTabView(
-      body: Expanded(
-        child: Scaffold(
-          body: CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                expandedHeight: Dimens.EXPANDED_HEIGHT,
-                automaticallyImplyLeading: false,
-                flexibleSpace: _buildExpenseChart(context),
-              ),
-              SliverAppBar(
-                title: Text('Expenses'),
-                automaticallyImplyLeading: false,
-                floating: true,
-                pinned: true,
-              ),
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: activity.expenses.isNotEmpty
-                    ? Timeline(
-                        children: expenseTimelines,
-                        position: TimelinePosition.Left,
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                      )
-                    : EmptyList(),
-              ),
-            ],
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: activity.people.length > 1
-                ? () {
-                    Navigator.pushNamed(context, EXPENSE_PAGE,
-                        arguments: activity);
-                  }
-                : null,
-            child: Icon(Icons.add),
+    return BlocListener<ExpenseBloc, ExpenseState>(
+      bloc: _expenseBloc,
+      child: AppTabView(
+        body: Expanded(
+          child: Scaffold(
+            body: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  expandedHeight: Dimens.EXPANDED_HEIGHT,
+                  automaticallyImplyLeading: false,
+                  flexibleSpace: _buildExpenseChart(context),
+                ),
+                SliverAppBar(
+                  title: Text('Expenses'),
+                  automaticallyImplyLeading: false,
+                  floating: true,
+                  pinned: true,
+                ),
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: widget.activity.expenses.isNotEmpty
+                      ? Timeline(
+                          children: expenseTimelines,
+                          position: TimelinePosition.Left,
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                        )
+                      : EmptyList(),
+                ),
+              ],
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: widget.activity.people.length > 1
+                  ? () {
+                      Navigator.pushNamed(context, EXPENSE_PAGE,
+                          arguments: widget.activity);
+                    }
+                  : null,
+              child: Icon(Icons.add),
+            ),
           ),
         ),
       ),
+      listener: (_, state) {
+        if (state is ExpenseDeletedState) {
+          _activityBloc.add(GetActivityEvent());
+        }
+      },
     );
   }
 
   Widget _buildExpenseChart(BuildContext context) {
     final totals =
-        activity.expenseADay.map((expense) => expense.total).toList();
+        widget.activity.expenseADay.map((expense) => expense.total).toList();
     final showIndexes =
-        activity.expenseADay.fold<List<int>>([], (previous, expense) {
+        widget.activity.expenseADay.fold<List<int>>([], (previous, expense) {
       if (previous.isNotEmpty) {
         previous.add(previous.last + 1);
       } else {
@@ -105,7 +140,7 @@ class ExpenseTab extends StatelessWidget {
       LineChartBarData(
         showingIndicators: showIndexes,
         isCurved: true,
-        spots: activity.expenseADay
+        spots: widget.activity.expenseADay
             .asMap()
             .entries
             .map((entry) => FlSpot(entry.key.toDouble(), entry.value.total))
@@ -133,7 +168,7 @@ class ExpenseTab extends StatelessWidget {
         Dimens.NORMAL_PADDING,
         0,
       ),
-      child: activity.expenseADay.isNotEmpty
+      child: widget.activity.expenseADay.isNotEmpty
           ? Card(
               elevation: 10.0,
               child: _buildChart(
@@ -172,8 +207,8 @@ class ExpenseTab extends StatelessWidget {
         lineBarsData: lineBarsData,
         minX: 0,
         minY: 0,
-        maxY: activity.maxExpenseADay * 1.5,
-        maxX: activity.expenseADay.length.toDouble(),
+        maxY: widget.activity.maxExpenseADay * 1.5,
+        maxX: widget.activity.expenseADay.length.toDouble(),
         gridData: const FlGridData(show: false),
         borderData: FlBorderData(border: Border()),
         titlesData: FlTitlesData(
@@ -183,9 +218,9 @@ class ExpenseTab extends StatelessWidget {
           bottomTitles: SideTitles(
               showTitles: true,
               getTitles: (value) {
-                if (value < activity.expenseADay.length) {
+                if (value < widget.activity.expenseADay.length) {
                   return DateUtils.toDate2(
-                      activity.expenseADay[value.toInt()].date);
+                      widget.activity.expenseADay[value.toInt()].date);
                 }
                 return '';
               }),
