@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,8 +8,10 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:tinh_tien/app/blocs/activity/bloc.dart';
 import 'package:tinh_tien/app/blocs/expense/bloc.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
+import 'package:tinh_tien/app/data/models/expense/expense.dart';
 import 'package:tinh_tien/app/data/models/expense/expense_request.dart';
 import 'package:tinh_tien/app/data/models/people/person.dart';
+import 'package:tinh_tien/app/pages/expense_page/expense_argument.dart';
 import 'package:tinh_tien/app/utils.dart';
 import 'package:tinh_tien/app/widgets/app_chip.dart';
 import 'package:tinh_tien/app/widgets/app_scaffold.dart';
@@ -38,6 +41,7 @@ class _ExpensePageState extends State<ExpensePage> {
   StreamController<int> _paidByForValidator;
   StreamController<int> _participantValidator;
   Activity _activity;
+  Expense _expense;
 
   @override
   void initState() {
@@ -71,7 +75,18 @@ class _ExpensePageState extends State<ExpensePage> {
 
   @override
   void didChangeDependencies() {
-    _activity = ModalRoute.of(context).settings.arguments;
+    final data = ModalRoute.of(context).settings.arguments;
+    if (data is Activity) {
+      _activity = ModalRoute.of(context).settings.arguments;
+    } else if (data is ExpenseArgument) {
+      _activity = data.activity;
+      _expense = data.expense;
+      _expense.paidBy.forEach((person) => _selectedPaidBys.add(person));
+      _expense.people.forEach((person) => _selectedParticipants.add(person));
+      _paidFor.text = _expense.paidFor;
+      _amount.text = _expense.amount.toString();
+      _selectedTime = _expense.date;
+    }
     super.didChangeDependencies();
   }
 
@@ -95,6 +110,34 @@ class _ExpensePageState extends State<ExpensePage> {
 
   @override
   Widget build(BuildContext context) {
+    final paidByChips = _activity.people
+            .map(
+              (person) => AppChip<Person>(
+                value: person,
+                label: person.name,
+                onChanged: _onPaidBySelected,
+                checked: _selectedPaidBys.firstWhere((p1) => p1.id == person.id,
+                        orElse: () => null) !=
+                    null,
+              ),
+            )
+            .toList() ??
+        [];
+    final paticipantChips = _activity.people
+            .map(
+              (person) => AppChip<Person>(
+                value: person,
+                label: person.name,
+                onChanged: _onParticipantSelected,
+                checked: _selectedParticipants.firstWhere(
+                        (p1) => p1.id == person.id,
+                        orElse: () => null) !=
+                    null,
+              ),
+            )
+            .toList() ??
+        [];
+
     return BlocListener<ExpenseBloc, ExpenseState>(
       bloc: _expenseBloc,
       listener: (context, state) {
@@ -114,13 +157,7 @@ class _ExpensePageState extends State<ExpensePage> {
                   Text('Paid by:'),
                   ListTile(
                     title: ChipList(
-                      chips: _activity.people
-                              .map((person) => AppChip<Person>(
-                                  value: person,
-                                  label: person.name,
-                                  onChanged: _onPaidBySelected))
-                              .toList() ??
-                          [],
+                      chips: paidByChips,
                     ),
                     subtitle: StreamBuilder<String>(
                       stream:
@@ -186,13 +223,7 @@ class _ExpensePageState extends State<ExpensePage> {
                   Text('Participants:'),
                   ListTile(
                     title: ChipList(
-                      chips: _activity.people
-                              .map((person) => AppChip<Person>(
-                                  value: person,
-                                  label: person.name,
-                                  onChanged: _onParticipantSelected))
-                              .toList() ??
-                          [],
+                      chips: paticipantChips,
                     ),
                     subtitle: StreamBuilder<String>(
                       stream:
@@ -208,12 +239,16 @@ class _ExpensePageState extends State<ExpensePage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      DatePicker.showDateTimePicker(context,
-                          minTime: _activity.createdAt, onConfirm: (dateTime) {
-                        setState(() {
-                          _selectedTime = dateTime;
-                        });
-                      });
+                      DatePicker.showDateTimePicker(
+                        context,
+                        minTime: _activity.createdAt,
+                        currentTime: _selectedTime ?? DateTime.now(),
+                        onConfirm: (dateTime) {
+                          setState(() {
+                            _selectedTime = dateTime;
+                          });
+                        },
+                      );
                     },
                     child: Container(
                       width: double.infinity,

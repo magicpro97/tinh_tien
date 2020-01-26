@@ -7,13 +7,15 @@ class AppChip<T> extends StatefulWidget {
   final Color selectedColor;
   final Color unselectedColor;
   final T value;
+  final bool checked;
 
   const AppChip({
     Key key,
     @required this.label,
     @required this.onChanged,
     this.selectedColor = AppColors.MAIN_COLOR,
-    this.unselectedColor = AppColors.WHITE_TEXT, this.value,
+    this.unselectedColor = AppColors.WHITE_TEXT, 
+    this.value, this.checked = false,
   }) : super(key: key);
 
   @override
@@ -21,7 +23,13 @@ class AppChip<T> extends StatefulWidget {
 }
 
 class _AppChipState extends State<AppChip> {
-  bool _selected = false;
+  bool _selected;
+
+  @override
+  void initState() {
+    super.initState();
+    _selected = widget.checked;
+  }
 
   @override
   Widget build(BuildContext context) {

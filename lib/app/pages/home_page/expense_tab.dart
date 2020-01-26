@@ -33,6 +33,7 @@ class ExpenseTab extends StatelessWidget {
                 title: DateUtils.toDate(activityExpense.createdAt),
                 expenseItems: activityExpense.expenses
                     .map((expense) => ExpenseItem(
+                          activity: activity,
                           expense: expense,
                         ))
                     .toList()
