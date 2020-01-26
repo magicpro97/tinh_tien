@@ -30,7 +30,7 @@ class ExpenseTab extends StatelessWidget {
     final expenseTimelines = activity.expenseADay
         .map((activityExpense) => TimelineModel(
               TimeLineExpenseBodyItem(
-                title: DateUtils.toDate(activityExpense.createdAt),
+                title: DateUtils.toDate(activityExpense.date),
                 expenseItems: activityExpense.expenses
                     .map((expense) => ExpenseItem(
                           activity: activity,
@@ -185,7 +185,7 @@ class ExpenseTab extends StatelessWidget {
               getTitles: (value) {
                 if (value < activity.expenseADay.length) {
                   return DateUtils.toDate2(
-                      activity.expenseADay[value.toInt()].createdAt);
+                      activity.expenseADay[value.toInt()].date);
                 }
                 return '';
               }),

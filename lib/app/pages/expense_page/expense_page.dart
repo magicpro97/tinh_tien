@@ -182,6 +182,9 @@ class _ExpensePageState extends State<ExpensePage> {
                       return TextField(
                         textInputAction: TextInputAction.go,
                         controller: _paidFor,
+                        style: Theme.of(context).textTheme.title.apply(
+                              color: AppColors.MAIN_COLOR,
+                            ),
                         decoration: InputDecoration(
                           hintText: 'Description Ex:Beer',
                           errorText: snapshot.hasError ? snapshot.error : null,
@@ -204,6 +207,9 @@ class _ExpensePageState extends State<ExpensePage> {
                         focusNode: _amountFocus,
                         textInputAction: TextInputAction.go,
                         controller: _amount,
+                        style: Theme.of(context).textTheme.title.apply(
+                              color: AppColors.MAIN_COLOR,
+                            ),
                         decoration: InputDecoration(
                           hintText: 'Amount Ex:10000',
                           errorText: snapshot.hasError ? snapshot.error : null,
@@ -287,7 +293,7 @@ class _ExpensePageState extends State<ExpensePage> {
                         height: 40.0,
                         color: AppColors.MAIN_COLOR,
                         child: Text(
-                          'Add',
+                          'Save',
                           style: Theme.of(context).textTheme.button.apply(
                                 color: AppColors.WHITE_TEXT,
                               ),

@@ -45,16 +45,16 @@ class Activity extends Base {
         if (previous.isNotEmpty) {
           final lastExpense = previous.last;
           final isSameDay =
-          DateUtils.isTheSameDate(lastExpense.createdAt, expense.createdAt);
+          DateUtils.isTheSameDate(lastExpense.date, expense.date);
           if (isSameDay) {
             previous.last.expenses.add(expense);
           } else {
             previous.add(ActivityExpenseInDay(
-                createdAt: expense.createdAt, expenses: [expense]));
+                date: expense.date, expenses: [expense]));
           }
         } else {
           previous.add(ActivityExpenseInDay(
-              createdAt: expense.createdAt, expenses: [expense]));
+              date: expense.date, expenses: [expense]));
         }
         return previous;
       });
@@ -72,10 +72,10 @@ class Activity extends Base {
 }
 
 class ActivityExpenseInDay {
-  final DateTime createdAt;
+  final DateTime date;
   final List<Expense> expenses;
 
-  ActivityExpenseInDay({this.createdAt, this.expenses});
+  ActivityExpenseInDay({this.date, this.expenses});
 
   double get total =>
       expenses.fold(0, (previous, expense) => previous += expense.amount);
