@@ -9,16 +9,25 @@ class CreatePeopleEvent extends PeopleEvent {
   final String activityId;
   final String name;
 
-  CreatePeopleEvent({@required this.name, @required this.activityId});
+  CreatePeopleEvent({
+    @required this.name,
+    @required this.activityId,
+  });
 
   @override
   List<Object> get props => [name];
 }
 
-class CreateActivityEvent extends PeopleEvent {
+class EditPeopleEvent extends PeopleEvent {
+  final String activityId;
+  final String personId;
   final String name;
 
-  CreateActivityEvent(this.name);
+  EditPeopleEvent({
+    @required this.personId,
+    @required this.name,
+    @required this.activityId,
+  });
 
   @override
   List<Object> get props => [name];

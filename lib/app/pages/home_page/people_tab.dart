@@ -35,7 +35,7 @@ class _PeopleTabState extends State<PeopleTab> {
   PeopleBloc _peopleBloc;
   FocusNode _peopleNameFocus;
   bool editPeopleNameMode = false;
-  Person editingPerson;
+  Person _editingPerson;
 
   @override
   void initState() {
@@ -95,7 +95,7 @@ class _PeopleTabState extends State<PeopleTab> {
           child: BlocListener<PeopleBloc, PeopleState>(
             bloc: _peopleBloc,
             listener: (context, state) {
-              if (state is PeopleCreatedState) {
+              if (state is PeopleCreatedState || state is PeopleEditedState) {
                 _activityBloc.add(GetActivityEvent());
               }
             },
@@ -118,6 +118,10 @@ class _PeopleTabState extends State<PeopleTab> {
                         focusNode: _peopleNameFocus,
                         onDone: () {
                           if (editPeopleNameMode) {
+                            _peopleBloc.add(EditPeopleEvent(
+                                activityId: widget.activity.id,
+                                name: _peopleNameController.text,
+                                personId: _editingPerson.id));
                           } else {
                             _peopleBloc.add(CreatePeopleEvent(
                               activityId: widget.activity.id,
@@ -153,7 +157,7 @@ class _PeopleTabState extends State<PeopleTab> {
   Widget _peopleItem(BuildContext context, Person person) {
     return ListTile(
       title: Text(person.name),
-      trailing: editPeopleNameMode && editingPerson.id == person.id
+      trailing: editPeopleNameMode && _editingPerson.id == person.id
           ? OutlineButton(
               child: Text(
                 'Cancel',
@@ -182,7 +186,7 @@ class _PeopleTabState extends State<PeopleTab> {
                   onPressed: () {
                     setState(() {
                       _peopleNameController.text = person.name;
-                      editingPerson = person;
+                      _editingPerson = person;
                       editPeopleNameMode = true;
                     });
                   },

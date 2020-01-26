@@ -36,6 +36,25 @@ class PeopleBloc extends Bloc<PeopleEvent, PeopleState> {
           yield PeopleErrorState(UnknownException().message);
         }
       }
+    } else if (event is EditPeopleEvent) {
+      yield PeopleLoadingState();
+      try {
+        final data = await peopleRepository.update(
+          name: event.name,
+          activityId: event.activityId,
+          personId: event.personId,
+        );
+        yield data.fold(
+          (error) => PeopleErrorState(error.message),
+          (person) => PeopleEditedState(),
+        );
+      } catch (e) {
+        if (e is NoNetworkConnection) {
+          yield PeopleErrorState(e.message);
+        } else {
+          yield PeopleErrorState(UnknownException().message);
+        }
+      }
     }
   }
 }

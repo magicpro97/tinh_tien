@@ -28,6 +28,13 @@ class PeopleCreatedState extends PeopleState {
   List<Object> get props => [person];
 }
 
+class PeopleEditedState extends PeopleState {
+  PeopleEditedState();
+
+  @override
+  List<Object> get props => [];
+}
+
 class PeopleLoadingState extends PeopleState {
   @override
   List<Object> get props => [];
