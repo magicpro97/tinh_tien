@@ -10,8 +10,26 @@ class CreateExpense extends ExpenseEvent {
   final String activityId;
   final ExpenseRequest expense;
 
-  CreateExpense({@required this.expense, @required this.activityId});
+  CreateExpense({
+    @required this.expense,
+    @required this.activityId,
+  });
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [expense, activityId];
+}
+
+class EditExpense extends ExpenseEvent {
+  final String activityId;
+  final ExpenseRequest expense;
+  final String expenseId;
+
+  EditExpense({
+    @required this.expense,
+    @required this.activityId,
+    @required this.expenseId,
+  });
+
+  @override
+  List<Object> get props => [expense, activityId, expenseId];
 }

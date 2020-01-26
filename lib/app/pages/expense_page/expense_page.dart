@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -91,19 +90,23 @@ class _ExpensePageState extends State<ExpensePage> {
   }
 
   void _onPaidBySelected(selected, person) {
-    if (selected && !_selectedPaidBys.contains(person)) {
+    final tempPerson = _selectedPaidBys.firstWhere((p1) => p1.id == person.id,
+        orElse: () => null);
+    if (selected && tempPerson == null) {
       _selectedPaidBys.add(person);
     } else {
-      _selectedPaidBys.remove(person);
+      _selectedPaidBys.remove(tempPerson);
     }
     _paidByForValidator.add(_selectedPaidBys.length);
   }
 
   void _onParticipantSelected(selected, person) {
-    if (selected && !_selectedParticipants.contains(person)) {
+    final tempPerson = _selectedParticipants
+        .firstWhere((p1) => p1.id == person.id, orElse: () => null);
+    if (selected && tempPerson == null) {
       _selectedParticipants.add(person);
     } else {
-      _selectedParticipants.remove(person);
+      _selectedParticipants.remove(tempPerson);
     }
     _participantValidator.add(_selectedParticipants.length);
   }
@@ -141,7 +144,7 @@ class _ExpensePageState extends State<ExpensePage> {
     return BlocListener<ExpenseBloc, ExpenseState>(
       bloc: _expenseBloc,
       listener: (context, state) {
-        if (state is ExpenseCreatedState) {
+        if (state is ExpenseCreatedState || state is ExpenseEditedState) {
           _activityBloc.add(GetActivityEvent());
           Navigator.pop(context);
         }
@@ -311,8 +314,18 @@ class _ExpensePageState extends State<ExpensePage> {
                               _amount.text.length > 0 &&
                               _selectedPaidBys.isNotEmpty &&
                               _selectedParticipants.isNotEmpty) {
-                            _expenseBloc.add(CreateExpense(
-                                activityId: _activity.id, expense: expense));
+                            if (_expense == null) {
+                              _expenseBloc.add(CreateExpense(
+                                activityId: _activity.id,
+                                expense: expense,
+                              ));
+                            } else {
+                              _expenseBloc.add(EditExpense(
+                                expenseId: _expense.id,
+                                activityId: _activity.id,
+                                expense: expense,
+                              ));
+                            }
                           }
                         },
                       ),
