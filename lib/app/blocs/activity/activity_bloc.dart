@@ -12,8 +12,12 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
   final SharedPreferences sharedPreferences;
   final ActivityRepository activityRepository;
 
-  ActivityBloc(
-      {@required this.sharedPreferences, @required this.activityRepository});
+  ActivityBloc({
+    @required this.sharedPreferences,
+    @required this.activityRepository,
+  });
+
+  String get activityId => sharedPreferences.getString(ACTIVITY_ID);
 
   @override
   ActivityState get initialState => InitialActivityState();
