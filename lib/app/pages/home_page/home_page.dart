@@ -10,6 +10,7 @@ import 'package:tinh_tien/app/widgets/app_scaffold.dart';
 import 'package:tinh_tien/app/widgets/loading_placeholder.dart';
 import 'package:tinh_tien/common/colors.dart';
 import 'package:tinh_tien/common/constants.dart';
+import 'package:tinh_tien/common/dimens.dart';
 
 import '../../inject_container.dart';
 import 'balance_tab.dart';
@@ -98,7 +99,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      margin: const EdgeInsets.all(0.0),
+      margin: const EdgeInsets.all(Dimens.ZERO),
       appBarAction: <Widget>[
         IconButton(
             icon: Icon(Icons.info),
