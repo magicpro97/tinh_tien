@@ -49,7 +49,7 @@ class ExpenseItem extends StatelessWidget {
               ],
             ),
           ),
-          subtitle: Text('at ${DateUtils.toTime(expense.createdAt)}'),
+          subtitle: Text('at ${DateUtils.toTime(expense.date)}'),
           // trailing: Column(
           //   mainAxisAlignment: MainAxisAlignment.spaceAround,
           //   children: <Widget>[
