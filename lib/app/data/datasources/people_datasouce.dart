@@ -4,11 +4,12 @@ import 'package:tinh_tien/app/data/models/error/error_response.dart';
 import 'package:tinh_tien/app/data/models/no_data.dart';
 import 'package:tinh_tien/app/data/models/people/person.dart';
 import 'package:tinh_tien/app/network/client.dart';
+import 'package:meta/meta.dart';
 
 class PeopleDatasouce {
   Future<Either<ErrorResponse, Person>> create({
-    String activityId,
-    String name,
+    @required String activityId,
+    @required String name,
   }) async {
     try {
       final response = await dio
@@ -20,9 +21,9 @@ class PeopleDatasouce {
   }
 
   Future<Either<ErrorResponse, NoData>> update({
-    String activityId,
-    String name,
-    String personId,
+    @required String activityId,
+    @required String name,
+    @required String personId,
   }) async {
     try {
       await dio.put(
@@ -36,14 +37,27 @@ class PeopleDatasouce {
   }
 
   Future<Either<ErrorResponse, NoData>> delete({
-    String activityId,
-    String personId,
+    @required String activityId,
+    @required String personId,
   }) async {
     try {
       await dio.delete(
         '$ACTIVITIES/$activityId/people/$personId',
       );
       return Right(NoData());
+    } on DioError catch (e) {
+      return Left(ErrorResponse.fromJson(e.response.data));
+    }
+  }
+
+  Future<Either<ErrorResponse, List<Person>>> getPeople({
+    @required String activityId,
+  }) async {
+    try {
+      final response = await dio.get('$ACTIVITIES/$activityId/peope');
+      return Right((response.data as List)
+          .map((data) => Person.fromJson(data))
+          .toList());
     } on DioError catch (e) {
       return Left(ErrorResponse.fromJson(e.response.data));
     }

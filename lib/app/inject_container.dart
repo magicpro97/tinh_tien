@@ -28,14 +28,11 @@ Future<void> init() async {
   // repo
   sl.registerLazySingleton(() => ActivityRepository(
         activityDatasource: sl(),
-        dataConnectionChecker: sl(),
       ));
   sl.registerLazySingleton(() => PeopleRepository(
-        dataConnectionChecker: sl(),
         peopleDatasouce: sl(),
       ));
   sl.registerLazySingleton(() => ExpenseRepository(
-        dataConnectionChecker: sl(),
         expenseDatasource: sl(),
       ));
 
