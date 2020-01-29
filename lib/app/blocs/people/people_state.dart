@@ -42,3 +42,8 @@ class PeopleLoadingState extends PeopleState {
   @override
   List<Object> get props => [];
 }
+
+class PeopleGotState extends PeopleState {
+  @override
+  List<Object> get props => null;
+}

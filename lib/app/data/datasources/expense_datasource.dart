@@ -61,6 +61,8 @@ class ExpenseDatasource {
       return Right((response.data as List)
           .map((data) => Expense.fromJson(data))
           .toList());
-    } on DioError catch (e) {}
+    } on DioError catch (e) {
+      return Left(ErrorResponse.fromJson(e.response.data));
+    }
   }
 }

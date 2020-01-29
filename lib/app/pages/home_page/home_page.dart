@@ -136,46 +136,35 @@ class _HomePageState extends State<HomePage> {
       body: BlocBuilder<ActivityBloc, ActivityState>(
         bloc: _activityBloc,
         builder: (context, state) {
-          if (state is ActivityLoadedState) {
-            final activity = state.activity;
-            final peopleTab = PeopleTab(
-              name: tabNames[0],
-              activity: activity,
-            );
-            final expenseTab = ExpenseTab(
-              name: tabNames[1],
-              activity: activity,
-            );
-            final balanceTab = BalanceTab(
-              name: tabNames[2],
-              activity: activity,
-              activitySummary: state.activitySummary,
-            );
-            final outstandingTab = OutstandingTab(
-              name: tabNames[3],
-              activity: activity,
-              activitySharedExpenses: state.activitySharedExpenses,
-            );
-            final moreTab = MoreTab(
-              name: tabNames[4],
-              activity: activity,
-            );
-            _tabs.clear();
-            _tabs.addAll([
-              peopleTab,
-              expenseTab,
-              balanceTab,
-              outstandingTab,
-              moreTab,
-            ]);
-            return _tabs[_currentIndex];
-          } else if (state is ActivityLoadingState) {
+          if (state is ActivityLoadingState) {
             return LoadingPlaceholder(
               title: tabNames[_currentIndex],
             );
           }
-
-          return Container();
+          final peopleTab = PeopleTab(
+            name: tabNames[0],
+          );
+          final expenseTab = ExpenseTab(
+            name: tabNames[1],
+          );
+          final balanceTab = BalanceTab(
+            name: tabNames[2],
+          );
+          final outstandingTab = OutstandingTab(
+            name: tabNames[3],
+          );
+          final moreTab = MoreTab(
+            name: tabNames[4],
+          );
+          _tabs.clear();
+          _tabs.addAll([
+            peopleTab,
+            expenseTab,
+            balanceTab,
+            outstandingTab,
+            moreTab,
+          ]);
+          return _tabs[_currentIndex];
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -184,17 +173,17 @@ class _HomePageState extends State<HomePage> {
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.black,
         type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-              icon: Icon(Icons.people), title: Text("People")),
+              icon: Icon(Icons.people), title: Text(tabNames[0])),
           BottomNavigationBarItem(
-              icon: Icon(Icons.attach_money), title: Text('Expense')),
+              icon: Icon(Icons.attach_money), title: Text(tabNames[1])),
           BottomNavigationBarItem(
-              icon: Icon(Icons.account_balance), title: Text('Balance')),
+              icon: Icon(Icons.account_balance), title: Text(tabNames[2])),
           BottomNavigationBarItem(
-              icon: Icon(Icons.assignment), title: Text('Outstanding')),
+              icon: Icon(Icons.assignment), title: Text(tabNames[3])),
           BottomNavigationBarItem(
-              icon: Icon(Icons.more_horiz), title: Text('More')),
+              icon: Icon(Icons.more_horiz), title: Text(tabNames[4])),
         ],
       ),
       bottom: StreamBuilder(

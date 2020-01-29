@@ -45,3 +45,14 @@ class DeletePeopleEvent extends PeopleEvent {
   @override
   List<Object> get props => [personId, activityId];
 }
+
+class GetPeopleEvent extends PeopleEvent {
+  final String activityId;
+
+  GetPeopleEvent({
+    @required this.activityId,
+  });
+
+  @override
+  List<Object> get props => [activityId];
+}

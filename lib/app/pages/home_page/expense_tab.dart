@@ -20,10 +20,8 @@ import '../../inject_container.dart';
 
 class ExpenseTab extends StatefulWidget {
   final String name;
-  final Activity activity;
 
-  const ExpenseTab({Key key, @required this.activity, this.name})
-      : super(key: key);
+  const ExpenseTab({Key key, @required this.name}) : super(key: key);
 
   @override
   _ExpenseTabState createState() => _ExpenseTabState();
@@ -48,30 +46,6 @@ class _ExpenseTabState extends State<ExpenseTab> {
 
   @override
   Widget build(BuildContext context) {
-    final expenseTimelines = widget.activity.expenseADay
-        .map((activityExpense) => TimelineModel(
-              TimeLineExpenseBodyItem(
-                title: DateUtils.toDate(activityExpense.date),
-                expenseItems: activityExpense.expenses
-                    .map((expense) => ExpenseItem(
-                          activity: widget.activity,
-                          expense: expense,
-                          onDeleted: () {
-                            _expenseBloc.add(DeleteExpense(
-                              activityId: widget.activity.id,
-                              expenseId: expense.id,
-                            ));
-                          },
-                        ))
-                    .toList()
-                    .reversed
-                    .toList(),
-              ),
-            ))
-        .toList()
-        .reversed
-        .toList();
-
     return BlocListener<ExpenseBloc, ExpenseState>(
       bloc: _expenseBloc,
       child: AppTabView(
@@ -82,7 +56,13 @@ class _ExpenseTabState extends State<ExpenseTab> {
                 SliverAppBar(
                   expandedHeight: Dimens.EXPANDED_HEIGHT,
                   automaticallyImplyLeading: false,
-                  flexibleSpace: _buildExpenseChart(context),
+                  flexibleSpace: BlocBuilder<ActivityBloc, ActivityState>(
+                      builder: (context, state) {
+                    if (state is ActivityLoadedState) {
+                      return _buildExpenseChart(context, state);
+                    }
+                    return Container();
+                  }),
                 ),
                 SliverAppBar(
                   title: Text('Expenses'),
@@ -92,25 +72,62 @@ class _ExpenseTabState extends State<ExpenseTab> {
                 ),
                 SliverFillRemaining(
                   hasScrollBody: false,
-                  child: widget.activity.expenses.isNotEmpty
-                      ? Timeline(
+                  child: BlocBuilder<ActivityBloc, ActivityState>(
+                    bloc: _activityBloc,
+                    builder: (_, state) {
+                      if (state is ActivityLoadedState &&
+                          state.activity.expenseADay.isNotEmpty) {
+                        final expenseTimelines = state.activity.expenseADay
+                            .map((activityExpense) => TimelineModel(
+                                  TimeLineExpenseBodyItem(
+                                    title:
+                                        DateUtils.toDate(activityExpense.date),
+                                    expenseItems: activityExpense.expenses
+                                        .map((expense) => ExpenseItem(
+                                              activity: state.activity,
+                                              expense: expense,
+                                              onDeleted: () {
+                                                _expenseBloc.add(DeleteExpense(
+                                                  activityId: state.activity.id,
+                                                  expenseId: expense.id,
+                                                ));
+                                              },
+                                            ))
+                                        .toList()
+                                        .reversed
+                                        .toList(),
+                                  ),
+                                ))
+                            .toList()
+                            .reversed
+                            .toList();
+
+                        return Timeline(
                           children: expenseTimelines,
                           position: TimelinePosition.Left,
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                        )
-                      : EmptyList(),
+                        );
+                      }
+                      return EmptyList();
+                    },
+                  ),
                 ),
               ],
             ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: widget.activity.people.length > 1
-                  ? () {
-                      Navigator.pushNamed(context, EXPENSE_PAGE,
-                          arguments: widget.activity);
-                    }
-                  : null,
-              child: Icon(Icons.add),
+            floatingActionButton: BlocBuilder<ActivityBloc, ActivityState>(
+              builder: (_, state) {
+                if (state is ActivityLoadedState &&
+                    state.activity.people.length > 1) {
+                  return FloatingActionButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, EXPENSE_PAGE,
+                            arguments: state.activity);
+                      },
+                      child: Icon(Icons.add));
+                }
+                return null;
+              },
             ),
           ),
         ),
@@ -123,11 +140,13 @@ class _ExpenseTabState extends State<ExpenseTab> {
     );
   }
 
-  Widget _buildExpenseChart(BuildContext context) {
-    final totals =
-        widget.activity.expenseADay.map((expense) => expense.total).toList();
-    final showIndexes =
-        widget.activity.expenseADay.fold<List<int>>([], (previous, expense) {
+  Widget _buildExpenseChart(BuildContext context, ActivityState state) {
+    final loadedState = state as ActivityLoadedState;
+    final totals = loadedState.activity.expenseADay
+        .map((expense) => expense.total)
+        .toList();
+    final showIndexes = loadedState.activity.expenseADay.fold<List<int>>([],
+        (previous, expense) {
       if (previous.isNotEmpty) {
         previous.add(previous.last + 1);
       } else {
@@ -140,7 +159,7 @@ class _ExpenseTabState extends State<ExpenseTab> {
       LineChartBarData(
         showingIndicators: showIndexes,
         isCurved: true,
-        spots: widget.activity.expenseADay
+        spots: loadedState.activity.expenseADay
             .asMap()
             .entries
             .map((entry) => FlSpot(entry.key.toDouble(), entry.value.total))
@@ -168,18 +187,22 @@ class _ExpenseTabState extends State<ExpenseTab> {
         Dimens.NORMAL_PADDING,
         0,
       ),
-      child: widget.activity.expenseADay.isNotEmpty
+      child: loadedState.activity.expenseADay.isNotEmpty
           ? Card(
               elevation: 10.0,
-              child: _buildChart(
-                  context, showIndexes, tooltipsOnBar, lineBarsData),
+              child: _buildChart(context, showIndexes, tooltipsOnBar,
+                  lineBarsData, loadedState.activity),
             )
           : EmptyList(),
     );
   }
 
-  Widget _buildChart(BuildContext context, List<int> showIndexes,
-      LineChartBarData tooltipsOnBar, List<LineChartBarData> lineBarsData) {
+  Widget _buildChart(
+      BuildContext context,
+      List<int> showIndexes,
+      LineChartBarData tooltipsOnBar,
+      List<LineChartBarData> lineBarsData,
+      Activity activity) {
     return LineChart(LineChartData(
         showingTooltipIndicators: showIndexes.map((index) {
           return MapEntry(
@@ -207,8 +230,8 @@ class _ExpenseTabState extends State<ExpenseTab> {
         lineBarsData: lineBarsData,
         minX: 0,
         minY: 0,
-        maxY: widget.activity.maxExpenseADay * 1.5,
-        maxX: widget.activity.expenseADay.length.toDouble(),
+        maxY: activity.maxExpenseADay * 1.5,
+        maxX: activity.expenseADay.length.toDouble(),
         gridData: const FlGridData(show: false),
         borderData: FlBorderData(border: Border()),
         titlesData: FlTitlesData(
@@ -218,9 +241,9 @@ class _ExpenseTabState extends State<ExpenseTab> {
           bottomTitles: SideTitles(
               showTitles: true,
               getTitles: (value) {
-                if (value < widget.activity.expenseADay.length) {
+                if (value < activity.expenseADay.length) {
                   return DateUtils.toDate2(
-                      widget.activity.expenseADay[value.toInt()].date);
+                      activity.expenseADay[value.toInt()].date);
                 }
                 return '';
               }),
