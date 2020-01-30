@@ -13,13 +13,11 @@ class ActivityTableData extends DataClass
   final DateTime createdAt;
   final DateTime updateAt;
   final String name;
-
   ActivityTableData(
       {@required this.id,
       @required this.createdAt,
       @required this.updateAt,
       @required this.name});
-
   factory ActivityTableData.fromData(
       Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
@@ -35,7 +33,6 @@ class ActivityTableData extends DataClass
       name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
     );
   }
-
   factory ActivityTableData.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
@@ -46,7 +43,6 @@ class ActivityTableData extends DataClass
       name: serializer.fromJson<String>(json['name']),
     );
   }
-
   @override
   Map<String, dynamic> toJson({ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
@@ -80,7 +76,6 @@ class ActivityTableData extends DataClass
         updateAt: updateAt ?? this.updateAt,
         name: name ?? this.name,
       );
-
   @override
   String toString() {
     return (StringBuffer('ActivityTableData(')
@@ -95,7 +90,6 @@ class ActivityTableData extends DataClass
   @override
   int get hashCode => $mrjf($mrjc(id.hashCode,
       $mrjc(createdAt.hashCode, $mrjc(updateAt.hashCode, name.hashCode))));
-
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -111,14 +105,12 @@ class ActivityTableCompanion extends UpdateCompanion<ActivityTableData> {
   final Value<DateTime> createdAt;
   final Value<DateTime> updateAt;
   final Value<String> name;
-
   const ActivityTableCompanion({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updateAt = const Value.absent(),
     this.name = const Value.absent(),
   });
-
   ActivityTableCompanion.insert({
     @required String id,
     @required DateTime createdAt,
@@ -128,7 +120,6 @@ class ActivityTableCompanion extends UpdateCompanion<ActivityTableData> {
         createdAt = Value(createdAt),
         updateAt = Value(updateAt),
         name = Value(name);
-
   ActivityTableCompanion copyWith(
       {Value<String> id,
       Value<DateTime> createdAt,
@@ -147,15 +138,11 @@ class $ActivityTableTable extends ActivityTable
     with TableInfo<$ActivityTableTable, ActivityTableData> {
   final GeneratedDatabase _db;
   final String _alias;
-
   $ActivityTableTable(this._db, [this._alias]);
-
   final VerificationMeta _idMeta = const VerificationMeta('id');
   GeneratedTextColumn _id;
-
   @override
   GeneratedTextColumn get id => _id ??= _constructId();
-
   GeneratedTextColumn _constructId() {
     return GeneratedTextColumn(
       'id',
@@ -166,10 +153,8 @@ class $ActivityTableTable extends ActivityTable
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
   GeneratedDateTimeColumn _createdAt;
-
   @override
   GeneratedDateTimeColumn get createdAt => _createdAt ??= _constructCreatedAt();
-
   GeneratedDateTimeColumn _constructCreatedAt() {
     return GeneratedDateTimeColumn(
       'created_at',
@@ -180,10 +165,8 @@ class $ActivityTableTable extends ActivityTable
 
   final VerificationMeta _updateAtMeta = const VerificationMeta('updateAt');
   GeneratedDateTimeColumn _updateAt;
-
   @override
   GeneratedDateTimeColumn get updateAt => _updateAt ??= _constructUpdateAt();
-
   GeneratedDateTimeColumn _constructUpdateAt() {
     return GeneratedDateTimeColumn(
       'update_at',
@@ -194,10 +177,8 @@ class $ActivityTableTable extends ActivityTable
 
   final VerificationMeta _nameMeta = const VerificationMeta('name');
   GeneratedTextColumn _name;
-
   @override
   GeneratedTextColumn get name => _name ??= _constructName();
-
   GeneratedTextColumn _constructName() {
     return GeneratedTextColumn(
       'name',
@@ -208,15 +189,12 @@ class $ActivityTableTable extends ActivityTable
 
   @override
   List<GeneratedColumn> get $columns => [id, createdAt, updateAt, name];
-
   @override
   $ActivityTableTable get asDslTable => this;
-
   @override
   String get $tableName => _alias ?? 'activity_table';
   @override
   final String actualTableName = 'activity_table';
-
   @override
   VerificationContext validateIntegrity(ActivityTableCompanion d,
       {bool isInserting = false}) {
@@ -248,8 +226,7 @@ class $ActivityTableTable extends ActivityTable
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
-
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   ActivityTableData map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -284,10 +261,8 @@ class ActivityMemberTableData extends DataClass
     implements Insertable<ActivityMemberTableData> {
   final String activityRef;
   final String personRef;
-
   ActivityMemberTableData(
       {@required this.activityRef, @required this.personRef});
-
   factory ActivityMemberTableData.fromData(
       Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
@@ -300,7 +275,6 @@ class ActivityMemberTableData extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}person_ref']),
     );
   }
-
   factory ActivityMemberTableData.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
@@ -309,7 +283,6 @@ class ActivityMemberTableData extends DataClass
       personRef: serializer.fromJson<String>(json['personRef']),
     );
   }
-
   @override
   Map<String, dynamic> toJson({ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
@@ -336,7 +309,6 @@ class ActivityMemberTableData extends DataClass
         activityRef: activityRef ?? this.activityRef,
         personRef: personRef ?? this.personRef,
       );
-
   @override
   String toString() {
     return (StringBuffer('ActivityMemberTableData(')
@@ -348,7 +320,6 @@ class ActivityMemberTableData extends DataClass
 
   @override
   int get hashCode => $mrjf($mrjc(activityRef.hashCode, personRef.hashCode));
-
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -361,18 +332,15 @@ class ActivityMemberTableCompanion
     extends UpdateCompanion<ActivityMemberTableData> {
   final Value<String> activityRef;
   final Value<String> personRef;
-
   const ActivityMemberTableCompanion({
     this.activityRef = const Value.absent(),
     this.personRef = const Value.absent(),
   });
-
   ActivityMemberTableCompanion.insert({
     @required String activityRef,
     @required String personRef,
   })  : activityRef = Value(activityRef),
         personRef = Value(personRef);
-
   ActivityMemberTableCompanion copyWith(
       {Value<String> activityRef, Value<String> personRef}) {
     return ActivityMemberTableCompanion(
@@ -386,17 +354,13 @@ class $ActivityMemberTableTable extends ActivityMemberTable
     with TableInfo<$ActivityMemberTableTable, ActivityMemberTableData> {
   final GeneratedDatabase _db;
   final String _alias;
-
   $ActivityMemberTableTable(this._db, [this._alias]);
-
   final VerificationMeta _activityRefMeta =
       const VerificationMeta('activityRef');
   GeneratedTextColumn _activityRef;
-
   @override
   GeneratedTextColumn get activityRef =>
       _activityRef ??= _constructActivityRef();
-
   GeneratedTextColumn _constructActivityRef() {
     return GeneratedTextColumn(
       'activity_ref',
@@ -407,10 +371,8 @@ class $ActivityMemberTableTable extends ActivityMemberTable
 
   final VerificationMeta _personRefMeta = const VerificationMeta('personRef');
   GeneratedTextColumn _personRef;
-
   @override
   GeneratedTextColumn get personRef => _personRef ??= _constructPersonRef();
-
   GeneratedTextColumn _constructPersonRef() {
     return GeneratedTextColumn(
       'person_ref',
@@ -421,15 +383,12 @@ class $ActivityMemberTableTable extends ActivityMemberTable
 
   @override
   List<GeneratedColumn> get $columns => [activityRef, personRef];
-
   @override
   $ActivityMemberTableTable get asDslTable => this;
-
   @override
   String get $tableName => _alias ?? 'activity_member_table';
   @override
   final String actualTableName = 'activity_member_table';
-
   @override
   VerificationContext validateIntegrity(ActivityMemberTableCompanion d,
       {bool isInserting = false}) {
@@ -450,8 +409,7 @@ class $ActivityMemberTableTable extends ActivityMemberTable
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
-
+  Set<GeneratedColumn> get $primaryKey => {activityRef, personRef};
   @override
   ActivityMemberTableData map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -480,10 +438,8 @@ class ExpenseParticipantTableData extends DataClass
     implements Insertable<ExpenseParticipantTableData> {
   final String expenseRef;
   final String personRef;
-
   ExpenseParticipantTableData(
       {@required this.expenseRef, @required this.personRef});
-
   factory ExpenseParticipantTableData.fromData(
       Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
@@ -496,7 +452,6 @@ class ExpenseParticipantTableData extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}person_ref']),
     );
   }
-
   factory ExpenseParticipantTableData.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
@@ -505,7 +460,6 @@ class ExpenseParticipantTableData extends DataClass
       personRef: serializer.fromJson<String>(json['personRef']),
     );
   }
-
   @override
   Map<String, dynamic> toJson({ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
@@ -532,7 +486,6 @@ class ExpenseParticipantTableData extends DataClass
         expenseRef: expenseRef ?? this.expenseRef,
         personRef: personRef ?? this.personRef,
       );
-
   @override
   String toString() {
     return (StringBuffer('ExpenseParticipantTableData(')
@@ -544,7 +497,6 @@ class ExpenseParticipantTableData extends DataClass
 
   @override
   int get hashCode => $mrjf($mrjc(expenseRef.hashCode, personRef.hashCode));
-
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -557,18 +509,15 @@ class ExpenseParticipantTableCompanion
     extends UpdateCompanion<ExpenseParticipantTableData> {
   final Value<String> expenseRef;
   final Value<String> personRef;
-
   const ExpenseParticipantTableCompanion({
     this.expenseRef = const Value.absent(),
     this.personRef = const Value.absent(),
   });
-
   ExpenseParticipantTableCompanion.insert({
     @required String expenseRef,
     @required String personRef,
   })  : expenseRef = Value(expenseRef),
         personRef = Value(personRef);
-
   ExpenseParticipantTableCompanion copyWith(
       {Value<String> expenseRef, Value<String> personRef}) {
     return ExpenseParticipantTableCompanion(
@@ -582,15 +531,11 @@ class $ExpenseParticipantTableTable extends ExpenseParticipantTable
     with TableInfo<$ExpenseParticipantTableTable, ExpenseParticipantTableData> {
   final GeneratedDatabase _db;
   final String _alias;
-
   $ExpenseParticipantTableTable(this._db, [this._alias]);
-
   final VerificationMeta _expenseRefMeta = const VerificationMeta('expenseRef');
   GeneratedTextColumn _expenseRef;
-
   @override
   GeneratedTextColumn get expenseRef => _expenseRef ??= _constructExpenseRef();
-
   GeneratedTextColumn _constructExpenseRef() {
     return GeneratedTextColumn(
       'expense_ref',
@@ -601,10 +546,8 @@ class $ExpenseParticipantTableTable extends ExpenseParticipantTable
 
   final VerificationMeta _personRefMeta = const VerificationMeta('personRef');
   GeneratedTextColumn _personRef;
-
   @override
   GeneratedTextColumn get personRef => _personRef ??= _constructPersonRef();
-
   GeneratedTextColumn _constructPersonRef() {
     return GeneratedTextColumn(
       'person_ref',
@@ -615,15 +558,12 @@ class $ExpenseParticipantTableTable extends ExpenseParticipantTable
 
   @override
   List<GeneratedColumn> get $columns => [expenseRef, personRef];
-
   @override
   $ExpenseParticipantTableTable get asDslTable => this;
-
   @override
   String get $tableName => _alias ?? 'expense_participant_table';
   @override
   final String actualTableName = 'expense_participant_table';
-
   @override
   VerificationContext validateIntegrity(ExpenseParticipantTableCompanion d,
       {bool isInserting = false}) {
@@ -644,8 +584,7 @@ class $ExpenseParticipantTableTable extends ExpenseParticipantTable
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
-
+  Set<GeneratedColumn> get $primaryKey => {expenseRef, personRef};
   @override
   ExpenseParticipantTableData map(Map<String, dynamic> data,
       {String tablePrefix}) {
@@ -676,9 +615,7 @@ class ExpensePayerTableData extends DataClass
     implements Insertable<ExpensePayerTableData> {
   final String expenseRef;
   final String personRef;
-
   ExpensePayerTableData({@required this.expenseRef, @required this.personRef});
-
   factory ExpensePayerTableData.fromData(
       Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
@@ -691,7 +628,6 @@ class ExpensePayerTableData extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}person_ref']),
     );
   }
-
   factory ExpensePayerTableData.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
@@ -700,7 +636,6 @@ class ExpensePayerTableData extends DataClass
       personRef: serializer.fromJson<String>(json['personRef']),
     );
   }
-
   @override
   Map<String, dynamic> toJson({ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
@@ -727,7 +662,6 @@ class ExpensePayerTableData extends DataClass
         expenseRef: expenseRef ?? this.expenseRef,
         personRef: personRef ?? this.personRef,
       );
-
   @override
   String toString() {
     return (StringBuffer('ExpensePayerTableData(')
@@ -739,7 +673,6 @@ class ExpensePayerTableData extends DataClass
 
   @override
   int get hashCode => $mrjf($mrjc(expenseRef.hashCode, personRef.hashCode));
-
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -752,18 +685,15 @@ class ExpensePayerTableCompanion
     extends UpdateCompanion<ExpensePayerTableData> {
   final Value<String> expenseRef;
   final Value<String> personRef;
-
   const ExpensePayerTableCompanion({
     this.expenseRef = const Value.absent(),
     this.personRef = const Value.absent(),
   });
-
   ExpensePayerTableCompanion.insert({
     @required String expenseRef,
     @required String personRef,
   })  : expenseRef = Value(expenseRef),
         personRef = Value(personRef);
-
   ExpensePayerTableCompanion copyWith(
       {Value<String> expenseRef, Value<String> personRef}) {
     return ExpensePayerTableCompanion(
@@ -777,15 +707,11 @@ class $ExpensePayerTableTable extends ExpensePayerTable
     with TableInfo<$ExpensePayerTableTable, ExpensePayerTableData> {
   final GeneratedDatabase _db;
   final String _alias;
-
   $ExpensePayerTableTable(this._db, [this._alias]);
-
   final VerificationMeta _expenseRefMeta = const VerificationMeta('expenseRef');
   GeneratedTextColumn _expenseRef;
-
   @override
   GeneratedTextColumn get expenseRef => _expenseRef ??= _constructExpenseRef();
-
   GeneratedTextColumn _constructExpenseRef() {
     return GeneratedTextColumn(
       'expense_ref',
@@ -796,10 +722,8 @@ class $ExpensePayerTableTable extends ExpensePayerTable
 
   final VerificationMeta _personRefMeta = const VerificationMeta('personRef');
   GeneratedTextColumn _personRef;
-
   @override
   GeneratedTextColumn get personRef => _personRef ??= _constructPersonRef();
-
   GeneratedTextColumn _constructPersonRef() {
     return GeneratedTextColumn(
       'person_ref',
@@ -810,15 +734,12 @@ class $ExpensePayerTableTable extends ExpensePayerTable
 
   @override
   List<GeneratedColumn> get $columns => [expenseRef, personRef];
-
   @override
   $ExpensePayerTableTable get asDslTable => this;
-
   @override
   String get $tableName => _alias ?? 'expense_payer_table';
   @override
   final String actualTableName = 'expense_payer_table';
-
   @override
   VerificationContext validateIntegrity(ExpensePayerTableCompanion d,
       {bool isInserting = false}) {
@@ -839,8 +760,7 @@ class $ExpensePayerTableTable extends ExpensePayerTable
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
-
+  Set<GeneratedColumn> get $primaryKey => {expenseRef, personRef};
   @override
   ExpensePayerTableData map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -872,14 +792,12 @@ class ExpenseTableData extends DataClass
   final DateTime updateAt;
   final double amount;
   final String paidFor;
-
   ExpenseTableData(
       {@required this.id,
       @required this.createdAt,
       @required this.updateAt,
       @required this.amount,
       @required this.paidFor});
-
   factory ExpenseTableData.fromData(
       Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
@@ -899,7 +817,6 @@ class ExpenseTableData extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}paid_for']),
     );
   }
-
   factory ExpenseTableData.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
@@ -911,7 +828,6 @@ class ExpenseTableData extends DataClass
       paidFor: serializer.fromJson<String>(json['paidFor']),
     );
   }
-
   @override
   Map<String, dynamic> toJson({ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
@@ -955,7 +871,6 @@ class ExpenseTableData extends DataClass
         amount: amount ?? this.amount,
         paidFor: paidFor ?? this.paidFor,
       );
-
   @override
   String toString() {
     return (StringBuffer('ExpenseTableData(')
@@ -973,7 +888,6 @@ class ExpenseTableData extends DataClass
       id.hashCode,
       $mrjc(createdAt.hashCode,
           $mrjc(updateAt.hashCode, $mrjc(amount.hashCode, paidFor.hashCode)))));
-
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -991,7 +905,6 @@ class ExpenseTableCompanion extends UpdateCompanion<ExpenseTableData> {
   final Value<DateTime> updateAt;
   final Value<double> amount;
   final Value<String> paidFor;
-
   const ExpenseTableCompanion({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -999,7 +912,6 @@ class ExpenseTableCompanion extends UpdateCompanion<ExpenseTableData> {
     this.amount = const Value.absent(),
     this.paidFor = const Value.absent(),
   });
-
   ExpenseTableCompanion.insert({
     @required String id,
     @required DateTime createdAt,
@@ -1011,7 +923,6 @@ class ExpenseTableCompanion extends UpdateCompanion<ExpenseTableData> {
         updateAt = Value(updateAt),
         amount = Value(amount),
         paidFor = Value(paidFor);
-
   ExpenseTableCompanion copyWith(
       {Value<String> id,
       Value<DateTime> createdAt,
@@ -1032,15 +943,11 @@ class $ExpenseTableTable extends ExpenseTable
     with TableInfo<$ExpenseTableTable, ExpenseTableData> {
   final GeneratedDatabase _db;
   final String _alias;
-
   $ExpenseTableTable(this._db, [this._alias]);
-
   final VerificationMeta _idMeta = const VerificationMeta('id');
   GeneratedTextColumn _id;
-
   @override
   GeneratedTextColumn get id => _id ??= _constructId();
-
   GeneratedTextColumn _constructId() {
     return GeneratedTextColumn(
       'id',
@@ -1051,10 +958,8 @@ class $ExpenseTableTable extends ExpenseTable
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
   GeneratedDateTimeColumn _createdAt;
-
   @override
   GeneratedDateTimeColumn get createdAt => _createdAt ??= _constructCreatedAt();
-
   GeneratedDateTimeColumn _constructCreatedAt() {
     return GeneratedDateTimeColumn(
       'created_at',
@@ -1065,10 +970,8 @@ class $ExpenseTableTable extends ExpenseTable
 
   final VerificationMeta _updateAtMeta = const VerificationMeta('updateAt');
   GeneratedDateTimeColumn _updateAt;
-
   @override
   GeneratedDateTimeColumn get updateAt => _updateAt ??= _constructUpdateAt();
-
   GeneratedDateTimeColumn _constructUpdateAt() {
     return GeneratedDateTimeColumn(
       'update_at',
@@ -1079,10 +982,8 @@ class $ExpenseTableTable extends ExpenseTable
 
   final VerificationMeta _amountMeta = const VerificationMeta('amount');
   GeneratedRealColumn _amount;
-
   @override
   GeneratedRealColumn get amount => _amount ??= _constructAmount();
-
   GeneratedRealColumn _constructAmount() {
     return GeneratedRealColumn(
       'amount',
@@ -1093,10 +994,8 @@ class $ExpenseTableTable extends ExpenseTable
 
   final VerificationMeta _paidForMeta = const VerificationMeta('paidFor');
   GeneratedTextColumn _paidFor;
-
   @override
   GeneratedTextColumn get paidFor => _paidFor ??= _constructPaidFor();
-
   GeneratedTextColumn _constructPaidFor() {
     return GeneratedTextColumn(
       'paid_for',
@@ -1108,15 +1007,12 @@ class $ExpenseTableTable extends ExpenseTable
   @override
   List<GeneratedColumn> get $columns =>
       [id, createdAt, updateAt, amount, paidFor];
-
   @override
   $ExpenseTableTable get asDslTable => this;
-
   @override
   String get $tableName => _alias ?? 'expense_table';
   @override
   final String actualTableName = 'expense_table';
-
   @override
   VerificationContext validateIntegrity(ExpenseTableCompanion d,
       {bool isInserting = false}) {
@@ -1154,8 +1050,7 @@ class $ExpenseTableTable extends ExpenseTable
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
-
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   ExpenseTableData map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -1194,13 +1089,11 @@ class PeopleTableData extends DataClass implements Insertable<PeopleTableData> {
   final DateTime createdAt;
   final DateTime updateAt;
   final String name;
-
   PeopleTableData(
       {@required this.id,
       @required this.createdAt,
       @required this.updateAt,
       @required this.name});
-
   factory PeopleTableData.fromData(
       Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
@@ -1216,7 +1109,6 @@ class PeopleTableData extends DataClass implements Insertable<PeopleTableData> {
       name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
     );
   }
-
   factory PeopleTableData.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
@@ -1227,7 +1119,6 @@ class PeopleTableData extends DataClass implements Insertable<PeopleTableData> {
       name: serializer.fromJson<String>(json['name']),
     );
   }
-
   @override
   Map<String, dynamic> toJson({ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
@@ -1261,7 +1152,6 @@ class PeopleTableData extends DataClass implements Insertable<PeopleTableData> {
         updateAt: updateAt ?? this.updateAt,
         name: name ?? this.name,
       );
-
   @override
   String toString() {
     return (StringBuffer('PeopleTableData(')
@@ -1276,7 +1166,6 @@ class PeopleTableData extends DataClass implements Insertable<PeopleTableData> {
   @override
   int get hashCode => $mrjf($mrjc(id.hashCode,
       $mrjc(createdAt.hashCode, $mrjc(updateAt.hashCode, name.hashCode))));
-
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -1292,14 +1181,12 @@ class PeopleTableCompanion extends UpdateCompanion<PeopleTableData> {
   final Value<DateTime> createdAt;
   final Value<DateTime> updateAt;
   final Value<String> name;
-
   const PeopleTableCompanion({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updateAt = const Value.absent(),
     this.name = const Value.absent(),
   });
-
   PeopleTableCompanion.insert({
     @required String id,
     @required DateTime createdAt,
@@ -1309,7 +1196,6 @@ class PeopleTableCompanion extends UpdateCompanion<PeopleTableData> {
         createdAt = Value(createdAt),
         updateAt = Value(updateAt),
         name = Value(name);
-
   PeopleTableCompanion copyWith(
       {Value<String> id,
       Value<DateTime> createdAt,
@@ -1328,15 +1214,11 @@ class $PeopleTableTable extends PeopleTable
     with TableInfo<$PeopleTableTable, PeopleTableData> {
   final GeneratedDatabase _db;
   final String _alias;
-
   $PeopleTableTable(this._db, [this._alias]);
-
   final VerificationMeta _idMeta = const VerificationMeta('id');
   GeneratedTextColumn _id;
-
   @override
   GeneratedTextColumn get id => _id ??= _constructId();
-
   GeneratedTextColumn _constructId() {
     return GeneratedTextColumn(
       'id',
@@ -1347,10 +1229,8 @@ class $PeopleTableTable extends PeopleTable
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
   GeneratedDateTimeColumn _createdAt;
-
   @override
   GeneratedDateTimeColumn get createdAt => _createdAt ??= _constructCreatedAt();
-
   GeneratedDateTimeColumn _constructCreatedAt() {
     return GeneratedDateTimeColumn(
       'created_at',
@@ -1361,10 +1241,8 @@ class $PeopleTableTable extends PeopleTable
 
   final VerificationMeta _updateAtMeta = const VerificationMeta('updateAt');
   GeneratedDateTimeColumn _updateAt;
-
   @override
   GeneratedDateTimeColumn get updateAt => _updateAt ??= _constructUpdateAt();
-
   GeneratedDateTimeColumn _constructUpdateAt() {
     return GeneratedDateTimeColumn(
       'update_at',
@@ -1375,10 +1253,8 @@ class $PeopleTableTable extends PeopleTable
 
   final VerificationMeta _nameMeta = const VerificationMeta('name');
   GeneratedTextColumn _name;
-
   @override
   GeneratedTextColumn get name => _name ??= _constructName();
-
   GeneratedTextColumn _constructName() {
     return GeneratedTextColumn(
       'name',
@@ -1389,15 +1265,12 @@ class $PeopleTableTable extends PeopleTable
 
   @override
   List<GeneratedColumn> get $columns => [id, createdAt, updateAt, name];
-
   @override
   $PeopleTableTable get asDslTable => this;
-
   @override
   String get $tableName => _alias ?? 'people_table';
   @override
   final String actualTableName = 'people_table';
-
   @override
   VerificationContext validateIntegrity(PeopleTableCompanion d,
       {bool isInserting = false}) {
@@ -1429,8 +1302,7 @@ class $PeopleTableTable extends PeopleTable
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
-
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   PeopleTableData map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -1464,37 +1336,28 @@ class $PeopleTableTable extends PeopleTable
 abstract class _$LocalDatabase extends GeneratedDatabase {
   _$LocalDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   $ActivityTableTable _activityTable;
-
   $ActivityTableTable get activityTable =>
       _activityTable ??= $ActivityTableTable(this);
   $ActivityMemberTableTable _activityMemberTable;
-
   $ActivityMemberTableTable get activityMemberTable =>
       _activityMemberTable ??= $ActivityMemberTableTable(this);
   $ExpenseParticipantTableTable _expenseParticipantTable;
-
   $ExpenseParticipantTableTable get expenseParticipantTable =>
       _expenseParticipantTable ??= $ExpenseParticipantTableTable(this);
   $ExpensePayerTableTable _expensePayerTable;
-
   $ExpensePayerTableTable get expensePayerTable =>
       _expensePayerTable ??= $ExpensePayerTableTable(this);
   $ExpenseTableTable _expenseTable;
-
   $ExpenseTableTable get expenseTable =>
       _expenseTable ??= $ExpenseTableTable(this);
   $PeopleTableTable _peopleTable;
-
   $PeopleTableTable get peopleTable => _peopleTable ??= $PeopleTableTable(this);
   ActivityLocalDatasource _activityLocalDatasource;
-
   ActivityLocalDatasource get activityLocalDatasource =>
       _activityLocalDatasource ??=
           ActivityLocalDatasource(this as LocalDatabase);
-
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
-
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
         activityTable,

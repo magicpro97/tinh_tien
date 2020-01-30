@@ -6,4 +6,6 @@ class ExpenseTable extends BaseTable {
   RealColumn get amount => real()();
 
   TextColumn get paidFor => text()();
+
+  Set<Column> get primaryKey => {id};
 }
