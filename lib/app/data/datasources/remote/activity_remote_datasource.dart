@@ -6,9 +6,9 @@ import 'package:tinh_tien/app/data/models/activity/activity_shared_expenses.dart
 import 'package:tinh_tien/app/data/models/activity/activity_summary.dart';
 import 'package:tinh_tien/app/data/models/error/error_response.dart';
 
-import '../../network/client.dart';
+import '../../../network/client.dart';
 
-class ActivityDatasource {
+class ActivityRemoteDatasource {
   Future<Either<ErrorResponse, Activity>> create(
       ActivityRequest activityRequest) async {
     try {

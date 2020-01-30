@@ -1,13 +1,13 @@
 import 'package:dartz/dartz.dart';
-import 'package:tinh_tien/app/data/datasources/people_datasouce.dart';
+import 'package:meta/meta.dart';
+import 'package:tinh_tien/app/data/datasources/remote/people_remote_datasource.dart';
 import 'package:tinh_tien/app/data/models/no_data.dart';
 import 'package:tinh_tien/app/data/models/people/person.dart';
 import 'package:tinh_tien/app/network/no_network_connection_exception.dart';
 import 'package:tinh_tien/core/errors/failures/people_failure.dart';
-import 'package:meta/meta.dart';
 
 class PeopleRepository {
-  final PeopleDatasouce peopleDatasouce;
+  final PeopleRemoteDatasouce peopleDatasouce;
   PeopleRepository({
     @required this.peopleDatasouce,
   });
