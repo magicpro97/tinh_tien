@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:meta/meta.dart';
 import 'package:tinh_tien/app/data/models/error/error_response.dart';
 import 'package:tinh_tien/app/data/models/no_data.dart';
 import 'package:tinh_tien/app/data/models/people/person.dart';
 import 'package:tinh_tien/app/network/client.dart';
-import 'package:meta/meta.dart';
 
-class PeopleDatasouce {
+class PeopleRemoteDatasouce {
   Future<Either<ErrorResponse, Person>> create({
     @required String activityId,
     @required String name,

@@ -1,13 +1,13 @@
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
+import 'package:meta/meta.dart';
 import 'package:tinh_tien/app/data/models/error/error_response.dart';
 import 'package:tinh_tien/app/data/models/expense/expense.dart';
 import 'package:tinh_tien/app/data/models/expense/expense_request.dart';
 import 'package:tinh_tien/app/data/models/no_data.dart';
 import 'package:tinh_tien/app/network/client.dart';
-import 'package:dio/dio.dart';
-import 'package:meta/meta.dart';
 
-class ExpenseDatasource {
+class ExpenseRemoteDatasource {
   Future<Either<ErrorResponse, NoData>> create({
     @required String activityId,
     @required ExpenseRequest expenseRequest,

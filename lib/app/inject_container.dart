@@ -1,16 +1,17 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:get_it/get_it.dart';
-import 'blocs/activity/activity_bloc.dart';
-import 'package:tinh_tien/app/data/datasources/activity_datasource.dart';
-import 'package:tinh_tien/app/data/repositories/activity_repository.dart';
-import 'package:tinh_tien/app/data/repositories/people_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tinh_tien/app/data/datasources/local/local_database.dart';
 
+import 'blocs/activity/activity_bloc.dart';
 import 'blocs/expense/expense_bloc.dart';
 import 'blocs/people/people_bloc.dart';
-import 'data/datasources/expense_datasource.dart';
-import 'data/datasources/people_datasouce.dart';
+import 'data/datasources/remote/activity_remote_datasource.dart';
+import 'data/datasources/remote/expense_remote_datasource.dart';
+import 'data/datasources/remote/people_remote_datasource.dart';
+import 'data/repositories/activity_repository.dart';
 import 'data/repositories/expense_repository.dart';
+import 'data/repositories/people_repository.dart';
 
 final sl = GetIt.instance;
 
@@ -21,9 +22,10 @@ Future<void> init() async {
   sl.registerLazySingleton(() => prefs);
 
   // data source
-  sl.registerLazySingleton(() => ActivityDatasource());
-  sl.registerLazySingleton(() => PeopleDatasouce());
-  sl.registerLazySingleton(() => ExpenseDatasource());
+  sl.registerLazySingleton(() => LocalDatabase());
+  sl.registerLazySingleton(() => ActivityRemoteDatasource());
+  sl.registerLazySingleton(() => PeopleRemoteDatasouce());
+  sl.registerLazySingleton(() => ExpenseRemoteDatasource());
 
   // repo
   sl.registerLazySingleton(() => ActivityRepository(

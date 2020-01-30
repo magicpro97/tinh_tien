@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:meta/meta.dart';
-import 'package:tinh_tien/app/data/datasources/activity_datasource.dart';
+import 'package:tinh_tien/app/data/datasources/remote/activity_remote_datasource.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/data/models/activity/activity_request.dart';
 import 'package:tinh_tien/app/data/models/activity/activity_shared_expenses.dart';
@@ -9,7 +9,7 @@ import 'package:tinh_tien/app/network/no_network_connection_exception.dart';
 import 'package:tinh_tien/core/errors/failures/activity_failure.dart';
 
 class ActivityRepository {
-  final ActivityDatasource activityDatasource;
+  final ActivityRemoteDatasource activityDatasource;
 
   ActivityRepository({
     @required this.activityDatasource,

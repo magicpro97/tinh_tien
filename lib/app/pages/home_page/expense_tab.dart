@@ -61,8 +61,7 @@ class _ExpenseTabState extends State<ExpenseTab> {
                     if (state is ActivityLoadedState) {
                       return _buildExpenseChart(context, state);
                     }
-                    log('checked', name: 'ExpenseTab');
-                    return Container(width: 0.0, height: 0.0);
+                    return Container();
                   }),
                 ),
                 SliverAppBar(
