@@ -1,6 +1,7 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tinh_tien/app/data/datasources/local/local_database.dart';
 
 import 'blocs/activity/activity_bloc.dart';
 import 'blocs/expense/expense_bloc.dart';
@@ -21,6 +22,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => prefs);
 
   // data source
+  sl.registerLazySingleton(() => LocalDatabase());
   sl.registerLazySingleton(() => ActivityRemoteDatasource());
   sl.registerLazySingleton(() => PeopleRemoteDatasouce());
   sl.registerLazySingleton(() => ExpenseRemoteDatasource());
