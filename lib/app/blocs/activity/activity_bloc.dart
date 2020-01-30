@@ -1,16 +1,20 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
+import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/data/repositories/activity_repository.dart';
 import 'package:tinh_tien/app/network/no_network_connection_exception.dart';
 import 'package:tinh_tien/common/constants.dart';
 import 'package:tinh_tien/core/errors/exceptions/unknown_exception.dart';
+
 import './bloc.dart';
-import 'package:meta/meta.dart';
 
 class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
   final SharedPreferences sharedPreferences;
   final ActivityRepository activityRepository;
+  Activity activity;
 
   ActivityBloc({
     @required this.sharedPreferences,
@@ -41,7 +45,10 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
           yield ActivityErrorState(error.fold((error) => error.message, null));
         } else {
           yield ActivityLoadedState(
-              activity: data[0].fold(null, (data) => data),
+              activity: data[0].fold(null, (data) {
+                activity = data;
+                return data;
+              }),
               activitySummary: data[1].fold(null, (data) => data),
               activitySharedExpenses: data[2].fold(null, (data) => data));
         }

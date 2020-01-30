@@ -7,7 +7,6 @@ import 'package:tinh_tien/app/pages/home_page/more_tab.dart';
 import 'package:tinh_tien/app/pages/home_page/outstanding_tab.dart';
 import 'package:tinh_tien/app/route.dart';
 import 'package:tinh_tien/app/widgets/app_scaffold.dart';
-import 'package:tinh_tien/app/widgets/loading_placeholder.dart';
 import 'package:tinh_tien/common/colors.dart';
 import 'package:tinh_tien/common/constants.dart';
 import 'package:tinh_tien/common/dimens.dart';
@@ -136,11 +135,6 @@ class _HomePageState extends State<HomePage> {
       body: BlocBuilder<ActivityBloc, ActivityState>(
         bloc: _activityBloc,
         builder: (context, state) {
-          if (state is ActivityLoadingState) {
-            return LoadingPlaceholder(
-              title: tabNames[_currentIndex],
-            );
-          }
           final peopleTab = PeopleTab(
             name: tabNames[0],
           );
@@ -164,7 +158,12 @@ class _HomePageState extends State<HomePage> {
             outstandingTab,
             moreTab,
           ]);
-          return _tabs[_currentIndex];
+          return Column(
+            children: <Widget>[
+              if (state is ActivityLoadingState) LinearProgressIndicator(),
+              Expanded(child: _tabs[_currentIndex]),
+            ],
+          );
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -201,9 +200,7 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      state is ActivityLoadedState
-                          ? state.activity.name
-                          : "Welcome",
+                      _activityBloc.activity?.name ?? "Welcome",
                       style: Theme.of(context).textTheme.title.apply(
                           color:
                               snapshot.data == DataConnectionStatus.disconnected
