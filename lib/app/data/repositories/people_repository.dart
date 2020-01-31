@@ -7,9 +7,9 @@ import 'package:tinh_tien/app/network/no_network_connection_exception.dart';
 import 'package:tinh_tien/core/errors/failures/people_failure.dart';
 
 class PeopleRepository {
-  final PeopleRemoteDataSource peopleDatasouce;
+  final PeopleRemoteDataSource peopleDataSource;
   PeopleRepository({
-    @required this.peopleDatasouce,
+    @required this.peopleDataSource,
   });
 
   Future<Either<PeopleFailure, Person>> create({
@@ -17,7 +17,7 @@ class PeopleRepository {
     @required String name,
   }) async {
     try {
-      final data = await peopleDatasouce.create(
+      final data = await peopleDataSource.create(
         activityId: activityId,
         name: name,
       );
@@ -36,7 +36,7 @@ class PeopleRepository {
     @required String personId,
   }) async {
     try {
-      final data = await peopleDatasouce.update(
+      final data = await peopleDataSource.update(
         activityId: activityId,
         name: name,
         personId: personId,
@@ -55,7 +55,7 @@ class PeopleRepository {
     @required String personId,
   }) async {
     try {
-      final data = await peopleDatasouce.delete(
+      final data = await peopleDataSource.delete(
         activityId: activityId,
         personId: personId,
       );
@@ -72,7 +72,7 @@ class PeopleRepository {
     @required String activityId,
   }) async {
     try {
-      final data = await peopleDatasouce.getPeople(
+      final data = await peopleDataSource.getPeople(
         activityId: activityId,
       );
       return data.fold(

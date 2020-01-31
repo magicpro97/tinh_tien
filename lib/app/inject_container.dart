@@ -29,13 +29,13 @@ Future<void> init() async {
 
   // repo
   sl.registerLazySingleton(() => ActivityRepository(
-        activityDatasource: sl(),
+    activityDataSource: sl(),
       ));
   sl.registerLazySingleton(() => PeopleRepository(
-        peopleDatasouce: sl(),
+    peopleDataSource: sl(),
       ));
   sl.registerLazySingleton(() => ExpenseRepository(
-        expenseDatasource: sl(),
+    expenseDataSource: sl(),
       ));
 
   // bloc
