@@ -53,7 +53,6 @@ class _ExpenseTabState extends State<ExpenseTab> {
       child: AppTabView(
         body: Scaffold(
           body: CustomScrollView(
-            shrinkWrap: true,
             slivers: [
               SliverAppBar(
                 expandedHeight: Dimens.EXPANDED_HEIGHT,
@@ -86,7 +85,6 @@ class _ExpenseTabState extends State<ExpenseTab> {
                 pinned: true,
               ),
               SliverFillRemaining(
-                hasScrollBody: true,
                 child: _buildExpenseTimeline(_activityBloc.activity),
               ),
             ],
