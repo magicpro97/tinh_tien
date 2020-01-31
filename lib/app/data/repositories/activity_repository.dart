@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:meta/meta.dart';
+import 'package:tinh_tien/app/data/datasources/local/activity_local_datasource.dart';
 import 'package:tinh_tien/app/data/datasources/remote/activity_remote_datasource.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/data/models/activity/activity_request.dart';
@@ -11,9 +12,11 @@ import 'package:tinh_tien/core/errors/failures/activity_failure.dart';
 
 class ActivityRepository {
   final ActivityRemoteDataSource activityDataSource;
+  final ActivityLocalDataSource activityLocalDataSource;
 
   ActivityRepository({
     @required this.activityDataSource,
+    @required this.activityLocalDataSource,
   });
 
   Future<Either<ActivityFailure, Activity>> createActivity(String name) async {

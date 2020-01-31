@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:meta/meta.dart';
+import 'package:tinh_tien/app/data/datasources/local/people_local_datasource.dart';
 import 'package:tinh_tien/app/data/datasources/remote/people_remote_datasource.dart';
 import 'package:tinh_tien/app/data/models/no_data.dart';
 import 'package:tinh_tien/app/data/models/people/person.dart';
@@ -8,8 +9,11 @@ import 'package:tinh_tien/core/errors/failures/people_failure.dart';
 
 class PeopleRepository {
   final PeopleRemoteDataSource peopleDataSource;
+  final PeopleLocalDataSource peopleLocalDataSource;
+
   PeopleRepository({
     @required this.peopleDataSource,
+    @required this.peopleLocalDataSource,
   });
 
   Future<Either<PeopleFailure, Person>> create({

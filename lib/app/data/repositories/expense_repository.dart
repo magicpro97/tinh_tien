@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:meta/meta.dart';
+import 'package:tinh_tien/app/data/datasources/local/expense_local_datasource.dart';
 import 'package:tinh_tien/app/data/datasources/remote/expense_remote_datasource.dart';
 import 'package:tinh_tien/app/data/models/expense/expense.dart';
 import 'package:tinh_tien/app/data/models/expense/expense_request.dart';
@@ -9,9 +10,11 @@ import 'package:tinh_tien/core/errors/failures/expense_failure.dart';
 
 class ExpenseRepository {
   final ExpenseRemoteDataSource expenseDataSource;
+  final ExpenseLocalDataSource expenseLocalDataSource;
 
   ExpenseRepository({
     @required this.expenseDataSource,
+    @required this.expenseLocalDataSource,
   });
 
   Future<Either<ExpenseFailure, NoData>> create({

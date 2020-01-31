@@ -5,6 +5,8 @@ import 'package:moor_ffi/moor_ffi.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:tinh_tien/app/data/datasources/local/activity_local_datasource.dart';
+import 'package:tinh_tien/app/data/datasources/local/expense_local_datasource.dart';
+import 'package:tinh_tien/app/data/datasources/local/people_local_datasource.dart';
 
 import 'tables/acitivity_table.dart';
 import 'tables/activity_member_table.dart';
@@ -37,6 +39,8 @@ LazyDatabase _openConnection() {
   ],
   daos: [
     ActivityLocalDataSource,
+    PeopleLocalDataSource,
+    ExpenseLocalDataSource,
   ],
 )
 class LocalDatabase extends _$LocalDatabase {

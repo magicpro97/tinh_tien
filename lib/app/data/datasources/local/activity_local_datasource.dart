@@ -10,6 +10,6 @@ part 'activity_local_datasource.g.dart';
   tables: [Activities, ActivityMembers],
 )
 class ActivityLocalDataSource extends DatabaseAccessor<LocalDatabase>
-    with _$ActivityLocalDatasourceMixin {
+    with _$ActivityLocalDataSourceMixin {
   ActivityLocalDataSource(LocalDatabase db) : super(db);
 }

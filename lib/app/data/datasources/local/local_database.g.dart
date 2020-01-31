@@ -12,13 +12,11 @@ class Activity extends DataClass implements Insertable<Activity> {
   final DateTime createdAt;
   final DateTime updateAt;
   final String name;
-
   Activity(
       {@required this.id,
       @required this.createdAt,
       @required this.updateAt,
       @required this.name});
-
   factory Activity.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -33,7 +31,6 @@ class Activity extends DataClass implements Insertable<Activity> {
       name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
     );
   }
-
   factory Activity.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
@@ -106,14 +103,12 @@ class ActivitiesCompanion extends UpdateCompanion<Activity> {
   final Value<DateTime> createdAt;
   final Value<DateTime> updateAt;
   final Value<String> name;
-
   const ActivitiesCompanion({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updateAt = const Value.absent(),
     this.name = const Value.absent(),
   });
-
   ActivitiesCompanion.insert({
     @required String id,
     @required DateTime createdAt,
@@ -123,7 +118,6 @@ class ActivitiesCompanion extends UpdateCompanion<Activity> {
         createdAt = Value(createdAt),
         updateAt = Value(updateAt),
         name = Value(name);
-
   ActivitiesCompanion copyWith(
       {Value<String> id,
       Value<DateTime> createdAt,
@@ -142,7 +136,6 @@ class $ActivitiesTable extends Activities
     with TableInfo<$ActivitiesTable, Activity> {
   final GeneratedDatabase _db;
   final String _alias;
-
   $ActivitiesTable(this._db, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
   GeneratedTextColumn _id;
@@ -265,9 +258,7 @@ class $ActivitiesTable extends Activities
 class ActivityMember extends DataClass implements Insertable<ActivityMember> {
   final String activityRef;
   final String personRef;
-
   ActivityMember({@required this.activityRef, @required this.personRef});
-
   factory ActivityMember.fromData(
       Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
@@ -280,7 +271,6 @@ class ActivityMember extends DataClass implements Insertable<ActivityMember> {
           .mapFromDatabaseResponse(data['${effectivePrefix}person_ref']),
     );
   }
-
   factory ActivityMember.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
@@ -337,18 +327,15 @@ class ActivityMember extends DataClass implements Insertable<ActivityMember> {
 class ActivityMembersCompanion extends UpdateCompanion<ActivityMember> {
   final Value<String> activityRef;
   final Value<String> personRef;
-
   const ActivityMembersCompanion({
     this.activityRef = const Value.absent(),
     this.personRef = const Value.absent(),
   });
-
   ActivityMembersCompanion.insert({
     @required String activityRef,
     @required String personRef,
   })  : activityRef = Value(activityRef),
         personRef = Value(personRef);
-
   ActivityMembersCompanion copyWith(
       {Value<String> activityRef, Value<String> personRef}) {
     return ActivityMembersCompanion(
@@ -362,7 +349,6 @@ class $ActivityMembersTable extends ActivityMembers
     with TableInfo<$ActivityMembersTable, ActivityMember> {
   final GeneratedDatabase _db;
   final String _alias;
-
   $ActivityMembersTable(this._db, [this._alias]);
   final VerificationMeta _activityRefMeta =
       const VerificationMeta('activityRef');
@@ -447,9 +433,7 @@ class ExpenseParticipant extends DataClass
     implements Insertable<ExpenseParticipant> {
   final String expenseRef;
   final String personRef;
-
   ExpenseParticipant({@required this.expenseRef, @required this.personRef});
-
   factory ExpenseParticipant.fromData(
       Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
@@ -462,7 +446,6 @@ class ExpenseParticipant extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}person_ref']),
     );
   }
-
   factory ExpenseParticipant.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
@@ -519,18 +502,15 @@ class ExpenseParticipant extends DataClass
 class ExpenseParticipantsCompanion extends UpdateCompanion<ExpenseParticipant> {
   final Value<String> expenseRef;
   final Value<String> personRef;
-
   const ExpenseParticipantsCompanion({
     this.expenseRef = const Value.absent(),
     this.personRef = const Value.absent(),
   });
-
   ExpenseParticipantsCompanion.insert({
     @required String expenseRef,
     @required String personRef,
   })  : expenseRef = Value(expenseRef),
         personRef = Value(personRef);
-
   ExpenseParticipantsCompanion copyWith(
       {Value<String> expenseRef, Value<String> personRef}) {
     return ExpenseParticipantsCompanion(
@@ -544,7 +524,6 @@ class $ExpenseParticipantsTable extends ExpenseParticipants
     with TableInfo<$ExpenseParticipantsTable, ExpenseParticipant> {
   final GeneratedDatabase _db;
   final String _alias;
-
   $ExpenseParticipantsTable(this._db, [this._alias]);
   final VerificationMeta _expenseRefMeta = const VerificationMeta('expenseRef');
   GeneratedTextColumn _expenseRef;
@@ -626,9 +605,7 @@ class $ExpenseParticipantsTable extends ExpenseParticipants
 class ExpensePayer extends DataClass implements Insertable<ExpensePayer> {
   final String expenseRef;
   final String personRef;
-
   ExpensePayer({@required this.expenseRef, @required this.personRef});
-
   factory ExpensePayer.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -640,7 +617,6 @@ class ExpensePayer extends DataClass implements Insertable<ExpensePayer> {
           .mapFromDatabaseResponse(data['${effectivePrefix}person_ref']),
     );
   }
-
   factory ExpensePayer.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
@@ -697,18 +673,15 @@ class ExpensePayer extends DataClass implements Insertable<ExpensePayer> {
 class ExpensePayersCompanion extends UpdateCompanion<ExpensePayer> {
   final Value<String> expenseRef;
   final Value<String> personRef;
-
   const ExpensePayersCompanion({
     this.expenseRef = const Value.absent(),
     this.personRef = const Value.absent(),
   });
-
   ExpensePayersCompanion.insert({
     @required String expenseRef,
     @required String personRef,
   })  : expenseRef = Value(expenseRef),
         personRef = Value(personRef);
-
   ExpensePayersCompanion copyWith(
       {Value<String> expenseRef, Value<String> personRef}) {
     return ExpensePayersCompanion(
@@ -722,7 +695,6 @@ class $ExpensePayersTable extends ExpensePayers
     with TableInfo<$ExpensePayersTable, ExpensePayer> {
   final GeneratedDatabase _db;
   final String _alias;
-
   $ExpensePayersTable(this._db, [this._alias]);
   final VerificationMeta _expenseRefMeta = const VerificationMeta('expenseRef');
   GeneratedTextColumn _expenseRef;
@@ -807,14 +779,12 @@ class Expense extends DataClass implements Insertable<Expense> {
   final DateTime updateAt;
   final double amount;
   final String paidFor;
-
   Expense(
       {@required this.id,
       @required this.createdAt,
       @required this.updateAt,
       @required this.amount,
       @required this.paidFor});
-
   factory Expense.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -833,7 +803,6 @@ class Expense extends DataClass implements Insertable<Expense> {
           .mapFromDatabaseResponse(data['${effectivePrefix}paid_for']),
     );
   }
-
   factory Expense.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
@@ -922,7 +891,6 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
   final Value<DateTime> updateAt;
   final Value<double> amount;
   final Value<String> paidFor;
-
   const ExpensesCompanion({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -930,7 +898,6 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
     this.amount = const Value.absent(),
     this.paidFor = const Value.absent(),
   });
-
   ExpensesCompanion.insert({
     @required String id,
     @required DateTime createdAt,
@@ -942,7 +909,6 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
         updateAt = Value(updateAt),
         amount = Value(amount),
         paidFor = Value(paidFor);
-
   ExpensesCompanion copyWith(
       {Value<String> id,
       Value<DateTime> createdAt,
@@ -962,7 +928,6 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
 class $ExpensesTable extends Expenses with TableInfo<$ExpensesTable, Expense> {
   final GeneratedDatabase _db;
   final String _alias;
-
   $ExpensesTable(this._db, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
   GeneratedTextColumn _id;
@@ -1109,13 +1074,11 @@ class PeopleData extends DataClass implements Insertable<PeopleData> {
   final DateTime createdAt;
   final DateTime updateAt;
   final String name;
-
   PeopleData(
       {@required this.id,
       @required this.createdAt,
       @required this.updateAt,
       @required this.name});
-
   factory PeopleData.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -1130,7 +1093,6 @@ class PeopleData extends DataClass implements Insertable<PeopleData> {
       name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
     );
   }
-
   factory PeopleData.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
@@ -1203,14 +1165,12 @@ class PeopleCompanion extends UpdateCompanion<PeopleData> {
   final Value<DateTime> createdAt;
   final Value<DateTime> updateAt;
   final Value<String> name;
-
   const PeopleCompanion({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updateAt = const Value.absent(),
     this.name = const Value.absent(),
   });
-
   PeopleCompanion.insert({
     @required String id,
     @required DateTime createdAt,
@@ -1220,7 +1180,6 @@ class PeopleCompanion extends UpdateCompanion<PeopleData> {
         createdAt = Value(createdAt),
         updateAt = Value(updateAt),
         name = Value(name);
-
   PeopleCompanion copyWith(
       {Value<String> id,
       Value<DateTime> createdAt,
@@ -1238,7 +1197,6 @@ class PeopleCompanion extends UpdateCompanion<PeopleData> {
 class $PeopleTable extends People with TableInfo<$PeopleTable, PeopleData> {
   final GeneratedDatabase _db;
   final String _alias;
-
   $PeopleTable(this._db, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
   GeneratedTextColumn _id;
@@ -1361,31 +1319,33 @@ class $PeopleTable extends People with TableInfo<$PeopleTable, PeopleData> {
 abstract class _$LocalDatabase extends GeneratedDatabase {
   _$LocalDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   $ActivitiesTable _activities;
-
   $ActivitiesTable get activities => _activities ??= $ActivitiesTable(this);
   $ActivityMembersTable _activityMembers;
-
   $ActivityMembersTable get activityMembers =>
       _activityMembers ??= $ActivityMembersTable(this);
   $ExpenseParticipantsTable _expenseParticipants;
-
   $ExpenseParticipantsTable get expenseParticipants =>
       _expenseParticipants ??= $ExpenseParticipantsTable(this);
   $ExpensePayersTable _expensePayers;
-
   $ExpensePayersTable get expensePayers =>
       _expensePayers ??= $ExpensePayersTable(this);
   $ExpensesTable _expenses;
-
   $ExpensesTable get expenses => _expenses ??= $ExpensesTable(this);
   $PeopleTable _people;
-
   $PeopleTable get people => _people ??= $PeopleTable(this);
-  ActivityLocalDataSource _activityLocalDatasource;
+  ActivityLocalDataSource _activityLocalDataSource;
 
-  ActivityLocalDataSource get activityLocalDatasource =>
-      _activityLocalDatasource ??=
+  ActivityLocalDataSource get activityLocalDataSource =>
+      _activityLocalDataSource ??=
           ActivityLocalDataSource(this as LocalDatabase);
+  PeopleLocalDataSource _peopleLocalDataSource;
+
+  PeopleLocalDataSource get peopleLocalDataSource =>
+      _peopleLocalDataSource ??= PeopleLocalDataSource(this as LocalDatabase);
+  ExpenseLocalDataSource _expenseLocalDataSource;
+
+  ExpenseLocalDataSource get expenseLocalDataSource =>
+      _expenseLocalDataSource ??= ExpenseLocalDataSource(this as LocalDatabase);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
