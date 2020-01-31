@@ -88,56 +88,54 @@ class _PeopleTabState extends State<PeopleTab> {
           }),
         ),
       ],
-      body: Expanded(
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: Dimens.NORMAL_PADDING),
-          child: BlocListener<PeopleBloc, PeopleState>(
+      body: Container(
+        margin: const EdgeInsets.symmetric(horizontal: Dimens.NORMAL_PADDING),
+        child: BlocListener<PeopleBloc, PeopleState>(
+          bloc: _peopleBloc,
+          listener: (context, state) {
+            if (state is PeopleCreatedState ||
+                state is PeopleEditedState ||
+                state is PeopleDeletedState) {
+              _activityBloc.add(GetActivityEvent());
+            }
+          },
+          child: BlocBuilder<PeopleBloc, PeopleState>(
             bloc: _peopleBloc,
-            listener: (context, state) {
-              if (state is PeopleCreatedState ||
-                  state is PeopleEditedState ||
-                  state is PeopleDeletedState) {
-                _activityBloc.add(GetActivityEvent());
-              }
-            },
-            child: BlocBuilder<PeopleBloc, PeopleState>(
-              bloc: _peopleBloc,
-              builder: (_, state) => Column(
-                children: <Widget>[
-                  Card(
-                    elevation: 10.0,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: Dimens.NORMAL_PADDING),
-                      child: AppTextField(
-                        editMode: editPeopleNameMode,
-                        addLabelText: "Add a person",
-                        editLabelText: "Edit person's name",
-                        hintText: "Enter a name...",
-                        helpText: "Ex: John",
-                        controller: _peopleNameController,
-                        focusNode: _peopleNameFocus,
-                        onDone: () {
-                          if (editPeopleNameMode) {
-                            _peopleBloc.add(EditPeopleEvent(
-                                activityId: _activityBloc.activityId,
-                                name: _peopleNameController.text,
-                                personId: _editingPerson.id));
-                          } else {
-                            _peopleBloc.add(CreatePeopleEvent(
+            builder: (_, state) => Column(
+              children: <Widget>[
+                Card(
+                  elevation: 10.0,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: Dimens.NORMAL_PADDING),
+                    child: AppTextField(
+                      editMode: editPeopleNameMode,
+                      addLabelText: "Add a person",
+                      editLabelText: "Edit person's name",
+                      hintText: "Enter a name...",
+                      helpText: "Ex: John",
+                      controller: _peopleNameController,
+                      focusNode: _peopleNameFocus,
+                      onDone: () {
+                        if (editPeopleNameMode) {
+                          _peopleBloc.add(EditPeopleEvent(
                               activityId: _activityBloc.activityId,
                               name: _peopleNameController.text,
-                            ));
-                          }
-                        },
-                      ),
+                              personId: _editingPerson.id));
+                        } else {
+                          _peopleBloc.add(CreatePeopleEvent(
+                            activityId: _activityBloc.activityId,
+                            name: _peopleNameController.text,
+                          ));
+                        }
+                      },
                     ),
                   ),
-                  Expanded(
-                    child: _buildPeopleList(_activityBloc.activity),
-                  ),
-                ],
-              ),
+                ),
+                Expanded(
+                  child: _buildPeopleList(_activityBloc.activity),
+                ),
+              ],
             ),
           ),
         ),
@@ -154,8 +152,7 @@ class _PeopleTabState extends State<PeopleTab> {
         elevation: 10.0,
         child: ListView.separated(
             itemBuilder: (_, index) => peopleItems[index],
-            separatorBuilder: (_, __) =>
-                SizedBox(
+            separatorBuilder: (_, __) => SizedBox(
                   height: Dimens.XSMALL_PADDING,
                 ),
             itemCount: peopleItems.length),

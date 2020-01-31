@@ -26,7 +26,7 @@ class AppTabView extends StatelessWidget {
                   actions: actions ?? const [],
                 )
               : Container(),
-          body,
+          Expanded(child: body),
         ],
       ),
     );

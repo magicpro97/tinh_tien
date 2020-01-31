@@ -51,54 +51,55 @@ class _ExpenseTabState extends State<ExpenseTab> {
     return BlocListener<ExpenseBloc, ExpenseState>(
       bloc: _expenseBloc,
       child: AppTabView(
-        body: Expanded(
-          child: Scaffold(
-            body: CustomScrollView(
-              slivers: [
-                SliverAppBar(
-                  expandedHeight: Dimens.EXPANDED_HEIGHT,
-                  automaticallyImplyLeading: false,
-                  flexibleSpace:
-                  _buildExpenseChart(context, _activityBloc.activity),
+        body: Scaffold(
+          body: CustomScrollView(
+            shrinkWrap: true,
+            slivers: [
+              SliverAppBar(
+                expandedHeight: Dimens.EXPANDED_HEIGHT,
+                automaticallyImplyLeading: false,
+                flexibleSpace:
+                    _buildExpenseChart(context, _activityBloc.activity),
+              ),
+              SliverAppBar(
+                title: Row(
+                  children: <Widget>[
+                    Text(widget.name),
+                    SizedBox(
+                      width: Dimens.NORMAL_PADDING,
+                    ),
+                    BlocBuilder<ActivityBloc, ActivityState>(
+                        bloc: _activityBloc,
+                        builder: (context, state) {
+                          if (state is ActivityLoadingState) {
+                            return Loading(
+                              indicator: BallPulseIndicator(),
+                              size: 25.0,
+                            );
+                          }
+                          return Container();
+                        }),
+                  ],
                 ),
-                SliverAppBar(
-                  title: Row(
-                    children: <Widget>[
-                      Text(widget.name),
-                      SizedBox(width: Dimens.NORMAL_PADDING,),
-                      BlocBuilder<ActivityBloc, ActivityState>(
-                          bloc: _activityBloc,
-                          builder: (context, state) {
-                            if (state is ActivityLoadingState) {
-                              return Loading(
-                                indicator: BallPulseIndicator(),
-                                size: 25.0,
-                              );
-                            }
-                            return Container();
-                          }),
-                    ],
-                  ),
-                  automaticallyImplyLeading: false,
-                  floating: true,
-                  pinned: true,
-                ),
-                SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: _buildExpenseTimeline(_activityBloc.activity),
-                ),
-              ],
-            ),
-            floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  if (_activityBloc.activity == null ||
-                      _activityBloc.activity.people.isNotEmpty) {
-                    Navigator.pushNamed(context, EXPENSE_PAGE,
-                        arguments: _activityBloc.activity);
-                  }
-                },
-                child: Icon(Icons.add)),
+                automaticallyImplyLeading: false,
+                floating: true,
+                pinned: true,
+              ),
+              SliverFillRemaining(
+                hasScrollBody: true,
+                child: _buildExpenseTimeline(_activityBloc.activity),
+              ),
+            ],
           ),
+          floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                if (_activityBloc.activity == null ||
+                    _activityBloc.activity.people.isNotEmpty) {
+                  Navigator.pushNamed(context, EXPENSE_PAGE,
+                      arguments: _activityBloc.activity);
+                }
+              },
+              child: Icon(Icons.add)),
         ),
       ),
       listener: (_, state) {
@@ -112,27 +113,25 @@ class _ExpenseTabState extends State<ExpenseTab> {
   Widget _buildExpenseTimeline(Activity activity) {
     if (activity != null && activity.expenses.isNotEmpty) {
       final expenseTimelines = activity.expenseADay
-          .map((activityExpense) =>
-          TimelineModel(
-            TimeLineExpenseBodyItem(
-              title: DateUtils.toDate(activityExpense.date),
-              expenseItems: activityExpense.expenses
-                  .map((expense) =>
-                  ExpenseItem(
-                    activity: activity,
-                    expense: expense,
-                    onDeleted: () {
-                      _expenseBloc.add(DeleteExpense(
-                        activityId: activity.id,
-                        expenseId: expense.id,
-                      ));
-                    },
-                  ))
-                  .toList()
-                  .reversed
-                  .toList(),
-            ),
-          ))
+          .map((activityExpense) => TimelineModel(
+                TimeLineExpenseBodyItem(
+                  title: DateUtils.toDate(activityExpense.date),
+                  expenseItems: activityExpense.expenses
+                      .map((expense) => ExpenseItem(
+                            activity: activity,
+                            expense: expense,
+                            onDeleted: () {
+                              _expenseBloc.add(DeleteExpense(
+                                activityId: activity.id,
+                                expenseId: expense.id,
+                              ));
+                            },
+                          ))
+                      .toList()
+                      .reversed
+                      .toList(),
+                ),
+              ))
           .toList()
           .reversed
           .toList();
@@ -149,9 +148,9 @@ class _ExpenseTabState extends State<ExpenseTab> {
 
   Widget _buildExpenseChart(BuildContext context, Activity activity) {
     final totals =
-    activity.expenseADay.map((expense) => expense.total).toList();
+        activity.expenseADay.map((expense) => expense.total).toList();
     final showIndexes =
-    activity.expenseADay.fold<List<int>>([], (previous, expense) {
+        activity.expenseADay.fold<List<int>>([], (previous, expense) {
       if (previous.isNotEmpty) {
         previous.add(previous.last + 1);
       } else {
@@ -195,8 +194,8 @@ class _ExpenseTabState extends State<ExpenseTab> {
       child: activity.expenseADay.isNotEmpty
           ? Card(
               elevation: 10.0,
-        child: _buildChart(
-            context, showIndexes, tooltipsOnBar, lineBarsData, activity),
+              child: _buildChart(
+                  context, showIndexes, tooltipsOnBar, lineBarsData, activity),
             )
           : EmptyList(),
     );

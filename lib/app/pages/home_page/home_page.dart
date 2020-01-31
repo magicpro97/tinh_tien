@@ -95,6 +95,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void dispose() {
+    _activityBloc.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AppScaffold(
       margin: const EdgeInsets.all(Dimens.ZERO),

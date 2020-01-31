@@ -23,49 +23,47 @@ class OutstandingTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppTabView(
       title: 'Outstanding',
-      body: Expanded(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(
-            Dimens.NORMAL_PADDING,
-            Dimens.SMALL_PADDING,
-            Dimens.NORMAL_PADDING,
-            0,
-          ),
-          child: BlocBuilder<ActivityBloc, ActivityState>(
-            bloc: BlocProvider.of<ActivityBloc>(context),
-            builder: (_, state) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Card(
-                    elevation: 10.0,
-                    child: Padding(
-                      child: Text(
-                          'Total transaction: ${state is ActivityLoadedState ? state.activitySharedExpenses.sharedExpenses?.length ?? 0 : 0}'),
-                      padding: const EdgeInsets.all(Dimens.NORMAL_PADDING),
-                    ),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(
+          Dimens.NORMAL_PADDING,
+          Dimens.SMALL_PADDING,
+          Dimens.NORMAL_PADDING,
+          0,
+        ),
+        child: BlocBuilder<ActivityBloc, ActivityState>(
+          bloc: BlocProvider.of<ActivityBloc>(context),
+          builder: (_, state) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Card(
+                  elevation: 10.0,
+                  child: Padding(
+                    child: Text(
+                        'Total transaction: ${state is ActivityLoadedState ? state.activitySharedExpenses.sharedExpenses?.length ?? 0 : 0}'),
+                    padding: const EdgeInsets.all(Dimens.NORMAL_PADDING),
                   ),
-                  Expanded(
-                    child: state is ActivityLoadedState
-                        ? state.activitySharedExpenses.sharedExpenses.isEmpty
-                            ? EmptyList()
-                            : Card(
-                                elevation: 10.0,
-                                child: ListView.builder(
-                                  itemBuilder: (context, index) =>
-                                      _sharedExpensesItem(context, index,
-                                          state.activitySharedExpenses),
-                                  itemCount: state.activitySharedExpenses
-                                      .sharedExpenses.length,
-                                ),
-                              )
-                        : EmptyList(),
-                  ),
-                ],
-              );
-            },
-          ),
+                ),
+                Expanded(
+                  child: state is ActivityLoadedState
+                      ? state.activitySharedExpenses.sharedExpenses.isEmpty
+                          ? EmptyList()
+                          : Card(
+                              elevation: 10.0,
+                              child: ListView.builder(
+                                itemBuilder: (context, index) =>
+                                    _sharedExpensesItem(context, index,
+                                        state.activitySharedExpenses),
+                                itemCount: state.activitySharedExpenses
+                                    .sharedExpenses.length,
+                              ),
+                            )
+                      : EmptyList(),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
