@@ -13,6 +13,11 @@ class GetActivityEvent extends ActivityEvent {
   List<Object> get props => [activityId];
 }
 
+class GetLastActivityEvent extends ActivityEvent {
+  @override
+  List<Object> get props => [];
+}
+
 class DeleteActivityEvent extends ActivityEvent {
   final String activityId;
 

@@ -30,7 +30,13 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
   Stream<ActivityState> mapEventToState(
     ActivityEvent event,
   ) async* {
-    if (event is GetActivityEvent) {
+    if (event is GetLastActivityEvent) {
+      if (activityId != null && activityId
+          .trim()
+          .isNotEmpty) {
+        yield HasLastActivityState();
+      }
+    } else if (event is GetActivityEvent) {
       yield ActivityLoadingState();
       try {
         final activityId =

@@ -62,11 +62,13 @@ class _WelcomePageState extends State<WelcomePage>
       setState(() {
         _alreadyHaveButtonOpacity = 1;
       });
+      _activityBloc.add(GetLastActivityEvent());
     });
   }
 
   @override
   void dispose() {
+    _activityNameController.dispose();
     _nameFieldFocus.dispose();
     _scaleController.dispose();
     super.dispose();
@@ -85,6 +87,10 @@ class _WelcomePageState extends State<WelcomePage>
               if (state is CreatedActivityState) {
                 Navigator.pushReplacementNamed(context, HOME_PAGE,
                     arguments: state.activity);
+              } else if (state is HasLastActivityState) {
+                _activityBloc.add(GetActivityEvent());
+              } else if (state is ActivityLoadedState) {
+                Navigator.pushReplacementNamed(context, HOME_PAGE);
               }
             },
             child: BlocBuilder<ActivityBloc, ActivityState>(

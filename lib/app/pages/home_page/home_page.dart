@@ -50,7 +50,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _activityBloc = BlocProvider.of<ActivityBloc>(context);
-    _activityBloc.add(GetActivityEvent());
     _dataConnectionChecker = sl<DataConnectionChecker>();
     _dataConnectionChecker.onStatusChange.listen((status) {
       if (status == DataConnectionStatus.disconnected) {

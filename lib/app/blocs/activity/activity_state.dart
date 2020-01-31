@@ -57,3 +57,8 @@ class ActivityErrorState extends ActivityState {
   @override
   List<Object> get props => [message];
 }
+
+class HasLastActivityState extends ActivityState {
+  @override
+  List<Object> get props => null;
+}
