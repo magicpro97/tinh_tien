@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loading/indicator/ball_scale_indicator.dart';
+import 'package:loading/loading.dart';
+import 'package:tinh_tien/app/blocs/activity/bloc.dart';
 import 'package:tinh_tien/common/colors.dart';
 
 class AppTextField extends StatelessWidget {
@@ -38,10 +42,22 @@ class AppTextField extends StatelessWidget {
           errorText: errorText,
           suffixIcon: editMode
               ? null
-              : IconButton(
+              : BlocBuilder<ActivityBloc, ActivityState>(
+              bloc: BlocProvider.of<ActivityBloc>(context),
+              builder: (context, state) {
+                return state is ActivityLoadingState
+                    ? Loading(
+                  indicator: BallScaleIndicator(),
+                  color: Theme
+                      .of(context)
+                      .primaryColor,
+                  size: 10.0,
+                )
+                    : IconButton(
                   icon: Icon(Icons.add),
                   onPressed: () => _onPressed(context),
-                ),
+                );
+              }),
           suffix: editMode
               ? OutlineButton.icon(
                   label: Text(

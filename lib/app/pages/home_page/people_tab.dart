@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinh_tien/app/blocs/activity/bloc.dart';
 import 'package:tinh_tien/app/blocs/people/bloc.dart';
+import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/data/models/people/person.dart';
 import 'package:tinh_tien/app/route.dart';
 import 'package:tinh_tien/app/widgets/app_tabview.dart';
@@ -133,26 +134,7 @@ class _PeopleTabState extends State<PeopleTab> {
                     ),
                   ),
                   Expanded(
-                    child: BlocBuilder<ActivityBloc, ActivityState>(
-                      builder: (_, state) {
-                        if (state is ActivityLoadedState &&
-                            state.activity.people.isNotEmpty) {
-                          final peopleItems = state.activity.people
-                              .map((person) => _peopleItem(context, person))
-                              .toList();
-                          return Card(
-                            elevation: 10.0,
-                            child: ListView.separated(
-                                itemBuilder: (_, index) => peopleItems[index],
-                                separatorBuilder: (_, __) => SizedBox(
-                                      height: Dimens.XSMALL_PADDING,
-                                    ),
-                                itemCount: peopleItems.length),
-                          );
-                        }
-                        return EmptyList();
-                      },
-                    ),
+                    child: _buildPeopleList(_activityBloc.activity),
                   ),
                 ],
               ),
@@ -161,6 +143,25 @@ class _PeopleTabState extends State<PeopleTab> {
         ),
       ),
     );
+  }
+
+  Widget _buildPeopleList(Activity activity) {
+    if (activity != null && activity.people.isNotEmpty) {
+      final peopleItems = activity.people
+          .map((person) => _peopleItem(context, person))
+          .toList();
+      return Card(
+        elevation: 10.0,
+        child: ListView.separated(
+            itemBuilder: (_, index) => peopleItems[index],
+            separatorBuilder: (_, __) =>
+                SizedBox(
+                  height: Dimens.XSMALL_PADDING,
+                ),
+            itemCount: peopleItems.length),
+      );
+    }
+    return EmptyList();
   }
 
   Widget _peopleItem(BuildContext context, Person person) {

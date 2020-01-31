@@ -33,6 +33,7 @@ dependencies:
   moor_ffi: ^0.4.0
   path_provider:
   path:
+  loading: ^1.0.2
 
 dev_dependencies:
   flutter_test:

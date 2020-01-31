@@ -158,12 +158,7 @@ class _HomePageState extends State<HomePage> {
             outstandingTab,
             moreTab,
           ]);
-          return Column(
-            children: <Widget>[
-              if (state is ActivityLoadingState) LinearProgressIndicator(),
-              Expanded(child: _tabs[_currentIndex]),
-            ],
-          );
+          return _tabs[_currentIndex];
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -193,31 +188,30 @@ class _HomePageState extends State<HomePage> {
             color: snapshot.data == DataConnectionStatus.disconnected
                 ? Colors.red
                 : Colors.white,
-            child: BlocBuilder<ActivityBloc, ActivityState>(
-              bloc: _activityBloc,
-              builder: (context, state) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      _activityBloc.activity?.name ?? "Welcome",
-                      style: Theme.of(context).textTheme.title.apply(
-                          color:
-                              snapshot.data == DataConnectionStatus.disconnected
-                                  ? Colors.white
-                                  : Colors.black),
-                    ),
-                    if (snapshot.data == DataConnectionStatus.disconnected)
-                      Text(
-                        " - No network connection",
-                        style: Theme.of(context)
-                            .textTheme
-                            .title
-                            .apply(color: Colors.white),
-                      ),
-                  ],
-                );
-              },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  _activityBloc.activity?.name ?? "Welcome",
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .title
+                      .apply(
+                      color: snapshot.data == DataConnectionStatus.disconnected
+                          ? Colors.white
+                          : Colors.black),
+                ),
+                if (snapshot.data == DataConnectionStatus.disconnected)
+                  Text(
+                    " - No network connection",
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .title
+                        .apply(color: Colors.white),
+                  ),
+              ],
             ),
           );
         },
