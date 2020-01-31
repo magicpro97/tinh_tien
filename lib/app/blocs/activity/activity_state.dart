@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/data/models/activity/activity_shared_expenses.dart';
 import 'package:tinh_tien/app/data/models/activity/activity_summary.dart';
-import 'package:meta/meta.dart';
 
 abstract class ActivityState extends Equatable {
   const ActivityState();
@@ -34,12 +34,10 @@ class ActivityLoadedState extends ActivityState {
 }
 
 class DeletedActivityState extends ActivityState {
-  final Activity activity;
-
-  DeletedActivityState(this.activity);
+  DeletedActivityState();
 
   @override
-  List<Object> get props => [activity];
+  List<Object> get props => [];
 }
 
 class CreatedActivityState extends ActivityState {

@@ -5,6 +5,7 @@ import 'package:tinh_tien/app/data/models/activity/activity_request.dart';
 import 'package:tinh_tien/app/data/models/activity/activity_shared_expenses.dart';
 import 'package:tinh_tien/app/data/models/activity/activity_summary.dart';
 import 'package:tinh_tien/app/data/models/error/error_response.dart';
+import 'package:tinh_tien/app/data/models/no_data.dart';
 
 import '../../../network/client.dart';
 
@@ -48,11 +49,11 @@ class ActivityRemoteDatasource {
     }
   }
 
-  Future<Either<ErrorResponse, Activity>> delete(
+  Future<Either<ErrorResponse, NoData>> delete(
       {String activityId}) async {
     try {
-      final response = await dio.delete('$ACTIVITIES/$activityId');
-      return Right(Activity.fromJson(response.data));
+      await dio.delete('$ACTIVITIES/$activityId');
+      return Right(NoData());
     } on DioError catch (e) {
       return Left(ErrorResponse.fromJson(e.response.data));
     }

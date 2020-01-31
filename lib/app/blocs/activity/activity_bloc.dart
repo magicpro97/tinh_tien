@@ -68,7 +68,7 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
           return ActivityErrorState(error.message);
         }, (activity) async {
           await sharedPreferences.setString(ACTIVITY_ID, "");
-          return DeletedActivityState(activity);
+          return DeletedActivityState();
         });
       } catch (e) {
         if (e is NoNetworkConnection) {

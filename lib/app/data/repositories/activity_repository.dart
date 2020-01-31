@@ -5,6 +5,7 @@ import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/data/models/activity/activity_request.dart';
 import 'package:tinh_tien/app/data/models/activity/activity_shared_expenses.dart';
 import 'package:tinh_tien/app/data/models/activity/activity_summary.dart';
+import 'package:tinh_tien/app/data/models/no_data.dart';
 import 'package:tinh_tien/app/network/no_network_connection_exception.dart';
 import 'package:tinh_tien/core/errors/failures/activity_failure.dart';
 
@@ -64,7 +65,7 @@ class ActivityRepository {
     }
   }
 
-  Future<Either<ActivityFailure, Activity>> deleteActivity(
+  Future<Either<ActivityFailure, NoData>> deleteActivity(
       {String activityId}) async {
     try {
       final data = await activityDatasource.delete(activityId: activityId);
