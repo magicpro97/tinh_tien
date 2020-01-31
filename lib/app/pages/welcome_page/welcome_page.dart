@@ -87,8 +87,8 @@ class _WelcomePageState extends State<WelcomePage>
               if (state is CreatedActivityState) {
                 Navigator.pushReplacementNamed(context, HOME_PAGE,
                     arguments: state.activity);
-              } else if (state is HasLastActivityState) {
-                _activityBloc.add(GetActivityEvent());
+              // } else if (state is HasLastActivityState) {
+              //   _activityBloc.add(GetActivityEvent());
               } else if (state is ActivityLoadedState) {
                 Navigator.pushReplacementNamed(context, HOME_PAGE);
               }
