@@ -8,7 +8,7 @@ import 'package:tinh_tien/app/network/no_network_connection_exception.dart';
 import 'package:tinh_tien/core/errors/failures/expense_failure.dart';
 
 class ExpenseRepository {
-  final ExpenseRemoteDatasource expenseDatasource;
+  final ExpenseRemoteDataSource expenseDatasource;
 
   ExpenseRepository({
     @required this.expenseDatasource,

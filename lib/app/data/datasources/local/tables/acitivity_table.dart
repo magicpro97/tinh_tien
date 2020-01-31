@@ -2,7 +2,8 @@ import 'package:moor/moor.dart';
 
 import 'base_table.dart';
 
-class ActivityTable extends BaseTable {
+@DataClassName("Activity")
+class Activities extends BaseTable {
   TextColumn get name => text()();
 
   Set<Column> get primaryKey => {id};

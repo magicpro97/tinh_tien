@@ -7,7 +7,7 @@ import 'package:tinh_tien/app/network/no_network_connection_exception.dart';
 import 'package:tinh_tien/core/errors/failures/people_failure.dart';
 
 class PeopleRepository {
-  final PeopleRemoteDatasouce peopleDatasouce;
+  final PeopleRemoteDataSource peopleDatasouce;
   PeopleRepository({
     @required this.peopleDatasouce,
   });

@@ -23,9 +23,9 @@ Future<void> init() async {
 
   // data source
   sl.registerLazySingleton(() => LocalDatabase());
-  sl.registerLazySingleton(() => ActivityRemoteDatasource());
-  sl.registerLazySingleton(() => PeopleRemoteDatasouce());
-  sl.registerLazySingleton(() => ExpenseRemoteDatasource());
+  sl.registerLazySingleton(() => ActivityRemoteDataSource());
+  sl.registerLazySingleton(() => PeopleRemoteDataSource());
+  sl.registerLazySingleton(() => ExpenseRemoteDataSource());
 
   // repo
   sl.registerLazySingleton(() => ActivityRepository(

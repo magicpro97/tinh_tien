@@ -28,15 +28,15 @@ LazyDatabase _openConnection() {
 
 @UseMoor(
   tables: [
-    ActivityTable,
-    ActivityMemberTable,
-    ExpenseParticipantTable,
-    ExpensePayerTable,
-    ExpenseTable,
-    PeopleTable,
+    Activities,
+    ActivityMembers,
+    ExpenseParticipants,
+    ExpensePayers,
+    Expenses,
+    People,
   ],
   daos: [
-    ActivityLocalDatasource,
+    ActivityLocalDataSource,
   ],
 )
 class LocalDatabase extends _$LocalDatabase {

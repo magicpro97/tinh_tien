@@ -10,7 +10,7 @@ import 'package:tinh_tien/app/network/no_network_connection_exception.dart';
 import 'package:tinh_tien/core/errors/failures/activity_failure.dart';
 
 class ActivityRepository {
-  final ActivityRemoteDatasource activityDatasource;
+  final ActivityRemoteDataSource activityDatasource;
 
   ActivityRepository({
     @required this.activityDatasource,

@@ -6,7 +6,7 @@ import 'package:tinh_tien/app/data/models/no_data.dart';
 import 'package:tinh_tien/app/data/models/people/person.dart';
 import 'package:tinh_tien/app/network/client.dart';
 
-class PeopleRemoteDatasouce {
+class PeopleRemoteDataSource {
   Future<Either<ErrorResponse, Person>> create({
     @required String activityId,
     @required String name,
