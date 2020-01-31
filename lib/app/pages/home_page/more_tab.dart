@@ -38,56 +38,60 @@ class _MoreTabState extends State<MoreTab> {
     return AppTabView(
       body: BlocBuilder<ActivityBloc, ActivityState>(
         bloc: _activityBloc,
-        builder: (_, state) => Expanded(
-          child: ListView(
-            children: <Widget>[
-              ListTile(
-                leading: Icon(Icons.delete_forever),
-                title: Text(
-                  'Delete activity',
-                  style: TextStyle(fontSize: 20),
-                ),
-                onTap: state is ActivityLoadedState
-                    ? () {
-                        showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                                  title: Text("Confirm"),
-                                  content: Text(
-                                      'You are about to delete activity "${state.activity.name}". \nAre you sure want to continue?'),
-                                  actions: <Widget>[
-                                    FlatButton(
-                                      child: Text('Cancel',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .button
-                                              .apply(color: Colors.red)),
-                                      onPressed: Navigator.of(context).pop,
-                                    ),
-                                    FlatButton(
-                                      child: Text(
-                                        'OK',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .button
-                                            .apply(color: Colors.blue),
-                                      ),
-                                      onPressed: () {
-                                        _activityBloc.add(DeleteActivityEvent(
-                                            state.activity.id));
-                                        Navigator.pushNamedAndRemoveUntil(
-                                            context,
-                                            WElCOME_PAGE,
-                                            (route) => false);
-                                      },
-                                    )
-                                  ],
-                                ));
-                      }
-                    : null,
-              )
-            ],
-          ),
+        builder: (_, state) =>
+            ListView(
+              children: <Widget>[
+                ListTile(
+                  leading: Icon(Icons.delete_forever),
+                  title: Text(
+                    'Delete activity',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  onTap: state is ActivityLoadedState
+                      ? () {
+                    showDialog(
+                        context: context,
+                        builder: (context) =>
+                            AlertDialog(
+                              title: Text("Confirm"),
+                              content: Text(
+                                  'You are about to delete activity "${state
+                                      .activity
+                                      .name}". \nAre you sure want to continue?'),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text('Cancel',
+                                      style: Theme
+                                          .of(context)
+                                          .textTheme
+                                          .button
+                                          .apply(color: Colors.red)),
+                                  onPressed: Navigator
+                                      .of(context)
+                                      .pop,
+                                ),
+                                FlatButton(
+                                  child: Text(
+                                    'OK',
+                                    style: Theme
+                                        .of(context)
+                                        .textTheme
+                                        .button
+                                        .apply(color: Colors.blue),
+                                  ),
+                                  onPressed: () {
+                                    _activityBloc.add(DeleteActivityEvent(
+                                        state.activity.id));
+                                    Navigator.pushNamedAndRemoveUntil(context,
+                                        WElCOME_PAGE, (route) => false);
+                                  },
+                                )
+                              ],
+                            ));
+                  }
+                      : null,
+                )
+              ],
         ),
       ),
     );
