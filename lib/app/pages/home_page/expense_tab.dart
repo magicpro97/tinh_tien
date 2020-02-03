@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
@@ -17,7 +18,7 @@ import 'package:tinh_tien/app/widgets/empty_list.dart';
 import 'package:tinh_tien/app/widgets/expense_item.dart';
 import 'package:tinh_tien/app/widgets/timeline_expense_body_item.dart';
 import 'package:tinh_tien/common/dimens.dart';
-
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../../inject_container.dart';
 
 class ExpenseTab extends StatefulWidget {
@@ -29,20 +30,51 @@ class ExpenseTab extends StatefulWidget {
   _ExpenseTabState createState() => _ExpenseTabState();
 }
 
-class _ExpenseTabState extends State<ExpenseTab> {
+class _ExpenseTabState extends State<ExpenseTab>
+    with SingleTickerProviderStateMixin {
   ActivityBloc _activityBloc;
   ExpenseBloc _expenseBloc;
+  ScrollController _scrollController;
+  bool isScrollUp = false;
 
   @override
   void initState() {
     super.initState();
     _activityBloc = BlocProvider.of<ActivityBloc>(context);
     _expenseBloc = sl<ExpenseBloc>();
-  }
+    _scrollController = ScrollController();
+    _scrollController.addListener(() {
+        if (_scrollController.offset != 0 ) {
+          setState(() {
+            isScrollUp = true;
+          });
+        } else {
+          setState(() {
+            isScrollUp = false;
+          });
+        }
+      });
+    }
+    //   if (_scrollController.offset >=
+    //           _scrollController.position.maxScrollExtent &&
+    //       !_scrollController.position.outOfRange) {
+    //     setState(() {
+    //       isScrollUp = true;
+    //     });
+    //   }
+    //   if (_scrollController.offset <=
+    //           _scrollController.position.minScrollExtent &&
+    //       !_scrollController.position.outOfRange) {
+    //     setState(() {
+    //       isScrollUp = false;
+    //     });
+    //   }
+    // });
 
   @override
   void dispose() {
     _expenseBloc.close();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -53,13 +85,19 @@ class _ExpenseTabState extends State<ExpenseTab> {
       child: AppTabView(
         body: Scaffold(
           body: CustomScrollView(
+            controller: _scrollController,
             slivers: [
-              SliverAppBar(
-                expandedHeight: Dimens.EXPANDED_HEIGHT,
-                automaticallyImplyLeading: false,
-                flexibleSpace:
-                    _buildExpenseChart(context, _activityBloc.activity),
-              ),
+              BlocBuilder<ActivityBloc, ActivityState>(
+                  bloc: _activityBloc,
+                  builder: (context, state) {
+                    return SliverAppBar(
+                      expandedHeight: Dimens.EXPANDED_HEIGHT,
+                      automaticallyImplyLeading: false,
+                      flexibleSpace: _activityBloc.activity != null
+                          ? _buildExpenseChart(context, _activityBloc.activity)
+                          : EmptyList(),
+                    );
+                  }),
               SliverAppBar(
                 title: Row(
                   children: <Widget>[
@@ -89,15 +127,18 @@ class _ExpenseTabState extends State<ExpenseTab> {
               ),
             ],
           ),
-          floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                if (_activityBloc.activity == null ||
-                    _activityBloc.activity.people.isNotEmpty) {
-                  Navigator.pushNamed(context, EXPENSE_PAGE,
-                      arguments: _activityBloc.activity);
-                }
-              },
-              child: Icon(Icons.add)),
+          floatingActionButton: Visibility(
+            child: FloatingActionButton(
+                onPressed: () {
+                  if (_activityBloc.activity == null ||
+                      _activityBloc.activity.people.isNotEmpty) {
+                    Navigator.pushNamed(context, EXPENSE_PAGE,
+                        arguments: _activityBloc.activity);
+                  }
+                },
+                child: Icon(Icons.add)),
+            visible: isScrollUp ? false : true,
+          ),
         ),
       ),
       listener: (_, state) {
@@ -255,4 +296,16 @@ class _ExpenseTabState extends State<ExpenseTab> {
           bottomTitle: const AxisTitle(showTitle: true, titleText: 'Date'),
         )));
   }
+
+  // _scrollToTop() {
+  //   _scrollController.animateTo(_scrollController.position.minScrollExtent,
+  //       duration: Duration(milliseconds: 1000), curve: Curves.easeIn);
+  //   setState(() => isOnTop = true);
+  // }
+
+  // _scrollToBottom() {
+  //   _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+  //       duration: Duration(milliseconds: 1000), curve: Curves.easeOut);
+  //   setState(() => isOnTop = false);
+  // }
 }
