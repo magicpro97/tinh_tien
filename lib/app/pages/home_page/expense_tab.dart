@@ -18,7 +18,6 @@ import 'package:tinh_tien/app/widgets/empty_list.dart';
 import 'package:tinh_tien/app/widgets/expense_item.dart';
 import 'package:tinh_tien/app/widgets/timeline_expense_body_item.dart';
 import 'package:tinh_tien/common/dimens.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../../inject_container.dart';
 
 class ExpenseTab extends StatefulWidget {
@@ -55,21 +54,6 @@ class _ExpenseTabState extends State<ExpenseTab>
         }
       });
     }
-    //   if (_scrollController.offset >=
-    //           _scrollController.position.maxScrollExtent &&
-    //       !_scrollController.position.outOfRange) {
-    //     setState(() {
-    //       isScrollUp = true;
-    //     });
-    //   }
-    //   if (_scrollController.offset <=
-    //           _scrollController.position.minScrollExtent &&
-    //       !_scrollController.position.outOfRange) {
-    //     setState(() {
-    //       isScrollUp = false;
-    //     });
-    //   }
-    // });
 
   @override
   void dispose() {
