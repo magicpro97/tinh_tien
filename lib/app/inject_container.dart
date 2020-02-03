@@ -23,19 +23,22 @@ Future<void> init() async {
 
   // data source
   sl.registerLazySingleton(() => LocalDatabase());
-  sl.registerLazySingleton(() => ActivityRemoteDatasource());
-  sl.registerLazySingleton(() => PeopleRemoteDatasouce());
-  sl.registerLazySingleton(() => ExpenseRemoteDatasource());
+  sl.registerLazySingleton(() => ActivityRemoteDataSource());
+  sl.registerLazySingleton(() => PeopleRemoteDataSource());
+  sl.registerLazySingleton(() => ExpenseRemoteDataSource());
 
   // repo
   sl.registerLazySingleton(() => ActivityRepository(
-        activityDatasource: sl(),
+    activityDataSource: sl(),
+    activityLocalDataSource: sl<LocalDatabase>().activityLocalDataSource,
       ));
   sl.registerLazySingleton(() => PeopleRepository(
-        peopleDatasouce: sl(),
+    peopleDataSource: sl(),
+    peopleLocalDataSource: sl<LocalDatabase>().peopleLocalDataSource,
       ));
   sl.registerLazySingleton(() => ExpenseRepository(
-        expenseDatasource: sl(),
+    expenseDataSource: sl(),
+    expenseLocalDataSource: sl<LocalDatabase>().expenseLocalDataSource,
       ));
 
   // bloc

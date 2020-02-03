@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:meta/meta.dart';
+import 'package:tinh_tien/app/data/datasources/local/activity_local_datasource.dart';
 import 'package:tinh_tien/app/data/datasources/remote/activity_remote_datasource.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/data/models/activity/activity_request.dart';
@@ -10,15 +11,17 @@ import 'package:tinh_tien/app/network/no_network_connection_exception.dart';
 import 'package:tinh_tien/core/errors/failures/activity_failure.dart';
 
 class ActivityRepository {
-  final ActivityRemoteDatasource activityDatasource;
+  final ActivityRemoteDataSource activityDataSource;
+  final ActivityLocalDataSource activityLocalDataSource;
 
   ActivityRepository({
-    @required this.activityDatasource,
+    @required this.activityDataSource,
+    @required this.activityLocalDataSource,
   });
 
   Future<Either<ActivityFailure, Activity>> createActivity(String name) async {
     try {
-      final data = await activityDatasource.create(ActivityRequest(name));
+      final data = await activityDataSource.create(ActivityRequest(name));
       return data.fold(
         (error) => Left(ActivityFailure(error.message)),
         (activity) => Right(activity),
@@ -30,7 +33,7 @@ class ActivityRepository {
 
   Future<Either<ActivityFailure, ActivitySummary>> getSummary(String id) async {
     try {
-      final data = await activityDatasource.getSummary(id);
+      final data = await activityDataSource.getSummary(id);
       return data.fold(
         (error) => Left(ActivityFailure(error.message)),
         (summary) => Right(summary),
@@ -42,7 +45,7 @@ class ActivityRepository {
 
   Future<Either<ActivityFailure, Activity>> getById(String id) async {
     try {
-      final data = await activityDatasource.get(id);
+      final data = await activityDataSource.get(id);
       return data.fold(
         (error) => Left(ActivityFailure(error.message)),
         (activity) => Right(activity),
@@ -55,7 +58,7 @@ class ActivityRepository {
   Future<Either<ActivityFailure, ActivitySharedExpenses>> getSharedExpenses(
       String id) async {
     try {
-      final data = await activityDatasource.getSharedExpenses(id);
+      final data = await activityDataSource.getSharedExpenses(id);
       return data.fold(
         (error) => Left(ActivityFailure(error.message)),
         (sharedExpense) => Right(sharedExpense),
@@ -68,7 +71,7 @@ class ActivityRepository {
   Future<Either<ActivityFailure, NoData>> deleteActivity(
       {String activityId}) async {
     try {
-      final data = await activityDatasource.delete(activityId: activityId);
+      final data = await activityDataSource.delete(activityId: activityId);
       return data.fold(
         (error) => Left(ActivityFailure(error.message)),
         (data) => Right(data),

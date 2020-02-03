@@ -7,9 +7,9 @@ import 'tables/activity_member_table.dart';
 part 'activity_local_datasource.g.dart';
 
 @UseDao(
-  tables: [ActivityTable, ActivityMemberTable],
+  tables: [Activities, ActivityMembers],
 )
-class ActivityLocalDatasource extends DatabaseAccessor<LocalDatabase>
-    with _$ActivityLocalDatasourceMixin {
-  ActivityLocalDatasource(LocalDatabase db) : super(db);
+class ActivityLocalDataSource extends DatabaseAccessor<LocalDatabase>
+    with _$ActivityLocalDataSourceMixin {
+  ActivityLocalDataSource(LocalDatabase db) : super(db);
 }

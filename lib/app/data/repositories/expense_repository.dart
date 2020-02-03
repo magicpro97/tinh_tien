@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:meta/meta.dart';
+import 'package:tinh_tien/app/data/datasources/local/expense_local_datasource.dart';
 import 'package:tinh_tien/app/data/datasources/remote/expense_remote_datasource.dart';
 import 'package:tinh_tien/app/data/models/expense/expense.dart';
 import 'package:tinh_tien/app/data/models/expense/expense_request.dart';
@@ -8,10 +9,12 @@ import 'package:tinh_tien/app/network/no_network_connection_exception.dart';
 import 'package:tinh_tien/core/errors/failures/expense_failure.dart';
 
 class ExpenseRepository {
-  final ExpenseRemoteDatasource expenseDatasource;
+  final ExpenseRemoteDataSource expenseDataSource;
+  final ExpenseLocalDataSource expenseLocalDataSource;
 
   ExpenseRepository({
-    @required this.expenseDatasource,
+    @required this.expenseDataSource,
+    @required this.expenseLocalDataSource,
   });
 
   Future<Either<ExpenseFailure, NoData>> create({
@@ -19,7 +22,7 @@ class ExpenseRepository {
     @required ExpenseRequest expenseRequest,
   }) async {
     try {
-      final data = await expenseDatasource.create(
+      final data = await expenseDataSource.create(
           activityId: activityId, expenseRequest: expenseRequest);
       return data.fold(
         (error) => Left(ExpenseFailure(error.message)),
@@ -36,7 +39,7 @@ class ExpenseRepository {
     @required String expenseId,
   }) async {
     try {
-      final data = await expenseDatasource.update(
+      final data = await expenseDataSource.update(
         activityId: activityId,
         expenseRequest: expenseRequest,
         expenseId: expenseId,
@@ -55,7 +58,7 @@ class ExpenseRepository {
     @required String expenseId,
   }) async {
     try {
-      final data = await expenseDatasource.delete(
+      final data = await expenseDataSource.delete(
         activityId: activityId,
         expenseId: expenseId,
       );
@@ -72,7 +75,7 @@ class ExpenseRepository {
     @required String activityId,
   }) async {
     try {
-      final data = await expenseDatasource.gets(activityId: activityId);
+      final data = await expenseDataSource.gets(activityId: activityId);
       return data.fold(
         (error) => Left(ExpenseFailure(error.message)),
         (expenses) => Right(expenses),

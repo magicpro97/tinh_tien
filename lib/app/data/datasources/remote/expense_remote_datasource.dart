@@ -7,7 +7,7 @@ import 'package:tinh_tien/app/data/models/expense/expense_request.dart';
 import 'package:tinh_tien/app/data/models/no_data.dart';
 import 'package:tinh_tien/app/network/client.dart';
 
-class ExpenseRemoteDatasource {
+class ExpenseRemoteDataSource {
   Future<Either<ErrorResponse, NoData>> create({
     @required String activityId,
     @required ExpenseRequest expenseRequest,

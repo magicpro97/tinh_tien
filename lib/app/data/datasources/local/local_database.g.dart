@@ -7,24 +7,22 @@ part of 'local_database.dart';
 // **************************************************************************
 
 // ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this
-class ActivityTableData extends DataClass
-    implements Insertable<ActivityTableData> {
+class Activity extends DataClass implements Insertable<Activity> {
   final String id;
   final DateTime createdAt;
   final DateTime updateAt;
   final String name;
-  ActivityTableData(
+  Activity(
       {@required this.id,
       @required this.createdAt,
       @required this.updateAt,
       @required this.name});
-  factory ActivityTableData.fromData(
-      Map<String, dynamic> data, GeneratedDatabase db,
+  factory Activity.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
     final stringType = db.typeSystem.forDartType<String>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
-    return ActivityTableData(
+    return Activity(
       id: stringType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
@@ -33,10 +31,10 @@ class ActivityTableData extends DataClass
       name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
     );
   }
-  factory ActivityTableData.fromJson(Map<String, dynamic> json,
+  factory Activity.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
-    return ActivityTableData(
+    return Activity(
       id: serializer.fromJson<String>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updateAt: serializer.fromJson<DateTime>(json['updateAt']),
@@ -55,8 +53,8 @@ class ActivityTableData extends DataClass
   }
 
   @override
-  ActivityTableCompanion createCompanion(bool nullToAbsent) {
-    return ActivityTableCompanion(
+  ActivitiesCompanion createCompanion(bool nullToAbsent) {
+    return ActivitiesCompanion(
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
@@ -68,9 +66,9 @@ class ActivityTableData extends DataClass
     );
   }
 
-  ActivityTableData copyWith(
+  Activity copyWith(
           {String id, DateTime createdAt, DateTime updateAt, String name}) =>
-      ActivityTableData(
+      Activity(
         id: id ?? this.id,
         createdAt: createdAt ?? this.createdAt,
         updateAt: updateAt ?? this.updateAt,
@@ -78,7 +76,7 @@ class ActivityTableData extends DataClass
       );
   @override
   String toString() {
-    return (StringBuffer('ActivityTableData(')
+    return (StringBuffer('Activity(')
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updateAt: $updateAt, ')
@@ -93,25 +91,25 @@ class ActivityTableData extends DataClass
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
-      (other is ActivityTableData &&
+          (other is Activity &&
           other.id == this.id &&
           other.createdAt == this.createdAt &&
           other.updateAt == this.updateAt &&
           other.name == this.name);
 }
 
-class ActivityTableCompanion extends UpdateCompanion<ActivityTableData> {
+class ActivitiesCompanion extends UpdateCompanion<Activity> {
   final Value<String> id;
   final Value<DateTime> createdAt;
   final Value<DateTime> updateAt;
   final Value<String> name;
-  const ActivityTableCompanion({
+  const ActivitiesCompanion({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updateAt = const Value.absent(),
     this.name = const Value.absent(),
   });
-  ActivityTableCompanion.insert({
+  ActivitiesCompanion.insert({
     @required String id,
     @required DateTime createdAt,
     @required DateTime updateAt,
@@ -120,12 +118,12 @@ class ActivityTableCompanion extends UpdateCompanion<ActivityTableData> {
         createdAt = Value(createdAt),
         updateAt = Value(updateAt),
         name = Value(name);
-  ActivityTableCompanion copyWith(
+  ActivitiesCompanion copyWith(
       {Value<String> id,
       Value<DateTime> createdAt,
       Value<DateTime> updateAt,
       Value<String> name}) {
-    return ActivityTableCompanion(
+    return ActivitiesCompanion(
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
       updateAt: updateAt ?? this.updateAt,
@@ -134,11 +132,11 @@ class ActivityTableCompanion extends UpdateCompanion<ActivityTableData> {
   }
 }
 
-class $ActivityTableTable extends ActivityTable
-    with TableInfo<$ActivityTableTable, ActivityTableData> {
+class $ActivitiesTable extends Activities
+    with TableInfo<$ActivitiesTable, Activity> {
   final GeneratedDatabase _db;
   final String _alias;
-  $ActivityTableTable(this._db, [this._alias]);
+  $ActivitiesTable(this._db, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
   GeneratedTextColumn _id;
   @override
@@ -190,13 +188,13 @@ class $ActivityTableTable extends ActivityTable
   @override
   List<GeneratedColumn> get $columns => [id, createdAt, updateAt, name];
   @override
-  $ActivityTableTable get asDslTable => this;
+  $ActivitiesTable get asDslTable => this;
   @override
-  String get $tableName => _alias ?? 'activity_table';
+  String get $tableName => _alias ?? 'activities';
   @override
-  final String actualTableName = 'activity_table';
+  final String actualTableName = 'activities';
   @override
-  VerificationContext validateIntegrity(ActivityTableCompanion d,
+  VerificationContext validateIntegrity(ActivitiesCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
     if (d.id.present) {
@@ -228,13 +226,13 @@ class $ActivityTableTable extends ActivityTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  ActivityTableData map(Map<String, dynamic> data, {String tablePrefix}) {
+  Activity map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
-    return ActivityTableData.fromData(data, _db, prefix: effectivePrefix);
+    return Activity.fromData(data, _db, prefix: effectivePrefix);
   }
 
   @override
-  Map<String, Variable> entityToSql(ActivityTableCompanion d) {
+  Map<String, Variable> entityToSql(ActivitiesCompanion d) {
     final map = <String, Variable>{};
     if (d.id.present) {
       map['id'] = Variable<String, StringType>(d.id.value);
@@ -252,33 +250,31 @@ class $ActivityTableTable extends ActivityTable
   }
 
   @override
-  $ActivityTableTable createAlias(String alias) {
-    return $ActivityTableTable(_db, alias);
+  $ActivitiesTable createAlias(String alias) {
+    return $ActivitiesTable(_db, alias);
   }
 }
 
-class ActivityMemberTableData extends DataClass
-    implements Insertable<ActivityMemberTableData> {
+class ActivityMember extends DataClass implements Insertable<ActivityMember> {
   final String activityRef;
   final String personRef;
-  ActivityMemberTableData(
-      {@required this.activityRef, @required this.personRef});
-  factory ActivityMemberTableData.fromData(
+  ActivityMember({@required this.activityRef, @required this.personRef});
+  factory ActivityMember.fromData(
       Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
     final stringType = db.typeSystem.forDartType<String>();
-    return ActivityMemberTableData(
+    return ActivityMember(
       activityRef: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}activity_ref']),
       personRef: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}person_ref']),
     );
   }
-  factory ActivityMemberTableData.fromJson(Map<String, dynamic> json,
+  factory ActivityMember.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
-    return ActivityMemberTableData(
+    return ActivityMember(
       activityRef: serializer.fromJson<String>(json['activityRef']),
       personRef: serializer.fromJson<String>(json['personRef']),
     );
@@ -293,8 +289,8 @@ class ActivityMemberTableData extends DataClass
   }
 
   @override
-  ActivityMemberTableCompanion createCompanion(bool nullToAbsent) {
-    return ActivityMemberTableCompanion(
+  ActivityMembersCompanion createCompanion(bool nullToAbsent) {
+    return ActivityMembersCompanion(
       activityRef: activityRef == null && nullToAbsent
           ? const Value.absent()
           : Value(activityRef),
@@ -304,14 +300,14 @@ class ActivityMemberTableData extends DataClass
     );
   }
 
-  ActivityMemberTableData copyWith({String activityRef, String personRef}) =>
-      ActivityMemberTableData(
+  ActivityMember copyWith({String activityRef, String personRef}) =>
+      ActivityMember(
         activityRef: activityRef ?? this.activityRef,
         personRef: personRef ?? this.personRef,
       );
   @override
   String toString() {
-    return (StringBuffer('ActivityMemberTableData(')
+    return (StringBuffer('ActivityMember(')
           ..write('activityRef: $activityRef, ')
           ..write('personRef: $personRef')
           ..write(')'))
@@ -323,38 +319,37 @@ class ActivityMemberTableData extends DataClass
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
-      (other is ActivityMemberTableData &&
+          (other is ActivityMember &&
           other.activityRef == this.activityRef &&
           other.personRef == this.personRef);
 }
 
-class ActivityMemberTableCompanion
-    extends UpdateCompanion<ActivityMemberTableData> {
+class ActivityMembersCompanion extends UpdateCompanion<ActivityMember> {
   final Value<String> activityRef;
   final Value<String> personRef;
-  const ActivityMemberTableCompanion({
+  const ActivityMembersCompanion({
     this.activityRef = const Value.absent(),
     this.personRef = const Value.absent(),
   });
-  ActivityMemberTableCompanion.insert({
+  ActivityMembersCompanion.insert({
     @required String activityRef,
     @required String personRef,
   })  : activityRef = Value(activityRef),
         personRef = Value(personRef);
-  ActivityMemberTableCompanion copyWith(
+  ActivityMembersCompanion copyWith(
       {Value<String> activityRef, Value<String> personRef}) {
-    return ActivityMemberTableCompanion(
+    return ActivityMembersCompanion(
       activityRef: activityRef ?? this.activityRef,
       personRef: personRef ?? this.personRef,
     );
   }
 }
 
-class $ActivityMemberTableTable extends ActivityMemberTable
-    with TableInfo<$ActivityMemberTableTable, ActivityMemberTableData> {
+class $ActivityMembersTable extends ActivityMembers
+    with TableInfo<$ActivityMembersTable, ActivityMember> {
   final GeneratedDatabase _db;
   final String _alias;
-  $ActivityMemberTableTable(this._db, [this._alias]);
+  $ActivityMembersTable(this._db, [this._alias]);
   final VerificationMeta _activityRefMeta =
       const VerificationMeta('activityRef');
   GeneratedTextColumn _activityRef;
@@ -384,13 +379,13 @@ class $ActivityMemberTableTable extends ActivityMemberTable
   @override
   List<GeneratedColumn> get $columns => [activityRef, personRef];
   @override
-  $ActivityMemberTableTable get asDslTable => this;
+  $ActivityMembersTable get asDslTable => this;
   @override
-  String get $tableName => _alias ?? 'activity_member_table';
+  String get $tableName => _alias ?? 'activity_members';
   @override
-  final String actualTableName = 'activity_member_table';
+  final String actualTableName = 'activity_members';
   @override
-  VerificationContext validateIntegrity(ActivityMemberTableCompanion d,
+  VerificationContext validateIntegrity(ActivityMembersCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
     if (d.activityRef.present) {
@@ -411,13 +406,13 @@ class $ActivityMemberTableTable extends ActivityMemberTable
   @override
   Set<GeneratedColumn> get $primaryKey => {activityRef, personRef};
   @override
-  ActivityMemberTableData map(Map<String, dynamic> data, {String tablePrefix}) {
+  ActivityMember map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
-    return ActivityMemberTableData.fromData(data, _db, prefix: effectivePrefix);
+    return ActivityMember.fromData(data, _db, prefix: effectivePrefix);
   }
 
   @override
-  Map<String, Variable> entityToSql(ActivityMemberTableCompanion d) {
+  Map<String, Variable> entityToSql(ActivityMembersCompanion d) {
     final map = <String, Variable>{};
     if (d.activityRef.present) {
       map['activity_ref'] = Variable<String, StringType>(d.activityRef.value);
@@ -429,33 +424,32 @@ class $ActivityMemberTableTable extends ActivityMemberTable
   }
 
   @override
-  $ActivityMemberTableTable createAlias(String alias) {
-    return $ActivityMemberTableTable(_db, alias);
+  $ActivityMembersTable createAlias(String alias) {
+    return $ActivityMembersTable(_db, alias);
   }
 }
 
-class ExpenseParticipantTableData extends DataClass
-    implements Insertable<ExpenseParticipantTableData> {
+class ExpenseParticipant extends DataClass
+    implements Insertable<ExpenseParticipant> {
   final String expenseRef;
   final String personRef;
-  ExpenseParticipantTableData(
-      {@required this.expenseRef, @required this.personRef});
-  factory ExpenseParticipantTableData.fromData(
+  ExpenseParticipant({@required this.expenseRef, @required this.personRef});
+  factory ExpenseParticipant.fromData(
       Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
     final stringType = db.typeSystem.forDartType<String>();
-    return ExpenseParticipantTableData(
+    return ExpenseParticipant(
       expenseRef: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}expense_ref']),
       personRef: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}person_ref']),
     );
   }
-  factory ExpenseParticipantTableData.fromJson(Map<String, dynamic> json,
+  factory ExpenseParticipant.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
-    return ExpenseParticipantTableData(
+    return ExpenseParticipant(
       expenseRef: serializer.fromJson<String>(json['expenseRef']),
       personRef: serializer.fromJson<String>(json['personRef']),
     );
@@ -470,8 +464,8 @@ class ExpenseParticipantTableData extends DataClass
   }
 
   @override
-  ExpenseParticipantTableCompanion createCompanion(bool nullToAbsent) {
-    return ExpenseParticipantTableCompanion(
+  ExpenseParticipantsCompanion createCompanion(bool nullToAbsent) {
+    return ExpenseParticipantsCompanion(
       expenseRef: expenseRef == null && nullToAbsent
           ? const Value.absent()
           : Value(expenseRef),
@@ -481,14 +475,14 @@ class ExpenseParticipantTableData extends DataClass
     );
   }
 
-  ExpenseParticipantTableData copyWith({String expenseRef, String personRef}) =>
-      ExpenseParticipantTableData(
+  ExpenseParticipant copyWith({String expenseRef, String personRef}) =>
+      ExpenseParticipant(
         expenseRef: expenseRef ?? this.expenseRef,
         personRef: personRef ?? this.personRef,
       );
   @override
   String toString() {
-    return (StringBuffer('ExpenseParticipantTableData(')
+    return (StringBuffer('ExpenseParticipant(')
           ..write('expenseRef: $expenseRef, ')
           ..write('personRef: $personRef')
           ..write(')'))
@@ -500,38 +494,37 @@ class ExpenseParticipantTableData extends DataClass
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
-      (other is ExpenseParticipantTableData &&
+          (other is ExpenseParticipant &&
           other.expenseRef == this.expenseRef &&
           other.personRef == this.personRef);
 }
 
-class ExpenseParticipantTableCompanion
-    extends UpdateCompanion<ExpenseParticipantTableData> {
+class ExpenseParticipantsCompanion extends UpdateCompanion<ExpenseParticipant> {
   final Value<String> expenseRef;
   final Value<String> personRef;
-  const ExpenseParticipantTableCompanion({
+  const ExpenseParticipantsCompanion({
     this.expenseRef = const Value.absent(),
     this.personRef = const Value.absent(),
   });
-  ExpenseParticipantTableCompanion.insert({
+  ExpenseParticipantsCompanion.insert({
     @required String expenseRef,
     @required String personRef,
   })  : expenseRef = Value(expenseRef),
         personRef = Value(personRef);
-  ExpenseParticipantTableCompanion copyWith(
+  ExpenseParticipantsCompanion copyWith(
       {Value<String> expenseRef, Value<String> personRef}) {
-    return ExpenseParticipantTableCompanion(
+    return ExpenseParticipantsCompanion(
       expenseRef: expenseRef ?? this.expenseRef,
       personRef: personRef ?? this.personRef,
     );
   }
 }
 
-class $ExpenseParticipantTableTable extends ExpenseParticipantTable
-    with TableInfo<$ExpenseParticipantTableTable, ExpenseParticipantTableData> {
+class $ExpenseParticipantsTable extends ExpenseParticipants
+    with TableInfo<$ExpenseParticipantsTable, ExpenseParticipant> {
   final GeneratedDatabase _db;
   final String _alias;
-  $ExpenseParticipantTableTable(this._db, [this._alias]);
+  $ExpenseParticipantsTable(this._db, [this._alias]);
   final VerificationMeta _expenseRefMeta = const VerificationMeta('expenseRef');
   GeneratedTextColumn _expenseRef;
   @override
@@ -559,13 +552,13 @@ class $ExpenseParticipantTableTable extends ExpenseParticipantTable
   @override
   List<GeneratedColumn> get $columns => [expenseRef, personRef];
   @override
-  $ExpenseParticipantTableTable get asDslTable => this;
+  $ExpenseParticipantsTable get asDslTable => this;
   @override
-  String get $tableName => _alias ?? 'expense_participant_table';
+  String get $tableName => _alias ?? 'expense_participants';
   @override
-  final String actualTableName = 'expense_participant_table';
+  final String actualTableName = 'expense_participants';
   @override
-  VerificationContext validateIntegrity(ExpenseParticipantTableCompanion d,
+  VerificationContext validateIntegrity(ExpenseParticipantsCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
     if (d.expenseRef.present) {
@@ -586,15 +579,13 @@ class $ExpenseParticipantTableTable extends ExpenseParticipantTable
   @override
   Set<GeneratedColumn> get $primaryKey => {expenseRef, personRef};
   @override
-  ExpenseParticipantTableData map(Map<String, dynamic> data,
-      {String tablePrefix}) {
+  ExpenseParticipant map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
-    return ExpenseParticipantTableData.fromData(data, _db,
-        prefix: effectivePrefix);
+    return ExpenseParticipant.fromData(data, _db, prefix: effectivePrefix);
   }
 
   @override
-  Map<String, Variable> entityToSql(ExpenseParticipantTableCompanion d) {
+  Map<String, Variable> entityToSql(ExpenseParticipantsCompanion d) {
     final map = <String, Variable>{};
     if (d.expenseRef.present) {
       map['expense_ref'] = Variable<String, StringType>(d.expenseRef.value);
@@ -606,32 +597,30 @@ class $ExpenseParticipantTableTable extends ExpenseParticipantTable
   }
 
   @override
-  $ExpenseParticipantTableTable createAlias(String alias) {
-    return $ExpenseParticipantTableTable(_db, alias);
+  $ExpenseParticipantsTable createAlias(String alias) {
+    return $ExpenseParticipantsTable(_db, alias);
   }
 }
 
-class ExpensePayerTableData extends DataClass
-    implements Insertable<ExpensePayerTableData> {
+class ExpensePayer extends DataClass implements Insertable<ExpensePayer> {
   final String expenseRef;
   final String personRef;
-  ExpensePayerTableData({@required this.expenseRef, @required this.personRef});
-  factory ExpensePayerTableData.fromData(
-      Map<String, dynamic> data, GeneratedDatabase db,
+  ExpensePayer({@required this.expenseRef, @required this.personRef});
+  factory ExpensePayer.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
     final stringType = db.typeSystem.forDartType<String>();
-    return ExpensePayerTableData(
+    return ExpensePayer(
       expenseRef: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}expense_ref']),
       personRef: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}person_ref']),
     );
   }
-  factory ExpensePayerTableData.fromJson(Map<String, dynamic> json,
+  factory ExpensePayer.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
-    return ExpensePayerTableData(
+    return ExpensePayer(
       expenseRef: serializer.fromJson<String>(json['expenseRef']),
       personRef: serializer.fromJson<String>(json['personRef']),
     );
@@ -646,8 +635,8 @@ class ExpensePayerTableData extends DataClass
   }
 
   @override
-  ExpensePayerTableCompanion createCompanion(bool nullToAbsent) {
-    return ExpensePayerTableCompanion(
+  ExpensePayersCompanion createCompanion(bool nullToAbsent) {
+    return ExpensePayersCompanion(
       expenseRef: expenseRef == null && nullToAbsent
           ? const Value.absent()
           : Value(expenseRef),
@@ -657,14 +646,14 @@ class ExpensePayerTableData extends DataClass
     );
   }
 
-  ExpensePayerTableData copyWith({String expenseRef, String personRef}) =>
-      ExpensePayerTableData(
+  ExpensePayer copyWith({String expenseRef, String personRef}) =>
+      ExpensePayer(
         expenseRef: expenseRef ?? this.expenseRef,
         personRef: personRef ?? this.personRef,
       );
   @override
   String toString() {
-    return (StringBuffer('ExpensePayerTableData(')
+    return (StringBuffer('ExpensePayer(')
           ..write('expenseRef: $expenseRef, ')
           ..write('personRef: $personRef')
           ..write(')'))
@@ -676,38 +665,37 @@ class ExpensePayerTableData extends DataClass
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
-      (other is ExpensePayerTableData &&
+          (other is ExpensePayer &&
           other.expenseRef == this.expenseRef &&
           other.personRef == this.personRef);
 }
 
-class ExpensePayerTableCompanion
-    extends UpdateCompanion<ExpensePayerTableData> {
+class ExpensePayersCompanion extends UpdateCompanion<ExpensePayer> {
   final Value<String> expenseRef;
   final Value<String> personRef;
-  const ExpensePayerTableCompanion({
+  const ExpensePayersCompanion({
     this.expenseRef = const Value.absent(),
     this.personRef = const Value.absent(),
   });
-  ExpensePayerTableCompanion.insert({
+  ExpensePayersCompanion.insert({
     @required String expenseRef,
     @required String personRef,
   })  : expenseRef = Value(expenseRef),
         personRef = Value(personRef);
-  ExpensePayerTableCompanion copyWith(
+  ExpensePayersCompanion copyWith(
       {Value<String> expenseRef, Value<String> personRef}) {
-    return ExpensePayerTableCompanion(
+    return ExpensePayersCompanion(
       expenseRef: expenseRef ?? this.expenseRef,
       personRef: personRef ?? this.personRef,
     );
   }
 }
 
-class $ExpensePayerTableTable extends ExpensePayerTable
-    with TableInfo<$ExpensePayerTableTable, ExpensePayerTableData> {
+class $ExpensePayersTable extends ExpensePayers
+    with TableInfo<$ExpensePayersTable, ExpensePayer> {
   final GeneratedDatabase _db;
   final String _alias;
-  $ExpensePayerTableTable(this._db, [this._alias]);
+  $ExpensePayersTable(this._db, [this._alias]);
   final VerificationMeta _expenseRefMeta = const VerificationMeta('expenseRef');
   GeneratedTextColumn _expenseRef;
   @override
@@ -735,13 +723,13 @@ class $ExpensePayerTableTable extends ExpensePayerTable
   @override
   List<GeneratedColumn> get $columns => [expenseRef, personRef];
   @override
-  $ExpensePayerTableTable get asDslTable => this;
+  $ExpensePayersTable get asDslTable => this;
   @override
-  String get $tableName => _alias ?? 'expense_payer_table';
+  String get $tableName => _alias ?? 'expense_payers';
   @override
-  final String actualTableName = 'expense_payer_table';
+  final String actualTableName = 'expense_payers';
   @override
-  VerificationContext validateIntegrity(ExpensePayerTableCompanion d,
+  VerificationContext validateIntegrity(ExpensePayersCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
     if (d.expenseRef.present) {
@@ -762,13 +750,13 @@ class $ExpensePayerTableTable extends ExpensePayerTable
   @override
   Set<GeneratedColumn> get $primaryKey => {expenseRef, personRef};
   @override
-  ExpensePayerTableData map(Map<String, dynamic> data, {String tablePrefix}) {
+  ExpensePayer map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
-    return ExpensePayerTableData.fromData(data, _db, prefix: effectivePrefix);
+    return ExpensePayer.fromData(data, _db, prefix: effectivePrefix);
   }
 
   @override
-  Map<String, Variable> entityToSql(ExpensePayerTableCompanion d) {
+  Map<String, Variable> entityToSql(ExpensePayersCompanion d) {
     final map = <String, Variable>{};
     if (d.expenseRef.present) {
       map['expense_ref'] = Variable<String, StringType>(d.expenseRef.value);
@@ -780,32 +768,30 @@ class $ExpensePayerTableTable extends ExpensePayerTable
   }
 
   @override
-  $ExpensePayerTableTable createAlias(String alias) {
-    return $ExpensePayerTableTable(_db, alias);
+  $ExpensePayersTable createAlias(String alias) {
+    return $ExpensePayersTable(_db, alias);
   }
 }
 
-class ExpenseTableData extends DataClass
-    implements Insertable<ExpenseTableData> {
+class Expense extends DataClass implements Insertable<Expense> {
   final String id;
   final DateTime createdAt;
   final DateTime updateAt;
   final double amount;
   final String paidFor;
-  ExpenseTableData(
+  Expense(
       {@required this.id,
       @required this.createdAt,
       @required this.updateAt,
       @required this.amount,
       @required this.paidFor});
-  factory ExpenseTableData.fromData(
-      Map<String, dynamic> data, GeneratedDatabase db,
+  factory Expense.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
     final stringType = db.typeSystem.forDartType<String>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     final doubleType = db.typeSystem.forDartType<double>();
-    return ExpenseTableData(
+    return Expense(
       id: stringType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
@@ -817,10 +803,10 @@ class ExpenseTableData extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}paid_for']),
     );
   }
-  factory ExpenseTableData.fromJson(Map<String, dynamic> json,
+  factory Expense.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
-    return ExpenseTableData(
+    return Expense(
       id: serializer.fromJson<String>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updateAt: serializer.fromJson<DateTime>(json['updateAt']),
@@ -841,8 +827,8 @@ class ExpenseTableData extends DataClass
   }
 
   @override
-  ExpenseTableCompanion createCompanion(bool nullToAbsent) {
-    return ExpenseTableCompanion(
+  ExpensesCompanion createCompanion(bool nullToAbsent) {
+    return ExpensesCompanion(
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
@@ -858,13 +844,13 @@ class ExpenseTableData extends DataClass
     );
   }
 
-  ExpenseTableData copyWith(
+  Expense copyWith(
           {String id,
           DateTime createdAt,
           DateTime updateAt,
           double amount,
           String paidFor}) =>
-      ExpenseTableData(
+      Expense(
         id: id ?? this.id,
         createdAt: createdAt ?? this.createdAt,
         updateAt: updateAt ?? this.updateAt,
@@ -873,7 +859,7 @@ class ExpenseTableData extends DataClass
       );
   @override
   String toString() {
-    return (StringBuffer('ExpenseTableData(')
+    return (StringBuffer('Expense(')
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updateAt: $updateAt, ')
@@ -891,7 +877,7 @@ class ExpenseTableData extends DataClass
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
-      (other is ExpenseTableData &&
+          (other is Expense &&
           other.id == this.id &&
           other.createdAt == this.createdAt &&
           other.updateAt == this.updateAt &&
@@ -899,20 +885,20 @@ class ExpenseTableData extends DataClass
           other.paidFor == this.paidFor);
 }
 
-class ExpenseTableCompanion extends UpdateCompanion<ExpenseTableData> {
+class ExpensesCompanion extends UpdateCompanion<Expense> {
   final Value<String> id;
   final Value<DateTime> createdAt;
   final Value<DateTime> updateAt;
   final Value<double> amount;
   final Value<String> paidFor;
-  const ExpenseTableCompanion({
+  const ExpensesCompanion({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updateAt = const Value.absent(),
     this.amount = const Value.absent(),
     this.paidFor = const Value.absent(),
   });
-  ExpenseTableCompanion.insert({
+  ExpensesCompanion.insert({
     @required String id,
     @required DateTime createdAt,
     @required DateTime updateAt,
@@ -923,13 +909,13 @@ class ExpenseTableCompanion extends UpdateCompanion<ExpenseTableData> {
         updateAt = Value(updateAt),
         amount = Value(amount),
         paidFor = Value(paidFor);
-  ExpenseTableCompanion copyWith(
+  ExpensesCompanion copyWith(
       {Value<String> id,
       Value<DateTime> createdAt,
       Value<DateTime> updateAt,
       Value<double> amount,
       Value<String> paidFor}) {
-    return ExpenseTableCompanion(
+    return ExpensesCompanion(
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
       updateAt: updateAt ?? this.updateAt,
@@ -939,11 +925,10 @@ class ExpenseTableCompanion extends UpdateCompanion<ExpenseTableData> {
   }
 }
 
-class $ExpenseTableTable extends ExpenseTable
-    with TableInfo<$ExpenseTableTable, ExpenseTableData> {
+class $ExpensesTable extends Expenses with TableInfo<$ExpensesTable, Expense> {
   final GeneratedDatabase _db;
   final String _alias;
-  $ExpenseTableTable(this._db, [this._alias]);
+  $ExpensesTable(this._db, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
   GeneratedTextColumn _id;
   @override
@@ -1008,13 +993,13 @@ class $ExpenseTableTable extends ExpenseTable
   List<GeneratedColumn> get $columns =>
       [id, createdAt, updateAt, amount, paidFor];
   @override
-  $ExpenseTableTable get asDslTable => this;
+  $ExpensesTable get asDslTable => this;
   @override
-  String get $tableName => _alias ?? 'expense_table';
+  String get $tableName => _alias ?? 'expenses';
   @override
-  final String actualTableName = 'expense_table';
+  final String actualTableName = 'expenses';
   @override
-  VerificationContext validateIntegrity(ExpenseTableCompanion d,
+  VerificationContext validateIntegrity(ExpensesCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
     if (d.id.present) {
@@ -1052,13 +1037,13 @@ class $ExpenseTableTable extends ExpenseTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  ExpenseTableData map(Map<String, dynamic> data, {String tablePrefix}) {
+  Expense map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
-    return ExpenseTableData.fromData(data, _db, prefix: effectivePrefix);
+    return Expense.fromData(data, _db, prefix: effectivePrefix);
   }
 
   @override
-  Map<String, Variable> entityToSql(ExpenseTableCompanion d) {
+  Map<String, Variable> entityToSql(ExpensesCompanion d) {
     final map = <String, Variable>{};
     if (d.id.present) {
       map['id'] = Variable<String, StringType>(d.id.value);
@@ -1079,28 +1064,27 @@ class $ExpenseTableTable extends ExpenseTable
   }
 
   @override
-  $ExpenseTableTable createAlias(String alias) {
-    return $ExpenseTableTable(_db, alias);
+  $ExpensesTable createAlias(String alias) {
+    return $ExpensesTable(_db, alias);
   }
 }
 
-class PeopleTableData extends DataClass implements Insertable<PeopleTableData> {
+class PeopleData extends DataClass implements Insertable<PeopleData> {
   final String id;
   final DateTime createdAt;
   final DateTime updateAt;
   final String name;
-  PeopleTableData(
+  PeopleData(
       {@required this.id,
       @required this.createdAt,
       @required this.updateAt,
       @required this.name});
-  factory PeopleTableData.fromData(
-      Map<String, dynamic> data, GeneratedDatabase db,
+  factory PeopleData.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
     final stringType = db.typeSystem.forDartType<String>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
-    return PeopleTableData(
+    return PeopleData(
       id: stringType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
@@ -1109,10 +1093,10 @@ class PeopleTableData extends DataClass implements Insertable<PeopleTableData> {
       name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
     );
   }
-  factory PeopleTableData.fromJson(Map<String, dynamic> json,
+  factory PeopleData.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
-    return PeopleTableData(
+    return PeopleData(
       id: serializer.fromJson<String>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updateAt: serializer.fromJson<DateTime>(json['updateAt']),
@@ -1131,8 +1115,8 @@ class PeopleTableData extends DataClass implements Insertable<PeopleTableData> {
   }
 
   @override
-  PeopleTableCompanion createCompanion(bool nullToAbsent) {
-    return PeopleTableCompanion(
+  PeopleCompanion createCompanion(bool nullToAbsent) {
+    return PeopleCompanion(
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
@@ -1144,9 +1128,9 @@ class PeopleTableData extends DataClass implements Insertable<PeopleTableData> {
     );
   }
 
-  PeopleTableData copyWith(
+  PeopleData copyWith(
           {String id, DateTime createdAt, DateTime updateAt, String name}) =>
-      PeopleTableData(
+      PeopleData(
         id: id ?? this.id,
         createdAt: createdAt ?? this.createdAt,
         updateAt: updateAt ?? this.updateAt,
@@ -1154,7 +1138,7 @@ class PeopleTableData extends DataClass implements Insertable<PeopleTableData> {
       );
   @override
   String toString() {
-    return (StringBuffer('PeopleTableData(')
+    return (StringBuffer('PeopleData(')
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updateAt: $updateAt, ')
@@ -1169,25 +1153,25 @@ class PeopleTableData extends DataClass implements Insertable<PeopleTableData> {
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
-      (other is PeopleTableData &&
+          (other is PeopleData &&
           other.id == this.id &&
           other.createdAt == this.createdAt &&
           other.updateAt == this.updateAt &&
           other.name == this.name);
 }
 
-class PeopleTableCompanion extends UpdateCompanion<PeopleTableData> {
+class PeopleCompanion extends UpdateCompanion<PeopleData> {
   final Value<String> id;
   final Value<DateTime> createdAt;
   final Value<DateTime> updateAt;
   final Value<String> name;
-  const PeopleTableCompanion({
+  const PeopleCompanion({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updateAt = const Value.absent(),
     this.name = const Value.absent(),
   });
-  PeopleTableCompanion.insert({
+  PeopleCompanion.insert({
     @required String id,
     @required DateTime createdAt,
     @required DateTime updateAt,
@@ -1196,12 +1180,12 @@ class PeopleTableCompanion extends UpdateCompanion<PeopleTableData> {
         createdAt = Value(createdAt),
         updateAt = Value(updateAt),
         name = Value(name);
-  PeopleTableCompanion copyWith(
+  PeopleCompanion copyWith(
       {Value<String> id,
       Value<DateTime> createdAt,
       Value<DateTime> updateAt,
       Value<String> name}) {
-    return PeopleTableCompanion(
+    return PeopleCompanion(
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
       updateAt: updateAt ?? this.updateAt,
@@ -1210,11 +1194,10 @@ class PeopleTableCompanion extends UpdateCompanion<PeopleTableData> {
   }
 }
 
-class $PeopleTableTable extends PeopleTable
-    with TableInfo<$PeopleTableTable, PeopleTableData> {
+class $PeopleTable extends People with TableInfo<$PeopleTable, PeopleData> {
   final GeneratedDatabase _db;
   final String _alias;
-  $PeopleTableTable(this._db, [this._alias]);
+  $PeopleTable(this._db, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
   GeneratedTextColumn _id;
   @override
@@ -1266,13 +1249,13 @@ class $PeopleTableTable extends PeopleTable
   @override
   List<GeneratedColumn> get $columns => [id, createdAt, updateAt, name];
   @override
-  $PeopleTableTable get asDslTable => this;
+  $PeopleTable get asDslTable => this;
   @override
-  String get $tableName => _alias ?? 'people_table';
+  String get $tableName => _alias ?? 'people';
   @override
-  final String actualTableName = 'people_table';
+  final String actualTableName = 'people';
   @override
-  VerificationContext validateIntegrity(PeopleTableCompanion d,
+  VerificationContext validateIntegrity(PeopleCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
     if (d.id.present) {
@@ -1304,13 +1287,13 @@ class $PeopleTableTable extends PeopleTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  PeopleTableData map(Map<String, dynamic> data, {String tablePrefix}) {
+  PeopleData map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
-    return PeopleTableData.fromData(data, _db, prefix: effectivePrefix);
+    return PeopleData.fromData(data, _db, prefix: effectivePrefix);
   }
 
   @override
-  Map<String, Variable> entityToSql(PeopleTableCompanion d) {
+  Map<String, Variable> entityToSql(PeopleCompanion d) {
     final map = <String, Variable>{};
     if (d.id.present) {
       map['id'] = Variable<String, StringType>(d.id.value);
@@ -1328,43 +1311,50 @@ class $PeopleTableTable extends PeopleTable
   }
 
   @override
-  $PeopleTableTable createAlias(String alias) {
-    return $PeopleTableTable(_db, alias);
+  $PeopleTable createAlias(String alias) {
+    return $PeopleTable(_db, alias);
   }
 }
 
 abstract class _$LocalDatabase extends GeneratedDatabase {
   _$LocalDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
-  $ActivityTableTable _activityTable;
-  $ActivityTableTable get activityTable =>
-      _activityTable ??= $ActivityTableTable(this);
-  $ActivityMemberTableTable _activityMemberTable;
-  $ActivityMemberTableTable get activityMemberTable =>
-      _activityMemberTable ??= $ActivityMemberTableTable(this);
-  $ExpenseParticipantTableTable _expenseParticipantTable;
-  $ExpenseParticipantTableTable get expenseParticipantTable =>
-      _expenseParticipantTable ??= $ExpenseParticipantTableTable(this);
-  $ExpensePayerTableTable _expensePayerTable;
-  $ExpensePayerTableTable get expensePayerTable =>
-      _expensePayerTable ??= $ExpensePayerTableTable(this);
-  $ExpenseTableTable _expenseTable;
-  $ExpenseTableTable get expenseTable =>
-      _expenseTable ??= $ExpenseTableTable(this);
-  $PeopleTableTable _peopleTable;
-  $PeopleTableTable get peopleTable => _peopleTable ??= $PeopleTableTable(this);
-  ActivityLocalDatasource _activityLocalDatasource;
-  ActivityLocalDatasource get activityLocalDatasource =>
-      _activityLocalDatasource ??=
-          ActivityLocalDatasource(this as LocalDatabase);
+  $ActivitiesTable _activities;
+  $ActivitiesTable get activities => _activities ??= $ActivitiesTable(this);
+  $ActivityMembersTable _activityMembers;
+  $ActivityMembersTable get activityMembers =>
+      _activityMembers ??= $ActivityMembersTable(this);
+  $ExpenseParticipantsTable _expenseParticipants;
+  $ExpenseParticipantsTable get expenseParticipants =>
+      _expenseParticipants ??= $ExpenseParticipantsTable(this);
+  $ExpensePayersTable _expensePayers;
+  $ExpensePayersTable get expensePayers =>
+      _expensePayers ??= $ExpensePayersTable(this);
+  $ExpensesTable _expenses;
+  $ExpensesTable get expenses => _expenses ??= $ExpensesTable(this);
+  $PeopleTable _people;
+  $PeopleTable get people => _people ??= $PeopleTable(this);
+  ActivityLocalDataSource _activityLocalDataSource;
+
+  ActivityLocalDataSource get activityLocalDataSource =>
+      _activityLocalDataSource ??=
+          ActivityLocalDataSource(this as LocalDatabase);
+  PeopleLocalDataSource _peopleLocalDataSource;
+
+  PeopleLocalDataSource get peopleLocalDataSource =>
+      _peopleLocalDataSource ??= PeopleLocalDataSource(this as LocalDatabase);
+  ExpenseLocalDataSource _expenseLocalDataSource;
+
+  ExpenseLocalDataSource get expenseLocalDataSource =>
+      _expenseLocalDataSource ??= ExpenseLocalDataSource(this as LocalDatabase);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
-        activityTable,
-        activityMemberTable,
-        expenseParticipantTable,
-        expensePayerTable,
-        expenseTable,
-        peopleTable
+    activities,
+    activityMembers,
+    expenseParticipants,
+    expensePayers,
+    expenses,
+    people
       ];
 }

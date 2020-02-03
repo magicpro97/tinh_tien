@@ -11,7 +11,7 @@ import 'package:tinh_tien/app/data/models/no_data.dart';
 
 import '../../../network/client.dart';
 
-class ActivityRemoteDatasource {
+class ActivityRemoteDataSource {
   Future<Either<ErrorResponse, Activity>> create(
       ActivityRequest activityRequest) async {
     try {
