@@ -162,7 +162,6 @@ class _ExpenseTabState extends State<ExpenseTab>
       return Timeline(
         children: expenseTimelines,
         position: TimelinePosition.Left,
-        physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
       );
     }
