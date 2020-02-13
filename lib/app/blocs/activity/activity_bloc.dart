@@ -31,9 +31,7 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
     ActivityEvent event,
   ) async* {
     if (event is GetLastActivityEvent) {
-      if (activityId != null && activityId
-          .trim()
-          .isNotEmpty) {
+      if (activityId != null && activityId.trim().isNotEmpty) {
         yield HasLastActivityState();
       }
     } else if (event is GetActivityEvent) {
@@ -92,8 +90,9 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
           final data = await activityRepository.createActivity(event.name);
           yield await data.fold((fail) async {
             return ActivityErrorState(fail.message);
-          }, (activity) async {
-            await sharedPreferences.setString(ACTIVITY_ID, activity.id);
+          }, (act) async {
+            activity = act; // Fixed activity is null
+            await sharedPreferences.setString(ACTIVITY_ID, act.id);
             return CreatedActivityState(activity);
           });
         }
