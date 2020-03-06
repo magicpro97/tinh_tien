@@ -18,10 +18,14 @@ const SHARE_PAGE = "/share";
 final routes = {
   WElCOME_PAGE: (context) => WelcomePage(),
   HOME_PAGE: (context) =>
-      BlocProvider<PeopleBloc>(
-        create: (_) => sl(),
-        child: HomePage(),
-      ),
+      MultiBlocProvider(providers: [
+        BlocProvider<PeopleBloc>(
+          create: (_) => sl(),
+        ),
+        BlocProvider<ExpenseBloc>(
+          create: (_) => sl(),
+        ),
+      ], child: HomePage()),
   EXPENSE_PAGE: (context) =>
       BlocProvider<ExpenseBloc>(
         create: (_) => sl(),

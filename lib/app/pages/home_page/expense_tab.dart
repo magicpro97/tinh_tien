@@ -18,7 +18,6 @@ import 'package:tinh_tien/app/widgets/empty_list.dart';
 import 'package:tinh_tien/app/widgets/expense_item.dart';
 import 'package:tinh_tien/app/widgets/timeline_expense_body_item.dart';
 import 'package:tinh_tien/common/dimens.dart';
-import '../../inject_container.dart';
 
 class ExpenseTab extends StatefulWidget {
   final String name;
@@ -40,7 +39,7 @@ class _ExpenseTabState extends State<ExpenseTab>
   void initState() {
     super.initState();
     _activityBloc = BlocProvider.of<ActivityBloc>(context);
-    _expenseBloc = sl<ExpenseBloc>();
+    _expenseBloc = BlocProvider.of<ExpenseBloc>(context);
     _scrollController = ScrollController();
     _scrollController.addListener(() {
         if (_scrollController.offset != 0 ) {
@@ -57,7 +56,6 @@ class _ExpenseTabState extends State<ExpenseTab>
 
   @override
   void dispose() {
-    _expenseBloc.close();
     _scrollController.dispose();
     super.dispose();
   }

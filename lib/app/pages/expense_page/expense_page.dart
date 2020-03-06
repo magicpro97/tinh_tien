@@ -66,7 +66,6 @@ class _ExpensePageState extends State<ExpensePage> {
     _paidFor.dispose();
     _amount.dispose();
     _amountFocus.dispose();
-    _expenseBloc.close();
     super.dispose();
   }
 

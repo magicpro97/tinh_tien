@@ -27,7 +27,6 @@ class _AlreadyHaveActivityPageState extends State<AlreadyHaveActivityPage> {
 
   @override
   void dispose() {
-    _welcomeBloc.close();
     _idController.dispose();
     super.dispose();
   }
