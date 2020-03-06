@@ -18,11 +18,6 @@ class BalanceTab extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.debug}) {
-    return name;
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Container(
       child: BlocBuilder<ActivityBloc, ActivityState>(

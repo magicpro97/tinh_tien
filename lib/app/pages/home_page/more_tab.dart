@@ -12,11 +12,6 @@ class MoreTab extends StatefulWidget {
 
   @override
   _MoreTabState createState() => _MoreTabState();
-
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.debug}) {
-    return name;
-  }
 }
 
 class _MoreTabState extends State<MoreTab> {

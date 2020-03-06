@@ -9,11 +9,6 @@ import 'package:tinh_tien/common/dimens.dart';
 class OutstandingTab extends StatelessWidget {
   final String name;
 
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.debug}) {
-    return name;
-  }
-
   const OutstandingTab({
     Key key,
     this.name,

@@ -20,11 +20,6 @@ class PeopleTab extends StatefulWidget {
 
   @override
   _PeopleTabState createState() => _PeopleTabState();
-
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.debug}) {
-    return name;
-  }
 }
 
 class _PeopleTabState extends State<PeopleTab> {
