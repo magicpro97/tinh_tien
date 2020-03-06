@@ -5,11 +5,11 @@ abstract class PeopleEvent extends Equatable {
   const PeopleEvent();
 }
 
-class CreatePeopleEvent extends PeopleEvent {
+class CreatePeople extends PeopleEvent {
   final String activityId;
   final String name;
 
-  CreatePeopleEvent({
+  CreatePeople({
     @required this.name,
     @required this.activityId,
   });
@@ -18,12 +18,12 @@ class CreatePeopleEvent extends PeopleEvent {
   List<Object> get props => [name];
 }
 
-class EditPeopleEvent extends PeopleEvent {
+class EditPeople extends PeopleEvent {
   final String activityId;
   final String personId;
   final String name;
 
-  EditPeopleEvent({
+  EditPeople({
     @required this.personId,
     @required this.name,
     @required this.activityId,
@@ -33,11 +33,11 @@ class EditPeopleEvent extends PeopleEvent {
   List<Object> get props => [name];
 }
 
-class DeletePeopleEvent extends PeopleEvent {
+class DeletePeople extends PeopleEvent {
   final String activityId;
   final String personId;
 
-  DeletePeopleEvent({
+  DeletePeople({
     @required this.personId,
     @required this.activityId,
   });

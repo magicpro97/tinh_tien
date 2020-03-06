@@ -113,12 +113,12 @@ class _PeopleTabState extends State<PeopleTab> {
                       focusNode: _peopleNameFocus,
                       onDone: () {
                         if (editPeopleNameMode) {
-                          _peopleBloc.add(EditPeopleEvent(
+                          _peopleBloc.add(EditPeople(
                               activityId: _activityBloc.activityId,
                               name: _peopleNameController.text,
                               personId: _editingPerson.id));
                         } else {
-                          _peopleBloc.add(CreatePeopleEvent(
+                          _peopleBloc.add(CreatePeople(
                             activityId: _activityBloc.activityId,
                             name: _peopleNameController.text,
                           ));
@@ -261,7 +261,7 @@ class _PeopleTabState extends State<PeopleTab> {
                       context: context,
                     );
                     if (result) {
-                      _peopleBloc.add(DeletePeopleEvent(
+                      _peopleBloc.add(DeletePeople(
                         activityId: _activityBloc.activityId,
                         personId: person.id,
                       ));
