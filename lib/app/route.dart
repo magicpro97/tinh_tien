@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tinh_tien/app/blocs/people/bloc.dart';
 import 'package:tinh_tien/app/inject_container.dart';
 import 'package:tinh_tien/app/pages/expense_page/expense_page.dart';
 import 'package:tinh_tien/app/pages/home_page/home_page.dart';
@@ -16,7 +17,11 @@ const SHARE_PAGE = "/share";
 
 final routes = {
   WElCOME_PAGE: (context) => WelcomePage(),
-  HOME_PAGE: (context) => HomePage(),
+  HOME_PAGE: (context) =>
+      BlocProvider<PeopleBloc>(
+        create: (_) => sl(),
+        child: HomePage(),
+      ),
   EXPENSE_PAGE: (context) =>
       BlocProvider<ExpenseBloc>(
         create: (_) => sl(),

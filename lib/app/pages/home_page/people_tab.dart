@@ -11,8 +11,6 @@ import 'package:tinh_tien/app/widgets/empty_list.dart';
 import 'package:tinh_tien/common/colors.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
-import '../../inject_container.dart';
-
 class PeopleTab extends StatefulWidget {
   final String name;
 
@@ -43,7 +41,7 @@ class _PeopleTabState extends State<PeopleTab> {
     });
     _peopleNameController = TextEditingController();
     _activityBloc = BlocProvider.of<ActivityBloc>(context);
-    _peopleBloc = sl<PeopleBloc>();
+    _peopleBloc = BlocProvider.of<PeopleBloc>(context);
   }
 
   @override
