@@ -19,8 +19,6 @@ import 'package:tinh_tien/common/colors.dart';
 import 'package:tinh_tien/common/dimens.dart';
 import 'package:tinh_tien/core/vadidator/validator.dart';
 
-import '../../inject_container.dart';
-
 class ExpensePage extends StatefulWidget {
   @override
   _ExpensePageState createState() => _ExpensePageState();
@@ -45,7 +43,7 @@ class _ExpensePageState extends State<ExpensePage> {
   @override
   void initState() {
     _activityBloc = BlocProvider.of<ActivityBloc>(context);
-    _expenseBloc = sl<ExpenseBloc>();
+    _expenseBloc = BlocProvider.of<ExpenseBloc>(context);
     _selectedPaidBys = [];
     _selectedParticipants = [];
     _selectedTime = DateTime.now();
