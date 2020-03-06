@@ -1,3 +1,4 @@
+import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -5,7 +6,6 @@ import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/widgets/app_button.dart';
 import 'package:tinh_tien/common/colors.dart';
 import 'package:tinh_tien/common/dimens.dart';
-import 'package:flash/flash.dart';
 
 class SharePage extends StatelessWidget {
   @override
@@ -64,8 +64,7 @@ class SharePage extends StatelessWidget {
   }
 
   void _onCopyClick(BuildContext context, Activity activity) {
-    Clipboard.setData(ClipboardData(text: activity.id))
-        .then((data) {
+    Clipboard.setData(ClipboardData(text: activity.id)).then((data) {
       showFlash(
         context: context,
         duration: const Duration(seconds: 3),
@@ -81,7 +80,7 @@ class SharePage extends StatelessWidget {
               style: const TextStyle(fontSize: 16.0, color: Colors.white),
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 child: Text('Copied'),
               ),
             ),

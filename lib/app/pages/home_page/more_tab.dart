@@ -5,34 +5,16 @@ import 'package:tinh_tien/app/blocs/activity/bloc.dart';
 import 'package:tinh_tien/app/route.dart';
 import 'package:tinh_tien/app/widgets/app_tabview.dart';
 
-class MoreTab extends StatefulWidget {
+class MoreTab extends StatelessWidget {
   final String name;
 
   const MoreTab({Key key, @required this.name}) : super(key: key);
 
   @override
-  _MoreTabState createState() => _MoreTabState();
-}
-
-class _MoreTabState extends State<MoreTab> {
-  ActivityBloc _activityBloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _activityBloc = BlocProvider.of<ActivityBloc>(context);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return AppTabView(
       body: BlocBuilder<ActivityBloc, ActivityState>(
-        bloc: _activityBloc,
+        bloc: BlocProvider.of<ActivityBloc>(context),
         builder: (_, state) =>
             ListView(
               children: <Widget>[
@@ -75,7 +57,8 @@ class _MoreTabState extends State<MoreTab> {
                                         .apply(color: Colors.blue),
                                   ),
                                   onPressed: () {
-                                    _activityBloc.add(DeleteActivityEvent(
+                                    BlocProvider.of<ActivityBloc>(context)
+                                        .add(DeleteActivityEvent(
                                         state.activity.id));
                                     Navigator.pushNamedAndRemoveUntil(context,
                                         WElCOME_PAGE, (route) => false);

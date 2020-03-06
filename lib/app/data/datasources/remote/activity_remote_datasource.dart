@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
@@ -17,7 +15,6 @@ class ActivityRemoteDataSource {
     try {
       final response =
           await dio.post(ACTIVITIES, data: activityRequest.toJson());
-          log(response.data.toString(), name: 'ActivityRemoteDatasource');
       return Right(Activity.fromJson(response.data));
     } on DioError catch (e) {
       return Left(ErrorResponse.fromJson(e.response.data));

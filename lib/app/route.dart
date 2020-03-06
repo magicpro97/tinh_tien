@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tinh_tien/app/blocs/activity/activity_bloc.dart';
 import 'package:tinh_tien/app/blocs/people/bloc.dart';
 import 'package:tinh_tien/app/inject_container.dart';
 import 'package:tinh_tien/app/pages/expense_page/expense_page.dart';
@@ -16,9 +17,16 @@ const ALREADY_HAVE_ACTIVITY_PAGE = "/already";
 const SHARE_PAGE = "/share";
 
 final routes = {
-  WElCOME_PAGE: (context) => WelcomePage(),
+  WElCOME_PAGE: (context) =>
+      BlocProvider<ActivityBloc>(
+        create: (_) => sl(),
+        child: WelcomePage(),
+      ),
   HOME_PAGE: (context) =>
       MultiBlocProvider(providers: [
+        BlocProvider<ActivityBloc>(
+          create: (_) => sl(),
+        ),
         BlocProvider<PeopleBloc>(
           create: (_) => sl(),
         ),
@@ -31,6 +39,10 @@ final routes = {
         create: (_) => sl(),
         child: ExpensePage(),
       ),
-  ALREADY_HAVE_ACTIVITY_PAGE: (context) => AlreadyHaveActivityPage(),
+  ALREADY_HAVE_ACTIVITY_PAGE: (context) =>
+      BlocProvider<ActivityBloc>(
+        create: (_) => sl(),
+        child: AlreadyHaveActivityPage(),
+      ),
   SHARE_PAGE: (context) => SharePage(),
 };

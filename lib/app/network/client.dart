@@ -10,4 +10,10 @@ final baseOption = BaseOptions(
   baseUrl: BASE_URL,
 );
 
-final dio = Dio(baseOption);
+final dio = Dio(baseOption)
+  ..interceptors.add(
+    LogInterceptor(
+      requestBody: true,
+      responseBody: true,
+    ),
+  );
