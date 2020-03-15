@@ -1,11 +1,10 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tinh_tien/app/blocs/activity/bloc.dart';
+import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/pages/home_page/more_tab.dart';
 import 'package:tinh_tien/app/pages/home_page/outstanding_tab.dart';
-import 'package:tinh_tien/app/route.dart';
+import 'package:tinh_tien/app/pages/welcome_page/welcome_page.dart';
 import 'package:tinh_tien/app/widgets/app_scaffold.dart';
 import 'package:tinh_tien/common/colors.dart';
 import 'package:tinh_tien/common/constants.dart';
@@ -17,12 +16,16 @@ import 'expense_tab.dart';
 import 'people_tab.dart';
 
 class HomePage extends StatefulWidget {
+  static const route = '/home';
+  final Activity activity;
+
+  const HomePage({Key key, @required this.activity}) : super(key: key);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  ActivityBloc _activityBloc;
   DataConnectionChecker _dataConnectionChecker;
   int _currentIndex = 0;
   final _tabs = [];
@@ -49,7 +52,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _activityBloc = BlocProvider.of<ActivityBloc>(context);
     _dataConnectionChecker = sl<DataConnectionChecker>();
     _dataConnectionChecker.onStatusChange.listen((status) {
       if (status == DataConnectionStatus.disconnected) {
@@ -84,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     onPressed: () {
                       Navigator.pushNamedAndRemoveUntil(
-                          context, WElCOME_PAGE, (route) => false);
+                          context, WelcomePage.route, (route) => false);
                     },
                   )
                 ],
@@ -96,6 +98,26 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final peopleTab = PeopleTab(
+      activity: widget.activity,
+    );
+    final expenseTab = ExpenseTab(
+      activity: widget.activity,
+    );
+    final balanceTab = BalanceTab();
+    final outstandingTab = OutstandingTab();
+    final moreTab = MoreTab(
+      activity: widget.activity,
+    );
+    _tabs.clear();
+    _tabs.addAll([
+      peopleTab,
+      expenseTab,
+      balanceTab,
+      outstandingTab,
+      moreTab,
+    ]);
+
     return AppScaffold(
       margin: const EdgeInsets.all(Dimens.ZERO),
       appBarAction: <Widget>[
@@ -131,35 +153,7 @@ class _HomePageState extends State<HomePage> {
               );
             }),
       ],
-      body: BlocBuilder<ActivityBloc, ActivityState>(
-        bloc: _activityBloc,
-        builder: (context, state) {
-          final peopleTab = PeopleTab(
-            name: tabNames[0],
-          );
-          final expenseTab = ExpenseTab(
-            name: tabNames[1],
-          );
-          final balanceTab = BalanceTab(
-            name: tabNames[2],
-          );
-          final outstandingTab = OutstandingTab(
-            name: tabNames[3],
-          );
-          final moreTab = MoreTab(
-            name: tabNames[4],
-          );
-          _tabs.clear();
-          _tabs.addAll([
-            peopleTab,
-            expenseTab,
-            balanceTab,
-            outstandingTab,
-            moreTab,
-          ]);
-          return _tabs[_currentIndex];
-        },
-      ),
+      body: _tabs[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _onTapNavigationItem,
@@ -191,12 +185,8 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  _activityBloc.activity?.name ?? "Welcome",
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .title
-                      .apply(
+                  widget.activity?.name ?? "Welcome",
+                  style: Theme.of(context).textTheme.title.apply(
                       color: snapshot.data == DataConnectionStatus.disconnected
                           ? Colors.white
                           : Colors.black),
@@ -204,8 +194,7 @@ class _HomePageState extends State<HomePage> {
                 if (snapshot.data == DataConnectionStatus.disconnected)
                   Text(
                     " - No network connection",
-                    style: Theme
-                        .of(context)
+                    style: Theme.of(context)
                         .textTheme
                         .title
                         .apply(color: Colors.white),

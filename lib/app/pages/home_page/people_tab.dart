@@ -4,7 +4,7 @@ import 'package:tinh_tien/app/blocs/activity/bloc.dart';
 import 'package:tinh_tien/app/blocs/people/bloc.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/data/models/people/person.dart';
-import 'package:tinh_tien/app/route.dart';
+import 'package:tinh_tien/app/pages/share_page.dart';
 import 'package:tinh_tien/app/widgets/app_tabview.dart';
 import 'package:tinh_tien/app/widgets/app_textfield.dart';
 import 'package:tinh_tien/app/widgets/empty_list.dart';
@@ -12,9 +12,9 @@ import 'package:tinh_tien/common/colors.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
 class PeopleTab extends StatefulWidget {
-  final String name;
+  final Activity activity;
 
-  const PeopleTab({Key key, @required this.name}) : super(key: key);
+  const PeopleTab({Key key, @required this.activity}) : super(key: key);
 
   @override
   _PeopleTabState createState() => _PeopleTabState();
@@ -27,10 +27,12 @@ class _PeopleTabState extends State<PeopleTab> {
   FocusNode _peopleNameFocus;
   bool editPeopleNameMode = false;
   Person _editingPerson;
+  Activity _activity;
 
   @override
   void initState() {
     super.initState();
+    _activity = widget.activity;
     _peopleNameFocus = FocusNode();
     _peopleNameFocus.addListener(() {
       if (!_peopleNameFocus.hasFocus) {
@@ -72,7 +74,7 @@ class _PeopleTabState extends State<PeopleTab> {
               ),
               onPressed: state is ActivityLoadedState
                   ? () {
-                      Navigator.pushNamed(context, SHARE_PAGE,
+                      Navigator.pushNamed(context, SharePage.route,
                           arguments: state.activity);
                     }
                   : null,
@@ -88,7 +90,7 @@ class _PeopleTabState extends State<PeopleTab> {
             if (state is PeopleCreatedState ||
                 state is PeopleEditedState ||
                 state is PeopleDeletedState) {
-              _activityBloc.add(GetActivityEvent());
+              _activityBloc.add(GetActivity(activityId: widget.activity.id));
             }
           },
           child: BlocBuilder<PeopleBloc, PeopleState>(
@@ -111,12 +113,12 @@ class _PeopleTabState extends State<PeopleTab> {
                       onDone: () {
                         if (editPeopleNameMode) {
                           _peopleBloc.add(EditPeople(
-                              activityId: _activityBloc.activityId,
+                              activityId: widget.activity.id,
                               name: _peopleNameController.text,
                               personId: _editingPerson.id));
                         } else {
                           _peopleBloc.add(CreatePeople(
-                            activityId: _activityBloc.activityId,
+                            activityId: widget.activity.id,
                             name: _peopleNameController.text,
                           ));
                         }
@@ -125,7 +127,7 @@ class _PeopleTabState extends State<PeopleTab> {
                   ),
                 ),
                 Expanded(
-                  child: _buildPeopleList(_activityBloc.activity),
+                  child: _buildPeopleList(),
                 ),
               ],
             ),
@@ -135,22 +137,33 @@ class _PeopleTabState extends State<PeopleTab> {
     );
   }
 
-  Widget _buildPeopleList(Activity activity) {
-    if (activity != null && activity.people.isNotEmpty) {
-      final peopleItems = activity.people
-          .map((person) => _peopleItem(context, person))
-          .toList();
-      return Card(
-        elevation: 10.0,
-        child: ListView.separated(
-            itemBuilder: (_, index) => peopleItems[index],
-            separatorBuilder: (_, __) => SizedBox(
-                  height: Dimens.XSMALL_PADDING,
-                ),
-            itemCount: peopleItems.length),
-      );
-    }
-    return EmptyList();
+  Widget _buildPeopleList() {
+    return BlocBuilder<ActivityBloc, ActivityState>(
+      bloc: _activityBloc,
+      builder: (context, state) {
+        if (state is ActivityLoadedState) {
+          _activity = state.activity;
+          if (_activity != null &&
+              _activity.people != null &&
+              _activity.people.isNotEmpty) {
+            final peopleItems = _activity.people
+                .map((person) => _peopleItem(context, person))
+                .toList();
+            return Card(
+              elevation: 10.0,
+              child: ListView.separated(
+                  itemBuilder: (_, index) => peopleItems[index],
+                  separatorBuilder: (_, __) => SizedBox(
+                        height: Dimens.XSMALL_PADDING,
+                      ),
+                  itemCount: peopleItems.length),
+            );
+          }
+          return EmptyList();
+        }
+        return EmptyList();
+      },
+    );
   }
 
   Widget _peopleItem(BuildContext context, Person person) {
@@ -259,7 +272,7 @@ class _PeopleTabState extends State<PeopleTab> {
                     );
                     if (result) {
                       _peopleBloc.add(DeletePeople(
-                        activityId: _activityBloc.activityId,
+                        activityId: widget.activity.id,
                         personId: person.id,
                       ));
                     }

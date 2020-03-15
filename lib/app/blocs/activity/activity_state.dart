@@ -6,12 +6,11 @@ import 'package:tinh_tien/app/data/models/activity/activity_summary.dart';
 
 abstract class ActivityState extends Equatable {
   const ActivityState();
-}
 
-class InitialActivityState extends ActivityState {
-  @override
   List<Object> get props => [];
 }
+
+class InitialActivityState extends ActivityState {}
 
 class ActivityLoadingState extends ActivityState {
   @override
@@ -35,30 +34,18 @@ class ActivityLoadedState extends ActivityState {
 
 class DeletedActivityState extends ActivityState {
   DeletedActivityState();
-
-  @override
-  List<Object> get props => [];
 }
 
 class CreatedActivityState extends ActivityState {
   final Activity activity;
 
   CreatedActivityState(this.activity);
-
-  @override
-  List<Object> get props => [activity];
 }
 
 class ActivityErrorState extends ActivityState {
   final String message;
 
   ActivityErrorState(this.message);
-
-  @override
-  List<Object> get props => [message];
 }
 
-class HasLastActivityState extends ActivityState {
-  @override
-  List<Object> get props => null;
-}
+class HasLastActivityState extends ActivityState {}

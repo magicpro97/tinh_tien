@@ -1,48 +1,88 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tinh_tien/app/blocs/activity/activity_bloc.dart';
 import 'package:tinh_tien/app/blocs/people/bloc.dart';
+import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/inject_container.dart';
 import 'package:tinh_tien/app/pages/expense_page/expense_page.dart';
 import 'package:tinh_tien/app/pages/home_page/home_page.dart';
 import 'package:tinh_tien/app/pages/share_page.dart';
-import 'package:tinh_tien/app/pages/welcome_page/already_have_activity_page.dart';
+import 'package:tinh_tien/app/pages/welcome_page/scan_qr_page.dart';
 import 'package:tinh_tien/app/pages/welcome_page/welcome_page.dart';
 
 import 'blocs/expense/bloc.dart';
+import 'pages/flash_page.dart';
+import 'pages/expense_page/expense_argument.dart';
 
-const WElCOME_PAGE = "/";
-const HOME_PAGE = "/home";
-const EXPENSE_PAGE = "/expense";
-const ALREADY_HAVE_ACTIVITY_PAGE = "/already";
-const SHARE_PAGE = "/share";
+var bootStage = 1;
 
-final routes = {
-  WElCOME_PAGE: (context) =>
-      BlocProvider<ActivityBloc>(
-        create: (_) => sl(),
-        child: WelcomePage(),
-      ),
-  HOME_PAGE: (context) =>
-      MultiBlocProvider(providers: [
-        BlocProvider<ActivityBloc>(
+RouteFactory routes(String lastActivityId) {
+  return (settings) {
+    Widget screen;
+    bool fullScreen = false;
+
+    if (bootStage == 1) {
+      bootStage = 2;
+      return PageRouteBuilder(
+        pageBuilder: (_, __, ___) => FlashPage(lastActivityId),
+      );
+    }
+    final arguments = settings.arguments as Map<String, dynamic> ?? {};
+    switch (settings.name) {
+      case WelcomePage.route:
+        screen = WelcomePage();
+        break;
+      case HomePage.route:
+        screen = MultiBlocProvider(
+            providers: [
+              BlocProvider<PeopleBloc>(
+                create: (_) => sl(),
+              ),
+              BlocProvider<ExpenseBloc>(
+                create: (_) => sl(),
+              ),
+            ],
+            child: HomePage(
+              activity: Activity.fromJson(arguments),
+            ));
+        break;
+      case ExpensePage.route:
+        screen = BlocProvider<ExpenseBloc>(
           create: (_) => sl(),
-        ),
-        BlocProvider<PeopleBloc>(
-          create: (_) => sl(),
-        ),
-        BlocProvider<ExpenseBloc>(
-          create: (_) => sl(),
-        ),
-      ], child: HomePage()),
-  EXPENSE_PAGE: (context) =>
-      BlocProvider<ExpenseBloc>(
-        create: (_) => sl(),
-        child: ExpensePage(),
-      ),
-  ALREADY_HAVE_ACTIVITY_PAGE: (context) =>
-      BlocProvider<ActivityBloc>(
-        create: (_) => sl(),
-        child: AlreadyHaveActivityPage(),
-      ),
-  SHARE_PAGE: (context) => SharePage(),
-};
+          child: ExpensePage(
+            expenseArgument: ExpenseArgument.fromJson(arguments),
+          ),
+        );
+        break;
+      case ScanQRPage.route:
+        screen = ScanQRPage();
+        break;
+      case SharePage.route:
+        screen = SharePage(
+          activity: Activity.fromJson(arguments),
+        );
+        break;
+    }
+
+    if (bootStage == 2) {
+      bootStage = 3;
+      return PageRouteBuilder(
+        pageBuilder: (BuildContext context, _, __) {
+          return screen;
+        },
+        transitionDuration: const Duration(milliseconds: 500),
+      );
+    }
+    if (fullScreen) {
+      return MaterialPageRoute(
+        builder: (_) => screen,
+        fullscreenDialog: true,
+      );
+    }
+
+    return PageRouteBuilder(pageBuilder: (BuildContext context, _, __) {
+      return screen;
+    }, transitionsBuilder: (_, Animation<double> animation, __, Widget child) {
+      return FadeTransition(opacity: animation, child: child);
+    });
+  };
+}

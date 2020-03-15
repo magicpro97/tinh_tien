@@ -8,9 +8,13 @@ import 'package:tinh_tien/common/colors.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
 class SharePage extends StatelessWidget {
+  final Activity activity;
+  static const route = '/share';
+
+  const SharePage({Key key, @required this.activity}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final Activity activity = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       body: Builder(builder: (context) {
         return SafeArea(
@@ -80,7 +84,7 @@ class SharePage extends StatelessWidget {
               style: const TextStyle(fontSize: 16.0, color: Colors.white),
               child: Padding(
                 padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 child: Text('Copied'),
               ),
             ),

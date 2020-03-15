@@ -11,18 +11,19 @@ import 'package:timeline_list/timeline_model.dart';
 import 'package:tinh_tien/app/blocs/activity/bloc.dart';
 import 'package:tinh_tien/app/blocs/expense/bloc.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
-import 'package:tinh_tien/app/route.dart';
+import 'package:tinh_tien/app/pages/expense_page/expense_page.dart';
 import 'package:tinh_tien/app/utils.dart';
 import 'package:tinh_tien/app/widgets/app_tabview.dart';
 import 'package:tinh_tien/app/widgets/empty_list.dart';
 import 'package:tinh_tien/app/widgets/expense_item.dart';
 import 'package:tinh_tien/app/widgets/timeline_expense_body_item.dart';
 import 'package:tinh_tien/common/dimens.dart';
+import '../expense_page/expense_argument.dart';
 
 class ExpenseTab extends StatefulWidget {
-  final String name;
+  final Activity activity;
 
-  const ExpenseTab({Key key, @required this.name}) : super(key: key);
+  const ExpenseTab({Key key, @required this.activity}) : super(key: key);
 
   @override
   _ExpenseTabState createState() => _ExpenseTabState();
@@ -42,17 +43,17 @@ class _ExpenseTabState extends State<ExpenseTab>
     _expenseBloc = BlocProvider.of<ExpenseBloc>(context);
     _scrollController = ScrollController();
     _scrollController.addListener(() {
-        if (_scrollController.offset != 0 ) {
-          setState(() {
-            isScrollUp = true;
-          });
-        } else {
-          setState(() {
-            isScrollUp = false;
-          });
-        }
-      });
-    }
+      if (_scrollController.offset != 0) {
+        setState(() {
+          isScrollUp = true;
+        });
+      } else {
+        setState(() {
+          isScrollUp = false;
+        });
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -75,15 +76,15 @@ class _ExpenseTabState extends State<ExpenseTab>
                     return SliverAppBar(
                       expandedHeight: Dimens.EXPANDED_HEIGHT,
                       automaticallyImplyLeading: false,
-                      flexibleSpace: _activityBloc.activity != null
-                          ? _buildExpenseChart(context, _activityBloc.activity)
+                      flexibleSpace: state is ActivityLoadedState
+                          ? _buildExpenseChart(context, state.activity)
                           : EmptyList(),
                     );
                   }),
               SliverAppBar(
                 title: Row(
                   children: <Widget>[
-                    Text(widget.name),
+                    Text('Expense'),
                     SizedBox(
                       width: Dimens.NORMAL_PADDING,
                     ),
@@ -105,65 +106,77 @@ class _ExpenseTabState extends State<ExpenseTab>
                 pinned: true,
               ),
               SliverFillRemaining(
-                child: _buildExpenseTimeline(_activityBloc.activity),
+                child: _buildExpenseTimeline(),
               ),
             ],
           ),
           floatingActionButton: Visibility(
-            child: FloatingActionButton(
-                onPressed: () {
-                  if (_activityBloc.activity == null ||
-                      _activityBloc.activity.people.isNotEmpty) {
-                    Navigator.pushNamed(context, EXPENSE_PAGE,
-                        arguments: _activityBloc.activity);
-                  }
-                },
-                child: Icon(Icons.add)),
+            child: BlocBuilder(
+                bloc: _activityBloc,
+                builder: (context, state) {
+                  return FloatingActionButton(
+                      onPressed: () {
+                        if (state is ActivityLoadedState &&
+                            state.activity != null &&
+                            state.activity.people.isNotEmpty) {
+                          Navigator.pushNamed(context, ExpensePage.route,
+                              arguments: ExpenseArgument(state.activity, null)
+                                  .toJson());
+                        }
+                      },
+                      child: Icon(Icons.add));
+                }),
             visible: isScrollUp ? false : true,
           ),
         ),
       ),
       listener: (_, state) {
         if (state is ExpenseDeletedState) {
-          _activityBloc.add(GetActivityEvent());
+          _activityBloc.add(GetActivity(activityId: widget.activity.id));
         }
       },
     );
   }
 
-  Widget _buildExpenseTimeline(Activity activity) {
-    if (activity != null && activity.expenses.isNotEmpty) {
-      final expenseTimelines = activity.expenseADay
-          .map((activityExpense) => TimelineModel(
-                TimeLineExpenseBodyItem(
-                  title: DateUtils.toDate(activityExpense.date),
-                  expenseItems: activityExpense.expenses
-                      .map((expense) => ExpenseItem(
-                            activity: activity,
-                            expense: expense,
-                            onDeleted: () {
-                              _expenseBloc.add(DeleteExpense(
-                                activityId: activity.id,
-                                expenseId: expense.id,
-                              ));
-                            },
-                          ))
-                      .toList()
-                      .reversed
-                      .toList(),
-                ),
-              ))
-          .toList()
-          .reversed
-          .toList();
+  Widget _buildExpenseTimeline() {
+    return BlocBuilder<ActivityBloc, ActivityState>(
+        bloc: _activityBloc,
+        builder: (context, state) {
+          if (state is ActivityLoadedState &&
+              state.activity != null &&
+              state.activity.expenses.isNotEmpty) {
+            final expenseTimelines = state.activity.expenseADay
+                .map((activityExpense) => TimelineModel(
+                      TimeLineExpenseBodyItem(
+                        title: DateUtils.toDate(activityExpense.date),
+                        expenseItems: activityExpense.expenses
+                            .map((expense) => ExpenseItem(
+                                  activity: state.activity,
+                                  expense: expense,
+                                  onDeleted: () {
+                                    _expenseBloc.add(DeleteExpense(
+                                      activityId: state.activity.id,
+                                      expenseId: expense.id,
+                                    ));
+                                  },
+                                ))
+                            .toList()
+                            .reversed
+                            .toList(),
+                      ),
+                    ))
+                .toList()
+                .reversed
+                .toList();
 
-      return Timeline(
-        children: expenseTimelines,
-        position: TimelinePosition.Left,
-        shrinkWrap: true,
-      );
-    }
-    return EmptyList();
+            return Timeline(
+              children: expenseTimelines,
+              position: TimelinePosition.Left,
+              shrinkWrap: true,
+            );
+          }
+          return EmptyList();
+        });
   }
 
   Widget _buildExpenseChart(BuildContext context, Activity activity) {
@@ -278,15 +291,15 @@ class _ExpenseTabState extends State<ExpenseTab>
         )));
   }
 
-  // _scrollToTop() {
-  //   _scrollController.animateTo(_scrollController.position.minScrollExtent,
-  //       duration: Duration(milliseconds: 1000), curve: Curves.easeIn);
-  //   setState(() => isOnTop = true);
-  // }
+// _scrollToTop() {
+//   _scrollController.animateTo(_scrollController.position.minScrollExtent,
+//       duration: Duration(milliseconds: 1000), curve: Curves.easeIn);
+//   setState(() => isOnTop = true);
+// }
 
-  // _scrollToBottom() {
-  //   _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-  //       duration: Duration(milliseconds: 1000), curve: Curves.easeOut);
-  //   setState(() => isOnTop = false);
-  // }
+// _scrollToBottom() {
+//   _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+//       duration: Duration(milliseconds: 1000), curve: Curves.easeOut);
+//   setState(() => isOnTop = false);
+// }
 }

@@ -32,6 +32,6 @@ Map<String, dynamic> _$ActivityToJson(Activity instance) => <String, dynamic>{
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),
       'name': instance.name,
-      'people': instance.people,
-      'expenses': instance.expenses,
+      'people': instance.people.map((e) => e.toJson()).toList(),
+      'expenses': instance.expenses.map((e) => e.toJson()).toList(),
     };

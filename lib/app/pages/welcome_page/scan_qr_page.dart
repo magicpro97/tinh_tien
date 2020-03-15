@@ -3,18 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qr_mobile_vision/qr_camera.dart';
 import 'package:tinh_tien/app/blocs/activity/bloc.dart';
-import 'package:tinh_tien/app/route.dart';
+import 'package:tinh_tien/app/pages/home_page/home_page.dart';
 import 'package:tinh_tien/app/widgets/app_button.dart';
 import 'package:tinh_tien/common/colors.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
-class AlreadyHaveActivityPage extends StatefulWidget {
+class ScanQRPage extends StatefulWidget {
+  static const route = '/scan';
+  
   @override
-  _AlreadyHaveActivityPageState createState() =>
-      _AlreadyHaveActivityPageState();
+  _ScanQRPageState createState() =>
+      _ScanQRPageState();
 }
 
-class _AlreadyHaveActivityPageState extends State<AlreadyHaveActivityPage> {
+class _ScanQRPageState extends State<ScanQRPage> {
   ActivityBloc _welcomeBloc;
   TextEditingController _idController;
 
@@ -36,7 +38,7 @@ class _AlreadyHaveActivityPageState extends State<AlreadyHaveActivityPage> {
     return Scaffold(
         body: QrCamera(
       qrCodeCallback: (code) {
-        _welcomeBloc.add(GetActivityEvent(activityId: code));
+        _welcomeBloc.add(GetActivity(activityId: code));
       },
       child: SafeArea(
         child: SingleChildScrollView(
@@ -46,7 +48,7 @@ class _AlreadyHaveActivityPageState extends State<AlreadyHaveActivityPage> {
             listener: (_, state) {
               if (state is ActivityLoadedState) {
                 Navigator.pushNamedAndRemoveUntil(
-                    context, HOME_PAGE, (routes) => false);
+                    context, HomePage.route, (routes) => false);
               }
             },
             child: BlocBuilder<ActivityBloc, ActivityState>(
@@ -96,7 +98,7 @@ class _AlreadyHaveActivityPageState extends State<AlreadyHaveActivityPage> {
                             color: AppColors.WHITE_TEXT,
                           )),
                       onSubmitted: (value) {
-                        _welcomeBloc.add(GetActivityEvent(activityId: value));
+                        _welcomeBloc.add(GetActivity(activityId: value));
                       },
                     ),
                     if (state is ActivityErrorState) Center(child: Text(state.message)),
@@ -108,7 +110,7 @@ class _AlreadyHaveActivityPageState extends State<AlreadyHaveActivityPage> {
                               AppButton(
                                 onPressed: () {
                                   _welcomeBloc.add(
-                                      GetActivityEvent(activityId: _idController.text));
+                                      GetActivity(activityId: _idController.text));
                                 },
                                 text: 'Enter',
                               ),

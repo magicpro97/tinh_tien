@@ -44,7 +44,6 @@ Future<void> init() async {
   // bloc
   sl.registerFactory(() => ActivityBloc(
         activityRepository: sl(),
-        sharedPreferences: sl(),
       ));
   sl.registerFactory(() => PeopleBloc(peopleRepository: sl()));
   sl.registerFactory(() => ExpenseBloc(expenseRepository: sl()));

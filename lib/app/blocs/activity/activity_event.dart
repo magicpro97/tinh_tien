@@ -1,13 +1,14 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class ActivityEvent extends Equatable {
   const ActivityEvent();
 }
 
-class GetActivityEvent extends ActivityEvent {
+class GetActivity extends ActivityEvent {
   final String activityId;
 
-  GetActivityEvent({this.activityId});
+  GetActivity({@required this.activityId});
 
   @override
   List<Object> get props => [activityId];
@@ -18,19 +19,19 @@ class GetLastActivityEvent extends ActivityEvent {
   List<Object> get props => [];
 }
 
-class DeleteActivityEvent extends ActivityEvent {
+class DeleteActivity extends ActivityEvent {
   final String activityId;
 
-  DeleteActivityEvent(this.activityId);
+  DeleteActivity(this.activityId);
 
   @override
   List<Object> get props => [];
 }
 
-class CreateActivityEvent extends ActivityEvent {
+class CreateActivity extends ActivityEvent {
   final String name;
 
-  CreateActivityEvent(this.name);
+  CreateActivity(this.name);
 
   @override
   List<Object> get props => [name];

@@ -91,7 +91,7 @@ class Activity extends DataClass implements Insertable<Activity> {
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
-          (other is Activity &&
+      (other is Activity &&
           other.id == this.id &&
           other.createdAt == this.createdAt &&
           other.updateAt == this.updateAt &&
@@ -319,7 +319,7 @@ class ActivityMember extends DataClass implements Insertable<ActivityMember> {
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
-          (other is ActivityMember &&
+      (other is ActivityMember &&
           other.activityRef == this.activityRef &&
           other.personRef == this.personRef);
 }
@@ -494,7 +494,7 @@ class ExpenseParticipant extends DataClass
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
-          (other is ExpenseParticipant &&
+      (other is ExpenseParticipant &&
           other.expenseRef == this.expenseRef &&
           other.personRef == this.personRef);
 }
@@ -646,8 +646,7 @@ class ExpensePayer extends DataClass implements Insertable<ExpensePayer> {
     );
   }
 
-  ExpensePayer copyWith({String expenseRef, String personRef}) =>
-      ExpensePayer(
+  ExpensePayer copyWith({String expenseRef, String personRef}) => ExpensePayer(
         expenseRef: expenseRef ?? this.expenseRef,
         personRef: personRef ?? this.personRef,
       );
@@ -665,7 +664,7 @@ class ExpensePayer extends DataClass implements Insertable<ExpensePayer> {
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
-          (other is ExpensePayer &&
+      (other is ExpensePayer &&
           other.expenseRef == this.expenseRef &&
           other.personRef == this.personRef);
 }
@@ -877,7 +876,7 @@ class Expense extends DataClass implements Insertable<Expense> {
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
-          (other is Expense &&
+      (other is Expense &&
           other.id == this.id &&
           other.createdAt == this.createdAt &&
           other.updateAt == this.updateAt &&
@@ -1153,7 +1152,7 @@ class PeopleData extends DataClass implements Insertable<PeopleData> {
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
-          (other is PeopleData &&
+      (other is PeopleData &&
           other.id == this.id &&
           other.createdAt == this.createdAt &&
           other.updateAt == this.updateAt &&
@@ -1334,27 +1333,24 @@ abstract class _$LocalDatabase extends GeneratedDatabase {
   $PeopleTable _people;
   $PeopleTable get people => _people ??= $PeopleTable(this);
   ActivityLocalDataSource _activityLocalDataSource;
-
   ActivityLocalDataSource get activityLocalDataSource =>
       _activityLocalDataSource ??=
           ActivityLocalDataSource(this as LocalDatabase);
   PeopleLocalDataSource _peopleLocalDataSource;
-
   PeopleLocalDataSource get peopleLocalDataSource =>
       _peopleLocalDataSource ??= PeopleLocalDataSource(this as LocalDatabase);
   ExpenseLocalDataSource _expenseLocalDataSource;
-
   ExpenseLocalDataSource get expenseLocalDataSource =>
       _expenseLocalDataSource ??= ExpenseLocalDataSource(this as LocalDatabase);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
-    activities,
-    activityMembers,
-    expenseParticipants,
-    expensePayers,
-    expenses,
-    people
+        activities,
+        activityMembers,
+        expenseParticipants,
+        expensePayers,
+        expenses,
+        people
       ];
 }

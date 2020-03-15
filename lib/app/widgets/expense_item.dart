@@ -3,9 +3,9 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:tinh_tien/app/data/models/activity/activity.dart';
 import 'package:tinh_tien/app/data/models/expense/expense.dart';
 import 'package:tinh_tien/app/pages/expense_page/expense_argument.dart';
+import 'package:tinh_tien/app/pages/expense_page/expense_page.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
-import '../route.dart';
 import '../utils.dart';
 import 'action_item.dart';
 
@@ -64,7 +64,7 @@ class ExpenseItem extends StatelessWidget {
       ),
       actionPane: const SlidableDrawerActionPane(),
       secondaryActions: defaultActionItems(() {
-        Navigator.pushNamed(context, EXPENSE_PAGE,
+        Navigator.pushNamed(context, ExpensePage.route,
             arguments: ExpenseArgument(activity, expense));
       }, onDeleted),
       dismissal: defaultDismissal(

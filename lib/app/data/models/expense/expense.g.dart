@@ -37,8 +37,8 @@ Map<String, dynamic> _$ExpenseToJson(Expense instance) => <String, dynamic>{
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),
       'amount': instance.amount,
-      'people': instance.people,
-      'paid_by': instance.paidBy,
+      'people': instance.people.map((e) => e.toJson()).toList(),
+      'paid_by': instance.paidBy.map((e) => e.toJson()).toList(),
       'date': instance.date?.toIso8601String(),
       'paid_for': instance.paidFor,
     };

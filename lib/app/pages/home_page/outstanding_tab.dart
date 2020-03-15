@@ -7,11 +7,8 @@ import 'package:tinh_tien/app/widgets/empty_list.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
 class OutstandingTab extends StatelessWidget {
-  final String name;
-
   const OutstandingTab({
     Key key,
-    this.name,
   }) : super(key: key);
 
   @override

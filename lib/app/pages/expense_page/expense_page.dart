@@ -20,6 +20,12 @@ import 'package:tinh_tien/common/dimens.dart';
 import 'package:tinh_tien/core/vadidator/validator.dart';
 
 class ExpensePage extends StatefulWidget {
+  static const route = '/expense';
+  final ExpenseArgument expenseArgument;
+
+  const ExpensePage({Key key, @required this.expenseArgument})
+      : super(key: key);
+
   @override
   _ExpensePageState createState() => _ExpensePageState();
 }
@@ -54,36 +60,16 @@ class _ExpensePageState extends State<ExpensePage> {
     _amountValidator = StreamController.broadcast();
     _paidByForValidator = StreamController.broadcast();
     _participantValidator = StreamController.broadcast();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _paidForValidator.close();
-    _amountValidator.close();
-    _paidByForValidator.close();
-    _participantValidator.close();
-    _paidFor.dispose();
-    _amount.dispose();
-    _amountFocus.dispose();
-    super.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
-    final data = ModalRoute.of(context).settings.arguments;
-    if (data is Activity) {
-      _activity = ModalRoute.of(context).settings.arguments;
-    } else if (data is ExpenseArgument) {
-      _activity = data.activity;
-      _expense = data.expense;
+    _activity = widget.expenseArgument.activity;
+    if (widget.expenseArgument.expense != null) {
+      _expense = widget.expenseArgument.expense;
       _expense.paidBy.forEach((person) => _selectedPaidBys.add(person));
       _expense.people.forEach((person) => _selectedParticipants.add(person));
       _paidFor.text = _expense.paidFor;
       _amount.text = _expense.amount.toInt().toString();
       _selectedTime = _expense.date;
     }
-    super.didChangeDependencies();
+    super.initState();
   }
 
   void _onPaidBySelected(selected, person) {
@@ -123,7 +109,7 @@ class _ExpensePageState extends State<ExpensePage> {
             )
             .toList() ??
         [];
-    final paticipantChips = _activity.people
+    final participantChips = _activity.people
             .map(
               (person) => AppChip<Person>(
                 value: person,
@@ -142,7 +128,7 @@ class _ExpensePageState extends State<ExpensePage> {
       bloc: _expenseBloc,
       listener: (context, state) {
         if (state is ExpenseCreatedState || state is ExpenseEditedState) {
-          _activityBloc.add(GetActivityEvent());
+          _activityBloc.add(GetActivity(activityId: _activity.id));
           Navigator.pop(context);
         }
       },
@@ -229,7 +215,7 @@ class _ExpensePageState extends State<ExpensePage> {
                   Text('Participants:'),
                   ListTile(
                     title: ChipList(
-                      chips: paticipantChips,
+                      chips: participantChips,
                     ),
                     subtitle: StreamBuilder<String>(
                       stream:

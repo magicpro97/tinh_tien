@@ -10,11 +10,8 @@ import 'package:tinh_tien/common/colors.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
 class BalanceTab extends StatelessWidget {
-  final String name;
-
   const BalanceTab({
     Key key,
-    @required this.name,
   }) : super(key: key);
 
   @override

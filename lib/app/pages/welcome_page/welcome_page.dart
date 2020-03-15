@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tinh_tien/app/blocs/activity/bloc.dart';
-import 'package:tinh_tien/app/route.dart';
+import 'package:tinh_tien/app/pages/home_page/home_page.dart';
+import 'package:tinh_tien/app/pages/welcome_page/scan_qr_page.dart';
 import 'package:tinh_tien/app/widgets/app_logo.dart';
 import 'package:tinh_tien/common/colors.dart';
 import 'package:tinh_tien/common/dimens.dart';
 
 class WelcomePage extends StatefulWidget {
+  static const route = '/welcome';
+
   @override
   _WelcomePageState createState() => _WelcomePageState();
 }
@@ -62,7 +65,6 @@ class _WelcomePageState extends State<WelcomePage>
       setState(() {
         _alreadyHaveButtonOpacity = 1;
       });
-      _activityBloc.add(GetLastActivityEvent());
     });
   }
 
@@ -84,13 +86,13 @@ class _WelcomePageState extends State<WelcomePage>
           child: BlocListener(
             bloc: _activityBloc,
             listener: (_, state) {
-              if (state is CreatedActivityState) {
-                Navigator.pushReplacementNamed(context, HOME_PAGE,
-                    arguments: state.activity);
-              // } else if (state is HasLastActivityState) {
-              //   _activityBloc.add(GetActivityEvent());
-              } else if (state is ActivityLoadedState) {
-                Navigator.pushReplacementNamed(context, HOME_PAGE);
+              if (state is CreatedActivityState ||
+                  state is ActivityLoadedState) {
+                Navigator.pushReplacementNamed(
+                  context,
+                  HomePage.route,
+                  arguments: state.activity.toJson(),
+                );
               }
             },
             child: BlocBuilder<ActivityBloc, ActivityState>(
@@ -174,8 +176,7 @@ class _WelcomePageState extends State<WelcomePage>
                     child: FlatButton(
                       onPressed: () {
                         if (!(state is ActivityLoadingState)) {
-                          Navigator.pushNamed(
-                              context, ALREADY_HAVE_ACTIVITY_PAGE);
+                          Navigator.pushNamed(context, ScanQRPage.route);
                         }
                       },
                       child: Text(
@@ -197,7 +198,7 @@ class _WelcomePageState extends State<WelcomePage>
 
   void submitActivity(ActivityState state, String value) {
     if (!(state is ActivityLoadingState)) {
-      _activityBloc.add(CreateActivityEvent(value));
+      _activityBloc.add(CreateActivity(value));
     }
   }
 }
